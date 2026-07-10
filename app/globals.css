@@ -17,12 +17,14 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-ink: var(--accent-ink);
   --color-highlight: var(--highlight);
   --color-info: var(--info);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --font-sans: var(--font-manrope);
+  --font-serif: var(--font-instrument-serif);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -52,9 +54,7 @@ html.lenis body {
 body {
   min-height: 100%;
   overflow-x: clip;
-  background:
-    radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.055), transparent 32rem),
-    var(--background);
+  background: var(--background);
   color: var(--text-primary);
   font-family: var(--font-manrope), Arial, Helvetica, sans-serif;
   font-size: var(--font-body);
@@ -69,8 +69,8 @@ p {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--brand-sky) 72%, white);
-  color: #04111d;
+  background: color-mix(in srgb, var(--brand-sky) 55%, white);
+  color: #0a0a0d;
 }
 
 :focus-visible {
@@ -101,89 +101,125 @@ p {
   white-space: normal;
 }
 
-.brand-panel-rhythm {
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025)),
-    var(--surface-card);
+/* the studio's quiet aside — reserved for exactly three moments on the homepage */
+.voice-quiet {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* film grain, used sparingly on media frames and the arrival scene */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: radial-gradient(rgba(21, 20, 26, 0.9) 0.6px, transparent 0.6px);
+  background-size: 3px 3px;
+}
+
+.type-hero {
+  font-size: var(--font-hero);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  font-weight: 700;
 }
 
 .type-display-xl {
   font-size: var(--font-display-xl);
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .type-display {
   font-size: var(--font-display);
   line-height: var(--leading-display);
   letter-spacing: var(--tracking-display);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .type-h1 {
   font-size: var(--font-h1);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .type-h2 {
   font-size: var(--font-h2);
   line-height: var(--leading-heading);
   letter-spacing: var(--tracking-heading);
-  font-weight: 800;
+  font-weight: 650;
 }
 
 .type-h3 {
   font-size: var(--font-h3);
   line-height: 1.08;
-  letter-spacing: -0.035em;
-  font-weight: 800;
+  letter-spacing: -0.015em;
+  font-weight: 600;
 }
 
 .type-h4 {
   font-size: var(--font-h4);
   line-height: 1.16;
-  letter-spacing: -0.025em;
-  font-weight: 750;
+  letter-spacing: -0.01em;
+  font-weight: 600;
 }
 
 .type-body-lg {
   font-size: var(--font-body-lg);
   line-height: var(--leading-body-lg);
-  letter-spacing: -0.018em;
+  letter-spacing: -0.006em;
+  font-weight: 400;
 }
 
 .type-body {
   font-size: var(--font-body);
   line-height: var(--leading-body);
   letter-spacing: var(--tracking-body);
+  font-weight: 400;
 }
 
 .type-small {
   font-size: var(--font-small);
   line-height: var(--leading-small);
+  font-weight: 500;
 }
 
 .type-caption {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: var(--font-caption);
   line-height: 1.35;
+  font-weight: 500;
 }
 
 .type-label {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: var(--font-label);
   line-height: 1.25;
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  font-weight: 700;
+  font-weight: 500;
+}
+
+.type-index {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
 
 .type-button {
   font-size: var(--font-button);
   line-height: 1;
-  letter-spacing: -0.01em;
-  font-weight: 750;
+  letter-spacing: -0.005em;
+  font-weight: 600;
 }
 
 @media (prefers-reduced-motion: reduce) {

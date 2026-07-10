@@ -6,31 +6,36 @@
   --brand-gold: #c6963b;
   --brand-red: #c2242c;
 
-  --background: #08090b;
-  --surface: #0f1115;
-  --surface-elevated: #151820;
-  --surface-card: rgba(255, 255, 255, 0.045);
-  --surface-glass: rgba(255, 255, 255, 0.055);
-  --foreground: #f5f7fa;
-  --text-primary: #f5f7fa;
-  --text-secondary: #bcc4cf;
-  --text-muted: #7f8996;
-  --border: rgba(245, 247, 250, 0.1);
-  --border-strong: rgba(245, 247, 250, 0.18);
+  --background: #f8f6f1;
+  --surface: #ffffff;
+  --surface-elevated: #f1eee6;
+  --surface-card: rgba(21, 20, 26, 0.035);
+  --surface-glass: rgba(21, 20, 26, 0.045);
+  --foreground: #15141a;
+  --text-primary: #15141a;
+  --text-secondary: #57545f;
+  --text-muted: #8d8993;
+  --border: rgba(21, 20, 26, 0.1);
+  --border-strong: rgba(21, 20, 26, 0.18);
   --primary: var(--brand-blue);
   --primary-foreground: #ffffff;
-  --secondary: #161920;
+  --secondary: #eeebe3;
   --secondary-foreground: var(--text-primary);
   --accent: var(--brand-sky);
   --accent-foreground: #04111d;
+  --accent-ink: #14587f;
   --highlight: var(--brand-gold);
   --muted: var(--text-secondary);
-  --muted-foreground: #d7dde5;
+  --muted-foreground: #3f3d46;
   --info: var(--brand-sky);
-  --success: #5cc99a;
+  --success: #217a5a;
   --warning: var(--brand-gold);
   --danger: var(--brand-red);
   --ring: var(--brand-sky);
+
+  /* the one deliberate dark frame — Invitation only */
+  --ink-frame: #0a0a0d;
+  --ink-frame-foreground: #f3f0e8;
 
   --radius-sm: 0.625rem;
   --radius-md: 0.875rem;
@@ -38,15 +43,17 @@
   --radius-xl: 1.75rem;
   --radius-2xl: 2.5rem;
   --container-gutter: clamp(1.375rem, 3.2vw, 3rem);
-  --section-y: clamp(7rem, 12vw, 12rem);
+  --section-y: clamp(8rem, 13vw, 15rem);
   --motion-fast: 180ms;
   --motion-base: 420ms;
   --motion-slow: 820ms;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-reveal: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --font-display-xl: clamp(4.5rem, 12vw, 10rem);
+  --font-hero: clamp(3rem, 7.2vw, 7.25rem);
+  --font-display-xl: clamp(4.75rem, 12.5vw, 11rem);
   --font-display: clamp(3.75rem, 9vw, 7.5rem);
-  --font-h1: clamp(3.25rem, 7vw, 6rem);
+  --font-h1: clamp(3.5rem, 7.4vw, 6.5rem);
   --font-h2: clamp(2.75rem, 5.4vw, 4.75rem);
   --font-h3: clamp(2rem, 3.6vw, 3.25rem);
   --font-h4: clamp(1.45rem, 2vw, 2rem);
@@ -57,13 +64,13 @@
   --font-label: 0.75rem;
   --font-button: 0.9375rem;
 
-  --leading-display: 0.88;
+  --leading-display: 0.94;
   --leading-heading: 1.02;
   --leading-body-lg: 1.62;
   --leading-body: 1.72;
   --leading-small: 1.55;
-  --tracking-display: -0.065em;
-  --tracking-heading: -0.045em;
-  --tracking-body: -0.012em;
-  --tracking-label: 0.18em;
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.02em;
+  --tracking-body: -0.006em;
+  --tracking-label: 0.16em;
 }

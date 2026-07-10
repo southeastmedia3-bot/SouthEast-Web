@@ -11,11 +11,11 @@ export const buttonVariants = cva(
         primary:
           "bg-primary text-primary-foreground shadow-[0_14px_34px_rgba(25,81,168,0.22)] hover:-translate-y-0.5 hover:bg-[color-mix(in_srgb,var(--brand-blue)_92%,white)] hover:shadow-[0_18px_44px_rgba(25,81,168,0.28)]",
         secondary:
-          "border border-border bg-white/[0.045] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-white/[0.07]",
+          "border border-border bg-black/[0.02] text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] backdrop-blur-xl hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-black/[0.045]",
         outline:
           "border border-border bg-transparent text-foreground hover:-translate-y-0.5 hover:border-accent hover:text-foreground hover:shadow-[0_14px_36px_rgba(54,161,223,0.1)]",
-        ghost: "text-foreground hover:bg-white/[0.055]",
-        icon: "border border-border bg-white/[0.045] text-foreground hover:border-accent hover:text-accent",
+        ghost: "text-foreground hover:bg-black/[0.035]",
+        icon: "border border-border bg-black/[0.02] text-foreground hover:border-accent hover:text-accent",
       },
       size: {
         sm: "h-9 px-4",

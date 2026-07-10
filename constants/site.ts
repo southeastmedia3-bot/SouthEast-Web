@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: "Southeast Media",
-  projectName: "Project Aurora",
+  projectName: "Elite CGI, Enterprise Media & Immersive VFX",
   description:
-    "Premium digital foundation for Southeast Media, built for cinematic corporate storytelling.",
+    "Southeast Media engineers physically accurate 8K visualization and enterprise media systems for pharmaceutical, institutional real estate, film, and venture-stage institutions.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://southeastmedia.example.com",
   locale: "en_US",
-  themeColor: "#05070a",
+  themeColor: "#f8f6f1",
 } as const;

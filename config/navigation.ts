@@ -1,54 +1,53 @@
-import type { LucideIcon } from "lucide-react";
-import { BriefcaseBusiness, Clapperboard, FileText, Sparkles } from "lucide-react";
-
 export type NavigationChild = {
   label: string;
   href: string;
   description?: string;
-  icon?: LucideIcon;
 };
 
 export type NavigationItem = {
   label: string;
   href: string;
-  ariaLabel?: string;
   children?: NavigationChild[];
-  featured?: NavigationChild;
 };
 
 export const primaryNavigation: NavigationItem[] = [
   {
-    label: "Studio",
-    href: "/studio",
+    label: "Verticals",
+    href: "/verticals",
     children: [
-      { label: "About", href: "/about", description: "Company story placeholder", icon: Sparkles },
       {
-        label: "Leadership",
-        href: "/leadership",
-        description: "Team architecture placeholder",
-        icon: BriefcaseBusiness,
+        label: "Pharma",
+        href: "/pharma",
+        description: "Mechanism of Action & scientific visualization",
+      },
+      {
+        label: "Real Estate",
+        href: "/real-estate",
+        description: "Institutional pre-construction visualization",
+      },
+      {
+        label: "Films",
+        href: "/films",
+        description: "In-house live-action & cinematic production",
+      },
+      {
+        label: "VFX",
+        href: "/vfx",
+        description: "Zero-imperfection rendering & compositing",
+      },
+      {
+        label: "Animation",
+        href: "/animation",
+        description: "High-fidelity 2D/3D motion systems",
+      },
+      {
+        label: "Graphics",
+        href: "/graphics",
+        description: "Marketing collateral & design systems",
       },
     ],
   },
-  {
-    label: "Work",
-    href: "/work",
-    children: [
-      {
-        label: "Portfolio",
-        href: "/portfolio",
-        description: "Case-study index placeholder",
-        icon: Clapperboard,
-      },
-      {
-        label: "Insights",
-        href: "/insights",
-        description: "Editorial system placeholder",
-        icon: FileText,
-      },
-    ],
-  },
-  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -59,14 +58,18 @@ export const footerNavigation = {
     { label: "Careers", href: "/careers" },
   ],
   solutions: [
-    { label: "Animation", href: "/services/animation" },
-    { label: "Brand Films", href: "/services/brand-films" },
-    { label: "Interactive", href: "/services/interactive" },
+    { label: "Pharma", href: "/pharma" },
+    { label: "Real Estate", href: "/real-estate" },
+    { label: "Films", href: "/films" },
+    { label: "VFX", href: "/vfx" },
+    { label: "Animation", href: "/animation" },
+    { label: "Graphics", href: "/graphics" },
   ],
   industries: [
-    { label: "Entertainment", href: "/industries/entertainment" },
-    { label: "Technology", href: "/industries/technology" },
-    { label: "Enterprise", href: "/industries/enterprise" },
+    { label: "Medical & Pharma", href: "/industries/medical-pharma" },
+    { label: "Institutional Real Estate", href: "/industries/real-estate" },
+    { label: "Startup / Incubator", href: "/industries/startup" },
+    { label: "Product & E-Commerce", href: "/industries/product" },
   ],
   resources: [
     { label: "Insights", href: "/insights" },

@@ -1,160 +1,94 @@
-import {
-  Aperture,
-  Blocks,
-  BrainCircuit,
-  Clapperboard,
-  Cpu,
-  Film,
-  Globe2,
-  Layers3,
-  Play,
-  RadioTower,
-  Sparkles,
-  WandSparkles,
-} from "lucide-react";
+export const heroContent = {
+  eyebrow: "01 — Arrival",
+  headlineLines: ["Elite CGI,", "Enterprise Media", "& Immersive VFX"],
+  body: "We engineer the visual architecture that secures funding and drives institutional growth. By combining physically accurate 8K rendering with strategic communication, we deliver flawless Medical MoA, Institutional Real Estate visualization, Film VFX and high-converting startup explainer ecosystems.",
+};
 
-export const trustLogos = [
-  "Northline",
-  "VistaWorks",
-  "Aster Labs",
-  "Kairo",
-  "Monarch",
-  "Signal Bay",
-];
+export const trustBar = {
+  statement:
+    "Southeast Media operates as your embedded digital infrastructure partner — under NDA, on secure servers, for institutions that cannot afford to look uncertain.",
+  metrics: [
+    { value: 20, suffix: "+", label: "years combined CGI experience" },
+    { value: 100, suffix: "TB", label: "secure RAID-configured storage" },
+    { value: 15, suffix: "", label: "server dedicated render farm" },
+    { value: 8, suffix: "K", label: "physically accurate max resolution" },
+  ],
+};
 
-export const heroMetrics = [
-  { value: 120, suffix: "+", label: "story systems shaped" },
-  { value: 18, suffix: " yrs", label: "combined creative leadership" },
-  { value: 4, suffix: "K", label: "production-ready assets delivered" },
-];
+export const reelMoments = [
+  {
+    title:
+      "Doctor-reviewed anatomy, MoA animation, and clinical visualization built for pharma review boards.",
+    discipline: "Medical & Pharma",
+    tone: "blue",
+    ratio: "wide",
+    description:
+      "A doctor-reviewed 3D anatomy and disease-state library, paired with Cinema 4D–Octane MoA animation and 3D-print-ready molecular models for HCP education.",
+    mediaSrc: "/media/placeholder/pharma-heart.png",
+  },
+  {
+    title: "Pre-construction renders that secure institutional buyers before ground is broken.",
+    discipline: "Institutional Real Estate",
+    tone: "sky",
+    ratio: "wide",
+    description:
+      "Photorealistic interior and exterior renders, cinematic walkthroughs, and virtual tours built for corporate boards and investor presentations.",
+    mediaSrc: "/media/placeholder/real-estate-interior.png",
+  },
+  {
+    title: "8K capture through an in-house Maya-to-Octane finishing pipeline.",
+    discipline: "Film & VFX",
+    tone: "violet",
+    ratio: "square",
+    description:
+      "Uncompressed 8K live-action capture, DI color grading, and VFX compositing handled end-to-end by our in-house cinematic production division.",
+    mediaSrc: undefined,
+  },
+  {
+    title: "An elite visual incubation suite for high-stakes investor pitches.",
+    discipline: "Startup / Incubator",
+    tone: "gold",
+    ratio: "tall",
+    description:
+      "Abstract ideas visualized for funding rounds, product explainer videos, market research, and a daily-ready social media presence.",
+    mediaSrc: undefined,
+  },
+  {
+    title: "Lifecycle visual support, from launch film to continuous commerce content.",
+    discipline: "Product & E-Commerce",
+    tone: "blue",
+    ratio: "portrait",
+    mediaSrc: undefined,
+    description:
+      "End-to-end visual support from the high-fidelity website hero launch video to a continuous stream of premium social and marketing assets.",
+  },
+] as const;
 
-export const capabilities = [
-  {
-    title: "Cinematic Brand Worlds",
-    description:
-      "Visual systems, launch films, and campaign moments designed to make a brand feel unmistakable.",
-    icon: Clapperboard,
-  },
-  {
-    title: "Motion & Animation",
-    description:
-      "High-fidelity animation direction for products, titles, explainers, reels, and immersive digital stories.",
-    icon: Aperture,
-  },
-  {
-    title: "Interactive Experiences",
-    description:
-      "Responsive web moments and interface choreography built to feel smooth, tactile, and premium.",
-    icon: Blocks,
-  },
-  {
-    title: "Production Systems",
-    description:
-      "Reusable design, media, and delivery frameworks that keep creative output sharp at scale.",
-    icon: Layers3,
-  },
-];
+export const mandate = {
+  statement:
+    "A zero-imperfection mandate, backed by ironclad data security and NDA-driven governance.",
+  pillars: [
+    {
+      label: "Security",
+      detail: "NDA-bound engagements, zero-tolerance breach policy, access-controlled servers.",
+    },
+    {
+      label: "Infrastructure",
+      detail: "100TB RAID storage, dual 96GB VRAM render nodes, a 15-server dedicated farm.",
+    },
+    {
+      label: "Pipeline",
+      detail: "Maya, 3ds Max, Blender & Octane — physically accurate 8K output, every asset.",
+    },
+    {
+      label: "Governance",
+      detail: "Milestone-based SOWs tracked in real time for total procurement visibility.",
+    },
+  ],
+};
 
-export const industries = [
-  {
-    title: "Entertainment",
-    description: "Launches, studio identities, title sequences, and audience-facing worlds.",
-    icon: Play,
-  },
-  {
-    title: "Technology",
-    description: "Product stories that make complex platforms feel clear, desirable, and alive.",
-    icon: Cpu,
-  },
-  {
-    title: "Enterprise",
-    description: "Premium communication systems for teams with global audiences and high stakes.",
-    icon: Globe2,
-  },
-  {
-    title: "Culture",
-    description: "Editorial and social-first visual language for brands moving at cultural speed.",
-    icon: RadioTower,
-  },
-];
-
-export const featuredProjects = [
-  {
-    title: "Aurora Launch System",
-    category: "Brand Film / Motion System",
-    description:
-      "A cinematic launch framework for a flagship product reveal, built around modular scenes and precision motion.",
-  },
-  {
-    title: "Signal Room Experience",
-    category: "Interactive / Digital Storytelling",
-    description:
-      "A scroll-led digital environment that turns a company story into a sequence of tactile moments.",
-  },
-  {
-    title: "Studio Identity Toolkit",
-    category: "Design System / Production",
-    description:
-      "A reusable visual toolkit for trailers, social cuts, pitch decks, and keynote-grade presentation moments.",
-  },
-];
-
-export const technologyItems = [
-  {
-    title: "Realtime Direction",
-    description:
-      "Rapid creative preview loops keep scenes, pacing, and interaction aligned from day one.",
-    icon: BrainCircuit,
-  },
-  {
-    title: "Motion Systems",
-    description:
-      "Animation tokens and reusable choreography patterns create consistency across every touchpoint.",
-    icon: Sparkles,
-  },
-  {
-    title: "Production Automation",
-    description:
-      "Repeatable asset pipelines reduce friction between strategy, design, animation, and delivery.",
-    icon: WandSparkles,
-  },
-  {
-    title: "Performance Craft",
-    description:
-      "GPU-friendly motion, optimized media, and stable layouts keep the experience fast under pressure.",
-    icon: Film,
-  },
-];
-
-export const processSteps = [
-  {
-    step: "01",
-    title: "Find the Signal",
-    description:
-      "Clarify the story, audience, emotional arc, and moments worth making unforgettable.",
-  },
-  {
-    step: "02",
-    title: "Design the World",
-    description:
-      "Define the visual language, motion grammar, section rhythm, and reusable creative system.",
-  },
-  {
-    step: "03",
-    title: "Prototype the Feeling",
-    description:
-      "Test interaction, pacing, transitions, and content hierarchy before committing production time.",
-  },
-  {
-    step: "04",
-    title: "Ship the Experience",
-    description: "Polish, optimize, and hand off a system that can keep expanding after launch.",
-  },
-];
-
-export const statistics = [
-  { value: 96, suffix: "%", label: "target Lighthouse standard" },
-  { value: 42, suffix: "%", label: "average asset workflow saved" },
-  { value: 9, suffix: "x", label: "modular reuse across campaigns" },
-  { value: 24, suffix: "/7", label: "global-ready delivery mindset" },
-];
+export const enterpriseClose = {
+  eyebrow: "Q3 / Q4 Production Bandwidth Allocation",
+  headline: "Secure your production slot before capacity closes.",
+  cta: "Initiate Vendor Protocol",
+};

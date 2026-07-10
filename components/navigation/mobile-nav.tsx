@@ -31,7 +31,7 @@ export function MobileNav() {
     <div className="lg:hidden">
       <button
         type="button"
-        className="relative z-[75] inline-flex size-11 items-center justify-center rounded-md border border-border bg-background/50 text-foreground backdrop-blur-xl"
+        className="relative z-[75] inline-flex size-11 items-center justify-center rounded-md border border-border bg-background/70 text-foreground backdrop-blur-xl"
         aria-label={open ? "Close navigation" : "Open navigation"}
         aria-expanded={open}
         aria-controls="mobile-navigation"
@@ -66,7 +66,7 @@ export function MobileNav() {
             exit={{ opacity: 0 }}
           >
             <button
-              className="absolute inset-0 bg-background/70 backdrop-blur-xl"
+              className="absolute inset-0 bg-background/80 backdrop-blur-xl"
               aria-label="Close navigation overlay"
               type="button"
               onClick={closeMenu}
@@ -77,21 +77,21 @@ export function MobileNav() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-border bg-background/95 p-6 pt-24 shadow-[0_24px_80px_rgba(0,0,0,0.42)]"
+              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-border bg-background p-6 pt-24 shadow-[0_24px_60px_rgba(21,20,26,0.14)]"
             >
-              <nav aria-label="Mobile navigation" className="grid gap-2">
-                {primaryNavigation.map((item) => {
+              <nav aria-label="Mobile navigation" className="flex flex-col">
+                {primaryNavigation.map((item, index) => {
                   const isExpanded = expanded === item.href;
                   return (
                     <div
                       key={item.href}
-                      className="rounded-lg border border-border bg-white/[0.03]"
+                      className={cn("py-1", index !== 0 && "border-t border-border")}
                     >
-                      <div className="flex items-center justify-between gap-2 p-2">
+                      <div className="flex items-center justify-between gap-2">
                         <Link
                           href={item.href}
                           onClick={closeMenu}
-                          className="flex-1 rounded-md px-3 py-3 text-lg font-medium text-foreground focus-visible:bg-white/[0.06]"
+                          className="flex-1 py-3 text-xl font-medium text-foreground"
                         >
                           {item.label}
                         </Link>
@@ -100,7 +100,7 @@ export function MobileNav() {
                             type="button"
                             aria-label={`Toggle ${item.label} submenu`}
                             aria-expanded={isExpanded}
-                            className="inline-flex size-11 items-center justify-center rounded-md text-muted-foreground transition hover:bg-white/[0.06] hover:text-foreground"
+                            className="inline-flex size-11 items-center justify-center text-muted-foreground transition hover:text-foreground"
                             onClick={() => setExpanded(isExpanded ? null : item.href)}
                           >
                             <ChevronDown
@@ -117,13 +117,13 @@ export function MobileNav() {
                             exit={{ height: 0, opacity: 0 }}
                             className="overflow-hidden"
                           >
-                            <div className="grid gap-1 px-4 pb-4">
+                            <div className="flex flex-col pb-3 pl-1">
                               {item.children.map((child) => (
                                 <Link
                                   key={child.href}
                                   href={child.href}
                                   onClick={closeMenu}
-                                  className="rounded-md px-3 py-2 text-sm text-muted transition hover:bg-white/[0.06] hover:text-foreground focus-visible:bg-white/[0.06]"
+                                  className="py-2.5 text-base text-muted transition hover:text-foreground"
                                 >
                                   {child.label}
                                 </Link>
