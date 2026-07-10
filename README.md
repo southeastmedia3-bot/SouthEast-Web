@@ -1,4 +1,4 @@
-# Southeast Media Website (Project Aurora)
+# Southeast Media Website 
 
 Production foundation for a premium corporate website built with Next.js App Router, React, TypeScript, Tailwind CSS, GSAP, Framer Motion, Lenis, shadcn/ui conventions, Lucide React, React Hook Form, Zod, ESLint, Prettier, Husky, and lint-staged.
 
