@@ -17,7 +17,7 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-[linear-gradient(180deg,rgba(11,17,26,0.54),rgba(5,7,10,1))] text-foreground">
+    <footer className="border-t border-white/10 bg-black text-[var(--ink-frame-foreground)]">
       <Container className="py-16 md:py-24">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_2fr]">
           <div className="space-y-6">
@@ -29,13 +29,13 @@ export function SiteFooter() {
               <BrandMark />
               <span className="sr-only">{siteConfig.projectName}</span>
             </Link>
-            <p className="max-w-md text-sm type-body text-muted md:text-base">
+            <p className="max-w-md text-sm type-body text-[color:var(--brand-ice)]/60 md:text-base">
               A premium media system for cinematic launches, motion-led stories, and digital
               experiences that need a sharper sense of presence.
             </p>
-            <div className="rounded-[1.35rem] border border-border bg-[rgba(235,246,255,0.045)] p-5 shadow-[inset_0_1px_0_rgba(235,246,255,0.07)] backdrop-blur-xl">
-              <p className="text-sm font-semibold text-foreground">Newsletter placeholder</p>
-              <p className="mt-2 text-sm leading-6 text-muted">
+            <div className="rounded-[1.35rem] border border-white/12 bg-white/[0.04] p-5 shadow-[inset_0_1px_0_rgba(235,246,255,0.07)] backdrop-blur-xl">
+              <p className="text-sm font-semibold text-[var(--ink-frame-foreground)]">Newsletter placeholder</p>
+              <p className="mt-2 text-sm leading-6 text-[color:var(--brand-ice)]/55">
                 Reserved for curated release notes, production insights, and studio updates.
               </p>
             </div>
@@ -43,7 +43,7 @@ export function SiteFooter() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {columns.map(([title, links]) => (
               <div key={title}>
-                <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-ice)]/45">
                   {title}
                 </h2>
                 <ul className="mt-5 grid gap-3">
@@ -51,7 +51,7 @@ export function SiteFooter() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-sm text-muted transition hover:text-info focus-visible:text-info"
+                        className="text-sm text-[color:var(--brand-ice)]/70 transition hover:text-[color:var(--brand-sky)] focus-visible:text-[color:var(--brand-sky)]"
                       >
                         {link.label}
                       </Link>
@@ -62,21 +62,12 @@ export function SiteFooter() {
             ))}
           </div>
         </div>
-        <Divider className="my-9" />
+        <Divider className="my-9 border-white/10" />
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[color:var(--brand-ice)]/55">
             <span>
               Copyright {year} {siteConfig.name}. All rights reserved.
             </span>
-            {footerNavigation.legal.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="transition hover:text-info focus-visible:text-info"
-              >
-                {link.label}
-              </Link>
-            ))}
           </div>
           <div className="flex items-center gap-3">
             {socialNavigation.map((link) => (
@@ -85,7 +76,7 @@ export function SiteFooter() {
                 href={link.href}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full px-3 py-1.5 text-sm text-muted transition hover:bg-white/[0.06] hover:text-foreground focus-visible:text-info"
+                className="rounded-full px-3 py-1.5 text-sm text-[color:var(--brand-ice)]/70 transition hover:bg-white/[0.08] hover:text-[var(--ink-frame-foreground)] focus-visible:text-[color:var(--brand-sky)]"
               >
                 {link.label}
               </a>

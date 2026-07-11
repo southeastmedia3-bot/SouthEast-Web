@@ -51,11 +51,16 @@ export const primaryNavigation: NavigationItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
+/**
+ * Every href here must resolve to a real route. Links to unbuilt pages aren't
+ * merely dead on click — Next prefetches them, so each one fires a 404 on every
+ * page view. (Leadership, Careers, Insights, Press, /industries/*, Privacy and
+ * Terms were doing exactly that; add them back only when the pages exist.)
+ */
 export const footerNavigation = {
   company: [
     { label: "About", href: "/about" },
-    { label: "Leadership", href: "/leadership" },
-    { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
   ],
   solutions: [
     { label: "Pharma", href: "/pharma" },
@@ -66,19 +71,14 @@ export const footerNavigation = {
     { label: "Graphics", href: "/graphics" },
   ],
   industries: [
-    { label: "Medical & Pharma", href: "/industries/medical-pharma" },
-    { label: "Institutional Real Estate", href: "/industries/real-estate" },
-    { label: "Startup / Incubator", href: "/industries/startup" },
-    { label: "Product & E-Commerce", href: "/industries/product" },
+    { label: "Medical & Pharma", href: "/pharma" },
+    { label: "Institutional Real Estate", href: "/real-estate" },
+    { label: "Film & VFX", href: "/vfx" },
+    { label: "Animation Systems", href: "/animation" },
   ],
   resources: [
-    { label: "Insights", href: "/insights" },
-    { label: "Press", href: "/press" },
-    { label: "Contact", href: "/contact" },
-  ],
-  legal: [
-    { label: "Privacy", href: "/privacy" },
-    { label: "Terms", href: "/terms" },
+    { label: "All verticals", href: "/verticals" },
+    { label: "Start a project", href: "/contact" },
   ],
 } as const;
 

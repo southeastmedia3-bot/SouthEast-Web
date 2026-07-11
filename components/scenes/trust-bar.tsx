@@ -44,12 +44,12 @@ export function TrustBar() {
         </div>
       </Container>
 
-      {/* The stage: deliberately tall and empty so the blocks have room to fall,
-          bounce, and pile up on each other. */}
+      {/* A large invisible box. The blocks float inside it and bolt away from the
+          cursor — they can be chased, never caught. */}
       <Container size="xl" className="mt-14">
-        <PhysicsBlocks blocks={trustBar.blocks} className="h-[26rem] md:h-[30rem]" />
+        <PhysicsBlocks blocks={trustBar.blocks} className="h-[28rem] md:h-[34rem]" />
         <p className="type-caption mt-3 text-center text-muted">
-          Drag them. Shove them. They&apos;re load-bearing.
+          Go on — try to catch one.
         </p>
       </Container>
     </section>

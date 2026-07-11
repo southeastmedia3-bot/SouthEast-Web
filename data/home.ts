@@ -149,6 +149,38 @@ export const pipeline = {
   ],
 } as const;
 
+/** Scene: the film-reel cylinder. Frames wrap a rotating drum; any frame opens
+ *  the verticals page. */
+export const filmReel = {
+  eyebrow: "The reel",
+  heading: "Thirty-six frames, one drum.",
+  intro: "Scroll to turn it. Pick any frame — it opens the work.",
+  cta: { label: "Explore all verticals", href: "/verticals" },
+  href: "/verticals",
+  images: [
+    "/media/generated/exterior-01.jpg",
+    "/media/generated/interior-01.jpg",
+    "/media/generated/exterior-02.jpg",
+    "/media/generated/interior-02.jpg",
+    "/media/generated/exterior-03.jpg",
+    "/media/generated/interior-03.jpg",
+    "/media/generated/exterior-04.jpg",
+    "/media/generated/interior-04.jpg",
+    "/media/generated/exterior-05.jpg",
+    "/media/generated/interior-05.jpg",
+    "/media/generated/exterior-06.jpg",
+    "/media/generated/interior-06.jpg",
+    "/media/generated/exterior-07.jpg",
+    "/media/generated/interior-07.jpg",
+    "/media/generated/interior-08.jpg",
+    "/media/generated/interior-09.jpg",
+    "/media/generated/interior-10.jpg",
+    "/media/generated/interior-11.jpg",
+    "/media/generated/interior-12.jpg",
+    "/media/generated/interior-13.jpg",
+  ],
+} as const;
+
 export const filmContent = {
   eyebrow: "The reel — in motion",
   headline: "We make the unseen cinematic.",

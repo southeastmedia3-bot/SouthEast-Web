@@ -17,15 +17,20 @@ const TONES: Record<PhysicsBlock["tone"], string> = {
   gold: "bg-[#f7f0e1] text-[#8a6620]",
 };
 
+/** How close the cursor can get before a block bolts. */
+const FLEE_RADIUS = 190;
+const FLEE_FORCE = 0.055;
+
 /**
- * Dice-like metric blocks dropped into a real rigid-body sim (matter.js). They
- * fall, collide, stack on each other and can be dragged or shoved aside with the
- * cursor. Bodies are simulated in matter; the *visuals* are ordinary DOM nodes
- * driven off each body's transform, so the numbers stay crisp text rather than
- * canvas pixels.
+ * Metric blocks floating inside a large invisible box. They drift on their own,
+ * bump each other, and bolt away from the cursor — you can never quite catch
+ * one. Weightless (no gravity) so they hang in the space rather than piling on
+ * the floor, and inertia is pinned to Infinity so a block never spins and its
+ * number stays readable.
  *
- * The engine is dynamically imported and only runs while the section is on
- * screen. Under reduced motion it degrades to a plain static row.
+ * Simulated with matter.js (dynamically imported, and only while on screen).
+ * Bodies are physics-only; the visuals are ordinary DOM nodes driven off each
+ * body's position, so the type stays crisp.
  */
 export function PhysicsBlocks({
   blocks,
@@ -50,68 +55,80 @@ export function PhysicsBlocks({
       const Matter = (await import("matter-js")).default;
       if (cancelled || !sceneRef.current) return;
 
-      const { Engine, Runner, World, Bodies, Body, Composite, Mouse, MouseConstraint, Events } =
-        Matter;
+      const { Engine, Runner, World, Bodies, Body, Composite, Events } = Matter;
 
       const width = scene.clientWidth;
       const height = scene.clientHeight;
 
       const engine = Engine.create();
-      engine.gravity.y = 1;
+      engine.gravity.y = 0; // weightless: they float inside the box
+      engine.gravity.x = 0;
 
-      // Size the blocks to the container so they always fit and can stack.
-      const size = Math.max(84, Math.min(140, Math.round(width / (blocks.length + 2))));
+      const size = Math.max(88, Math.min(148, Math.round(width / (blocks.length + 2))));
 
+      // The invisible boundary — all four walls, so nothing ever escapes it.
+      const T = 200; // thick walls: a fleeing block can't tunnel through
       const walls = [
-        Bodies.rectangle(width / 2, height + 40, width + 200, 80, { isStatic: true }), // floor
-        Bodies.rectangle(-40, height / 2, 80, height * 3, { isStatic: true }), // left
-        Bodies.rectangle(width + 40, height / 2, 80, height * 3, { isStatic: true }), // right
-        Bodies.rectangle(width / 2, -height * 1.2, width + 200, 80, { isStatic: true }), // high ceiling
+        Bodies.rectangle(width / 2, -T / 2, width + T * 2, T, { isStatic: true }),
+        Bodies.rectangle(width / 2, height + T / 2, width + T * 2, T, { isStatic: true }),
+        Bodies.rectangle(-T / 2, height / 2, T, height + T * 2, { isStatic: true }),
+        Bodies.rectangle(width + T / 2, height / 2, T, height + T * 2, { isStatic: true }),
       ];
 
       const bodies = blocks.map((_, i) => {
-        const x = (width / (blocks.length + 1)) * (i + 1);
-        const y = -size * (1 + Math.random() * 2.2); // drop in from above, staggered
-        return Bodies.rectangle(x, y, size, size, {
+        const cols = blocks.length;
+        const x = (width / (cols + 1)) * (i + 1);
+        const y = height * (0.3 + Math.random() * 0.4);
+        const body = Bodies.rectangle(x, y, size, size, {
           chamfer: { radius: size * 0.22 },
-          restitution: 0.5,
-          friction: 0.32,
-          frictionAir: 0.012,
-          density: 0.0016,
-          // Infinite inertia = the block never spins, so the metric stays
-          // upright and readable. It still bounces, slides and stacks.
-          inertia: Infinity,
+          restitution: 0.85,
+          friction: 0,
+          frictionAir: 0.028, // drifts to a stop instead of pinballing forever
+          density: 0.0014,
+          inertia: Infinity, // never rotates -> the metric stays upright
         });
+        Body.setVelocity(body, { x: (Math.random() - 0.5) * 2, y: (Math.random() - 0.5) * 2 });
+        return body;
       });
 
       World.add(engine.world, [...walls, ...bodies]);
 
-      // Drag + shove.
-      const mouse = Mouse.create(scene);
-      const mouseConstraint = MouseConstraint.create(engine, {
-        mouse,
-        constraint: { stiffness: 0.18, render: { visible: false } },
-      });
-      World.add(engine.world, mouseConstraint);
-      // Matter binds wheel handlers to the scene element, which would swallow
-      // page scroll over the sim. Detach them (not in the public types).
-      const wheel = (mouse as unknown as { mousewheel: EventListener }).mousewheel;
-      mouse.element.removeEventListener("wheel", wheel);
-      mouse.element.removeEventListener("DOMMouseScroll", wheel);
+      // Cursor is a repulsor, not a hand: there is no MouseConstraint, so a
+      // block can never be grabbed — only chased.
+      const cursor = { x: -9999, y: -9999, inside: false };
+      const onMove = (event: MouseEvent) => {
+        const rect = scene.getBoundingClientRect();
+        cursor.x = event.clientX - rect.left;
+        cursor.y = event.clientY - rect.top;
+        cursor.inside =
+          cursor.x > -FLEE_RADIUS &&
+          cursor.x < rect.width + FLEE_RADIUS &&
+          cursor.y > -FLEE_RADIUS &&
+          cursor.y < rect.height + FLEE_RADIUS;
+      };
+      const onLeave = () => {
+        cursor.inside = false;
+      };
+      window.addEventListener("mousemove", onMove, { passive: true });
+      document.addEventListener("mouseleave", onLeave);
 
-      // A moving cursor nudges nearby blocks, so the stack gets disturbed even
-      // without grabbing one.
       Events.on(engine, "beforeUpdate", () => {
-        const { x, y } = mouse.position;
-        if (!x && !y) return;
         for (const body of bodies) {
-          const dx = body.position.x - x;
-          const dy = body.position.y - y;
-          const d = Math.hypot(dx, dy);
-          if (d < size * 0.95 && d > 0.001) {
-            const f = (1 - d / (size * 0.95)) * 0.006;
-            Body.applyForce(body, body.position, { x: (dx / d) * f, y: (dy / d) * f });
+          if (cursor.inside) {
+            const dx = body.position.x - cursor.x;
+            const dy = body.position.y - cursor.y;
+            const d = Math.hypot(dx, dy) || 0.001;
+            if (d < FLEE_RADIUS) {
+              // Ramps up sharply as the cursor closes in, so it always escapes.
+              const f = (1 - d / FLEE_RADIUS) ** 2 * FLEE_FORCE;
+              Body.applyForce(body, body.position, { x: (dx / d) * f, y: (dy / d) * f });
+            }
           }
+          // A whisper of drift so the field never goes completely still.
+          Body.applyForce(body, body.position, {
+            x: (Math.random() - 0.5) * 0.00018,
+            y: (Math.random() - 0.5) * 0.00018,
+          });
         }
       });
 
@@ -130,10 +147,9 @@ export function PhysicsBlocks({
         }
       };
 
-      // Only simulate while visible.
       const io = new IntersectionObserver(
         ([entry]) => (entry?.isIntersecting ? start() : stop()),
-        { threshold: 0.1 },
+        { threshold: 0.05 },
       );
       io.observe(scene);
 
@@ -153,18 +169,11 @@ export function PhysicsBlocks({
       };
       raf = requestAnimationFrame(draw);
 
-      const onResize = () => {
-        const w = scene.clientWidth;
-        const h = scene.clientHeight;
-        Body.setPosition(walls[0]!, { x: w / 2, y: h + 40 });
-        Body.setPosition(walls[2]!, { x: w + 40, y: h / 2 });
-      };
-      window.addEventListener("resize", onResize, { passive: true });
-
       cleanup = () => {
         cancelAnimationFrame(raf);
         io.disconnect();
-        window.removeEventListener("resize", onResize);
+        window.removeEventListener("mousemove", onMove);
+        document.removeEventListener("mouseleave", onLeave);
         stop();
         Composite.clear(engine.world, false);
         Engine.clear(engine);
@@ -199,7 +208,8 @@ export function PhysicsBlocks({
   return (
     <div
       ref={sceneRef}
-      className={cn("relative w-full touch-pan-y select-none overflow-hidden", className)}
+      // pointer-events-none: the blocks are untouchable by design.
+      className={cn("pointer-events-none relative w-full select-none overflow-hidden", className)}
     >
       {blocks.map((b, i) => (
         <div
@@ -208,7 +218,7 @@ export function PhysicsBlocks({
             nodeRefs.current[i] = el;
           }}
           className={cn(
-            "absolute left-0 top-0 flex cursor-grab flex-col items-center justify-center rounded-[22%] will-change-transform active:cursor-grabbing",
+            "absolute left-0 top-0 flex flex-col items-center justify-center rounded-[22%] will-change-transform",
             TONES[b.tone],
           )}
           style={{ transform: "translate3d(-9999px, -9999px, 0)" }}

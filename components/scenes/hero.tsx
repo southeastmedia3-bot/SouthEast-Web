@@ -39,7 +39,14 @@ export function Hero() {
 
         <h1 className="mx-auto max-w-[20ch] text-balance type-hero text-foreground">
           {words.map((word, i) => (
-            <span key={`${word}-${i}`} className="inline-block overflow-hidden py-[0.06em]">
+            // The mask must be tall enough for descenders (the "g" in
+            // "engineered" was being sheared off). Pad the clip box, then pull
+            // the extra height back out with a negative margin so line spacing
+            // is untouched.
+            <span
+              key={`${word}-${i}`}
+              className="inline-block overflow-hidden pb-[0.22em] pt-[0.08em] -mb-[0.22em] -mt-[0.08em]"
+            >
               <motion.span
                 className="inline-block"
                 initial={reducedMotion ? undefined : { y: "110%" }}

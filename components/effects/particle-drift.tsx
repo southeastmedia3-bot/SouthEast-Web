@@ -6,8 +6,8 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 type ParticleDriftProps = {
   className?: string;
-  /** Ambient specks resting in the field. */
-  ambient?: number;
+  /** Speck count on a full-size viewport; scaled down by area. */
+  density?: number;
 };
 
 type Speck = {
@@ -17,28 +17,24 @@ type Speck = {
   vy: number;
   r: number;
   c: string;
-  life: number;
-  maxLife: number;
-  ambient: boolean;
+  /** Parallax depth, 0.35–1. Nearer specks are bigger and move a touch more. */
+  z: number;
+  phase: number;
 };
 
-// Brand ramp, kept light and sparse so the field never crowds the type.
-const COLORS = ["#1951a8", "#36a1df", "#362b5a", "#c6963b", "#7bb8e6"];
-
-const AMBIENT_DRIFT = 0.14;
-const CURSOR_EMIT = 2; // specks spawned per frame while the pointer moves
-const REPEL_RADIUS = 130;
+// Muted brand ramp with a couple of warm accents — never saturated, never loud.
+const COLORS = ["#1951a8", "#36a1df", "#362b5a", "#c6963b", "#8fbfe4", "#b9c7dd"];
 
 /**
- * A sparse drift of brand specks on a bright field — the calm, minimal opening
- * (antigravity-style) rather than a dense flow. Ambient specks wander slowly;
- * moving the pointer emits a short-lived trail of specks from the cursor and
- * gently nudges nearby ambient ones aside.
+ * A quiet field of specks on a bright ground. They drift on their own gentle
+ * currents and part very slightly around the pointer — no bursts, no trails, no
+ * cloud gathering at the cursor. The restraint is the point: the field should be
+ * felt, not watched.
  *
- * Canvas is transparent (the page supplies the white), pointer-events-none, and
- * inert under reduced motion.
+ * Transparent canvas (the page supplies the white), pointer-events-none, paused
+ * off-screen, and inert under reduced motion.
  */
-export function ParticleDrift({ className, ambient = 70 }: ParticleDriftProps) {
+export function ParticleDrift({ className, density = 90 }: ParticleDriftProps) {
   const reducedMotion = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -54,28 +50,30 @@ export function ParticleDrift({ className, ambient = 70 }: ParticleDriftProps) {
     let width = 0;
     let height = 0;
     let raf = 0;
+    let t = 0;
     let specks: Speck[] = [];
 
-    const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, active: false, moving: false };
-
-    const pick = () => COLORS[Math.floor(Math.random() * COLORS.length)] ?? "#36a1df";
-
-    const makeAmbient = (): Speck => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * AMBIENT_DRIFT,
-      vy: (Math.random() - 0.5) * AMBIENT_DRIFT,
-      r: Math.random() * 1.6 + 0.9,
-      c: pick(),
-      life: 0,
-      maxLife: Infinity,
-      ambient: true,
-    });
+    // The pointer only ever nudges specks aside, and only a little.
+    const mouse = { x: -9999, y: -9999, active: false };
+    const NUDGE_RADIUS = 110;
+    const NUDGE_STRENGTH = 0.05;
 
     const seed = () => {
-      const target = Math.round((width * height) / 16000);
-      const n = Math.max(24, Math.min(ambient, target));
-      specks = Array.from({ length: n }, makeAmbient);
+      const target = Math.round((width * height) / 15000);
+      const n = Math.max(30, Math.min(density, target));
+      specks = Array.from({ length: n }, () => {
+        const z = 0.35 + Math.random() * 0.65;
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.12 * z,
+          vy: (Math.random() - 0.5) * 0.12 * z,
+          r: (Math.random() * 1.1 + 0.7) * z,
+          c: COLORS[Math.floor(Math.random() * COLORS.length)] ?? "#36a1df",
+          z,
+          phase: Math.random() * Math.PI * 2,
+        };
+      });
     };
 
     const resize = () => {
@@ -90,79 +88,38 @@ export function ParticleDrift({ className, ambient = 70 }: ParticleDriftProps) {
       seed();
     };
 
-    const emit = () => {
-      // Specks peel off the cursor, inheriting a little of its velocity.
-      const dx = mouse.x - mouse.px;
-      const dy = mouse.y - mouse.py;
-      for (let i = 0; i < CURSOR_EMIT; i++) {
-        const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 0.7 + 0.2;
-        specks.push({
-          x: mouse.x + (Math.random() - 0.5) * 14,
-          y: mouse.y + (Math.random() - 0.5) * 14,
-          vx: Math.cos(angle) * speed + dx * 0.06,
-          vy: Math.sin(angle) * speed + dy * 0.06,
-          r: Math.random() * 1.8 + 0.8,
-          c: pick(),
-          life: 0,
-          maxLife: 70 + Math.random() * 60,
-          ambient: false,
-        });
-      }
-      // Keep the pool bounded.
-      if (specks.length > 420) specks.splice(0, specks.length - 420);
-    };
-
     const frame = () => {
+      t += 0.004;
       ctx.clearRect(0, 0, width, height);
 
-      if (mouse.active && mouse.moving) emit();
-      mouse.moving = false;
-      mouse.px = mouse.x;
-      mouse.py = mouse.y;
+      for (const s of specks) {
+        // A slow, wandering current — enough to feel alive, not enough to distract.
+        s.vx += Math.cos(t + s.phase) * 0.0022 * s.z;
+        s.vy += Math.sin(t * 0.8 + s.phase) * 0.0022 * s.z;
 
-      for (let i = specks.length - 1; i >= 0; i--) {
-        const s = specks[i]!;
-        s.x += s.vx;
-        s.y += s.vy;
-        s.life += 1;
-
-        if (s.ambient) {
-          // Ambient specks are nudged aside by the pointer, then drift back.
-          if (mouse.active) {
-            const dx = s.x - mouse.x;
-            const dy = s.y - mouse.y;
-            const d2 = dx * dx + dy * dy;
-            if (d2 < REPEL_RADIUS * REPEL_RADIUS) {
-              const d = Math.sqrt(d2) || 1;
-              const f = (1 - d / REPEL_RADIUS) * 0.35;
-              s.vx += (dx / d) * f;
-              s.vy += (dy / d) * f;
-            }
+        if (mouse.active) {
+          const dx = s.x - mouse.x;
+          const dy = s.y - mouse.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < NUDGE_RADIUS * NUDGE_RADIUS) {
+            const d = Math.sqrt(d2) || 1;
+            const f = (1 - d / NUDGE_RADIUS) * NUDGE_STRENGTH;
+            s.vx += (dx / d) * f;
+            s.vy += (dy / d) * f;
           }
-          s.vx *= 0.985;
-          s.vy *= 0.985;
-          // Never fully stall.
-          if (Math.abs(s.vx) < 0.02) s.vx += (Math.random() - 0.5) * AMBIENT_DRIFT * 0.4;
-          if (Math.abs(s.vy) < 0.02) s.vy += (Math.random() - 0.5) * AMBIENT_DRIFT * 0.4;
-
-          if (s.x < -10) s.x = width + 10;
-          else if (s.x > width + 10) s.x = -10;
-          if (s.y < -10) s.y = height + 10;
-          else if (s.y > height + 10) s.y = -10;
-
-          ctx.globalAlpha = 0.5;
-        } else {
-          s.vx *= 0.97;
-          s.vy *= 0.97;
-          const t = s.life / s.maxLife;
-          if (t >= 1) {
-            specks.splice(i, 1);
-            continue;
-          }
-          ctx.globalAlpha = (1 - t) * 0.75;
         }
 
+        s.vx *= 0.99;
+        s.vy *= 0.99;
+        s.x += s.vx;
+        s.y += s.vy;
+
+        if (s.x < -8) s.x = width + 8;
+        else if (s.x > width + 8) s.x = -8;
+        if (s.y < -8) s.y = height + 8;
+        else if (s.y > height + 8) s.y = -8;
+
+        ctx.globalAlpha = 0.2 + s.z * 0.4;
         ctx.fillStyle = s.c;
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
@@ -173,7 +130,6 @@ export function ParticleDrift({ className, ambient = 70 }: ParticleDriftProps) {
       raf = visible ? requestAnimationFrame(frame) : 0;
     };
 
-    // Don't burn frames once the hero has scrolled away.
     let visible = false;
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -192,15 +148,9 @@ export function ParticleDrift({ className, ambient = 70 }: ParticleDriftProps) {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      const inside = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
-      if (!mouse.active && inside) {
-        mouse.px = x;
-        mouse.py = y;
-      }
       mouse.x = x;
       mouse.y = y;
-      mouse.active = inside;
-      mouse.moving = true;
+      mouse.active = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
     };
     const onLeave = () => {
       mouse.active = false;
@@ -218,7 +168,7 @@ export function ParticleDrift({ className, ambient = 70 }: ParticleDriftProps) {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
     };
-  }, [reducedMotion, ambient]);
+  }, [reducedMotion, density]);
 
   if (reducedMotion) return null;
 
