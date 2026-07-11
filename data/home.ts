@@ -62,7 +62,7 @@ export const capabilities = {
     {
       shape: "graphics",
       title: "Design & Graphics",
-      blurb: "Token-driven design systems and campaign collateral at studio finish.",
+      blurb: "Token-driven design systems — the DNA a brand is built from — and campaign collateral at studio finish.",
       href: "/graphics",
     },
   ],

@@ -73,7 +73,7 @@ export function Capabilities() {
                 )}
               >
                 {/* the 3D stage — large, because the model needs the room */}
-                <div className="relative mb-7 h-[22rem] w-full">
+                <div className="relative mb-7 h-[26rem] w-full">
                   <ShapeParticles
                     shape={item.shape as ShapeKey}
                     active={active === i}
