@@ -1,20 +1,22 @@
-import { Arrival } from "@/components/scenes/arrival";
+import { Hero } from "@/components/scenes/hero";
 import { TheFilm } from "@/components/scenes/the-film";
-import { Invitation } from "@/components/scenes/invitation";
-import { Mandate } from "@/components/scenes/mandate";
-import { Showcase } from "@/components/scenes/showcase";
-import { TheReel } from "@/components/scenes/the-reel";
 import { TrustBar } from "@/components/scenes/trust-bar";
+import { Capabilities } from "@/components/scenes/capabilities";
+import { ServicesList } from "@/components/scenes/services-list";
+import { Pipeline } from "@/components/scenes/pipeline";
+import { Mandate } from "@/components/scenes/mandate";
+import { Invitation } from "@/components/scenes/invitation";
 import { PageWrapper } from "@/components/layout/page-wrapper";
 
 export default function Home() {
   return (
     <PageWrapper>
-      <Arrival />
+      <Hero />
       <TheFilm />
       <TrustBar />
-      <TheReel />
-      <Showcase />
+      <Capabilities />
+      <ServicesList />
+      <Pipeline />
       <Mandate />
       <Invitation />
     </PageWrapper>

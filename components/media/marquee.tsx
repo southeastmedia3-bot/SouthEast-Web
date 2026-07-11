@@ -25,7 +25,13 @@ export function DisciplineMarquee({ items, duration = 42, className }: MarqueePr
       )}
       aria-hidden="true"
     >
-      <div className="marquee-track" style={{ ["--marquee-duration" as string]: `${duration}s` }}>
+      {/* Layout utilities are duplicated here on purpose: `.marquee-track` only
+          needs to own the animation. If that stylesheet rule ever fails to
+          apply, the children (each `display:flex`) would stack vertically. */}
+      <div
+        className="marquee-track flex w-max flex-nowrap items-center"
+        style={{ ["--marquee-duration" as string]: `${duration}s` }}
+      >
         {doubled.map((item, i) => (
           <span key={i} className="flex items-center whitespace-nowrap">
             <span className="type-label px-8 text-muted">{item}</span>

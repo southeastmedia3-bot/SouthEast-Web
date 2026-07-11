@@ -55,7 +55,7 @@ export function Threshold() {
     <AnimatePresence>
       {visible ? (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#05070d]"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-white"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           role="presentation"
@@ -76,7 +76,7 @@ export function Threshold() {
           <button
             type="button"
             onClick={dismiss}
-            className="type-caption absolute bottom-8 right-8 rounded-full border border-white/20 px-4 py-2 uppercase tracking-[0.1em] text-[color:var(--brand-ice)]/60 transition hover:text-[var(--ink-frame-foreground)]"
+            className="type-caption absolute bottom-8 right-8 rounded-full border border-border px-4 py-2 uppercase tracking-[0.1em] text-muted transition hover:text-foreground"
           >
             Skip intro
           </button>

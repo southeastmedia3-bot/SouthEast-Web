@@ -31,7 +31,7 @@ type ScrollVideoProps = {
  * when a `video` is supplied its frames scrub with the scroll gesture (the
  * aadhyaanimatics effect); otherwise a drifting brand-light field carries a
  * title card that assembles, holds, and releases across the pin. Mirrors the
- * pinned-scrub pattern already proven in `the-reel.tsx`. Fully static and
+ * pinned-scrub pattern used across the site. Fully static and
  * unpinned under reduced motion.
  */
 export function ScrollVideo({
