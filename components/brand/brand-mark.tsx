@@ -23,14 +23,12 @@ export function BrandMark({
         <span className="absolute bottom-0 left-[53%] h-full w-[32%] rounded-br-[999px] bg-[var(--brand-sky)]" />
         <span className="absolute bottom-0 right-0 h-full w-[28%] rounded-br-[999px] bg-[var(--brand-ice)]" />
       </span>
+      {/* Wordmark inherits `currentColor` so surfaces (dark hero vs. frosted
+          header vs. footer) can set it — never hardcode a colour here. */}
       {showWordmark ? (
-        <span className="leading-none">
-          <span className="block text-sm font-black tracking-[-0.02em] text-foreground">
-            Southeast
-          </span>
-          <span className="block text-sm font-black tracking-[-0.02em] text-foreground/92">
-            media
-          </span>
+        <span className="leading-none text-current">
+          <span className="block text-sm font-black tracking-[-0.02em]">Southeast</span>
+          <span className="block text-sm font-black tracking-[-0.02em] opacity-90">media</span>
         </span>
       ) : null}
     </div>

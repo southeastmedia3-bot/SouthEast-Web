@@ -31,7 +31,7 @@ export function MobileNav() {
     <div className="lg:hidden">
       <button
         type="button"
-        className="relative z-[75] inline-flex size-11 items-center justify-center rounded-md border border-border bg-background/70 text-foreground backdrop-blur-xl"
+        className="relative z-[75] inline-flex size-11 items-center justify-center rounded-md border border-white/15 bg-[#05070d]/70 text-[var(--ink-frame-foreground)] backdrop-blur-xl"
         aria-label={open ? "Close navigation" : "Open navigation"}
         aria-expanded={open}
         aria-controls="mobile-navigation"
@@ -66,7 +66,7 @@ export function MobileNav() {
             exit={{ opacity: 0 }}
           >
             <button
-              className="absolute inset-0 bg-background/80 backdrop-blur-xl"
+              className="absolute inset-0 bg-[#05070d]/80 backdrop-blur-xl"
               aria-label="Close navigation overlay"
               type="button"
               onClick={closeMenu}
@@ -77,7 +77,7 @@ export function MobileNav() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-border bg-background p-6 pt-24 shadow-[0_24px_60px_rgba(21,20,26,0.14)]"
+              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-white/10 bg-[#05070d] p-6 pt-24 shadow-[0_24px_60px_rgba(0,0,0,0.5)]"
             >
               <nav aria-label="Mobile navigation" className="flex flex-col">
                 {primaryNavigation.map((item, index) => {
@@ -85,13 +85,13 @@ export function MobileNav() {
                   return (
                     <div
                       key={item.href}
-                      className={cn("py-1", index !== 0 && "border-t border-border")}
+                      className={cn("py-1", index !== 0 && "border-t border-white/10")}
                     >
                       <div className="flex items-center justify-between gap-2">
                         <Link
                           href={item.href}
                           onClick={closeMenu}
-                          className="flex-1 py-3 text-xl font-medium text-foreground"
+                          className="flex-1 py-3 text-xl font-medium text-[var(--ink-frame-foreground)]"
                         >
                           {item.label}
                         </Link>
@@ -100,7 +100,7 @@ export function MobileNav() {
                             type="button"
                             aria-label={`Toggle ${item.label} submenu`}
                             aria-expanded={isExpanded}
-                            className="inline-flex size-11 items-center justify-center text-muted-foreground transition hover:text-foreground"
+                            className="inline-flex size-11 items-center justify-center text-[color:var(--brand-ice)]/60 transition hover:text-[var(--ink-frame-foreground)]"
                             onClick={() => setExpanded(isExpanded ? null : item.href)}
                           >
                             <ChevronDown
@@ -123,7 +123,7 @@ export function MobileNav() {
                                   key={child.href}
                                   href={child.href}
                                   onClick={closeMenu}
-                                  className="py-2.5 text-base text-muted transition hover:text-foreground"
+                                  className="py-2.5 text-base text-[color:var(--brand-ice)]/60 transition hover:text-[var(--ink-frame-foreground)]"
                                 >
                                   {child.label}
                                 </Link>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { MediaFrame } from "@/components/common/media-frame";
 import { ParticleField } from "@/components/effects/particle-field";
@@ -29,7 +29,6 @@ export function Arrival() {
   const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const railRef = useRef<HTMLDivElement | null>(null);
   const reducedMotion = useReducedMotion();
-  const [glow, setGlow] = useState({ x: 30, y: 40 });
 
   useEffect(() => {
     if (reducedMotion || !headlineRef.current || !sectionRef.current) {
@@ -72,36 +71,23 @@ export function Arrival() {
     <section
       ref={sectionRef}
       id="arrival"
-      className="relative flex min-h-dvh flex-col justify-center overflow-hidden px-6 pb-20 pt-32 sm:px-10 lg:px-16"
-      onPointerMove={(event) => {
-        if (reducedMotion) {
-          return;
-        }
-        const rect = event.currentTarget.getBoundingClientRect();
-        setGlow({
-          x: ((event.clientX - rect.left) / rect.width) * 100,
-          y: ((event.clientY - rect.top) / rect.height) * 100,
-        });
-      }}
+      className="relative flex min-h-dvh flex-col justify-center overflow-hidden bg-[#05070d] px-6 pb-20 pt-32 sm:px-10 lg:px-16"
       aria-label="Southeast Media — opening scene"
     >
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 transition-[background] duration-700"
-        style={{
-          background: `radial-gradient(640px circle at ${glow.x}% ${glow.y}%, rgba(54,161,223,0.1), transparent 60%)`,
-        }}
-        aria-hidden="true"
-      />
+      {/* The flow field paints its own opaque stage, so it sits at z-0 above the
+          section background (a negative z-index would fall behind it) and all
+          content is lifted to z-10. */}
+      <ParticleField className="pointer-events-none absolute inset-0 z-0" />
 
-      <ParticleField className="pointer-events-none absolute inset-0 -z-10" />
-
-      <div className="grid items-start gap-10 xl:grid-cols-[1fr_auto] xl:gap-14">
+      <div className="relative z-10 grid items-start gap-10 xl:grid-cols-[1fr_auto] xl:gap-14">
         <div>
-          <p className="type-label mb-8 text-muted lg:mb-10">{heroContent.eyebrow}</p>
+          <p className="type-label mb-8 text-[color:var(--brand-ice)]/60 lg:mb-10">
+            {heroContent.eyebrow}
+          </p>
 
           <h1
             ref={headlineRef}
-            className="max-w-[94vw] text-balance type-hero text-foreground will-change-transform xl:max-w-[54rem]"
+            className="max-w-[94vw] text-balance type-hero text-[var(--ink-frame-foreground)] will-change-transform xl:max-w-[54rem]"
           >
             {headlineWords.map(({ line, words, startIndex }, lineIndex) => (
               <span key={line} className="block overflow-hidden py-[0.06em]">
@@ -134,7 +120,7 @@ export function Arrival() {
           </h1>
 
           <motion.p
-            className="type-body-lg mt-10 max-w-xl text-muted"
+            className="type-body-lg mt-10 max-w-xl text-[color:var(--brand-ice)]/70"
             initial={reducedMotion ? undefined : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.75 }}
@@ -159,7 +145,7 @@ export function Arrival() {
                 alt={moment.discipline}
                 className="w-[10.5rem]"
               />
-              <p className="type-index mt-3 text-muted">
+              <p className="type-index mt-3 text-[color:var(--brand-ice)]/55">
                 0{index + 1} — {moment.discipline}
               </p>
             </motion.div>
@@ -167,15 +153,17 @@ export function Arrival() {
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-6 flex items-center gap-3 sm:left-10 lg:left-16">
-        <span className="relative h-9 w-px overflow-hidden bg-border" aria-hidden="true">
+      <div className="absolute bottom-10 left-6 z-10 flex items-center gap-3 sm:left-10 lg:left-16">
+        <span className="relative h-9 w-px overflow-hidden bg-white/20" aria-hidden="true">
           <motion.span
-            className="absolute inset-x-0 top-0 h-full bg-muted"
+            className="absolute inset-x-0 top-0 h-full bg-[color:var(--brand-sky)]"
             animate={reducedMotion ? undefined : { y: ["-100%", "100%"] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
           />
         </span>
-        <span className="type-caption uppercase tracking-[0.14em] text-muted">Scroll</span>
+        <span className="type-caption uppercase tracking-[0.14em] text-[color:var(--brand-ice)]/60">
+          Scroll
+        </span>
       </div>
     </section>
   );

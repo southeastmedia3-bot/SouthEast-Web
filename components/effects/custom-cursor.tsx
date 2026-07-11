@@ -20,6 +20,10 @@ export function CustomCursor() {
     if (typeof window === "undefined") return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
+    // Gated on a browser-only capability check (matchMedia) that cannot run
+    // during SSR — an effect-gated initial set is correct here, not a
+    // subscription. Same pattern as Threshold's sessionStorage gate.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEnabled(true);
     const root = document.documentElement;
     root.classList.add("has-custom-cursor");

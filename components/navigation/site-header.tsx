@@ -56,14 +56,16 @@ export function SiteHeader() {
       <div
         className={cn(
           "border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-500",
-          chromeVisible && "border-border/60 bg-background/70 backdrop-blur-xl",
+          // Dark frosted chrome — the site is predominantly dark (hero, film,
+          // reel, tower), so the bar stays dark over every section.
+          chromeVisible && "border-white/10 bg-[#05070d]/80 backdrop-blur-xl",
         )}
       >
         <div className="mx-auto flex h-20 max-w-[100rem] items-center justify-between px-6 sm:px-10 lg:px-16">
-          {/* Logo — always visible, from the top */}
+          {/* Logo — always visible from the top, always light. */}
           <Link
             href="/"
-            className="group inline-flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="group inline-flex items-center gap-3 text-[var(--ink-frame-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={`${siteConfig.name} home`}
           >
             <BrandMark className="transition duration-300 group-hover:opacity-80" />
@@ -83,7 +85,7 @@ export function SiteHeader() {
             <DesktopNav />
             <Link
               href="/contact"
-              className="type-label relative hidden text-muted-foreground transition hover:text-foreground lg:inline-flex lg:items-center"
+              className="type-label relative hidden text-[color:var(--brand-ice)]/65 transition hover:text-[var(--ink-frame-foreground)] lg:inline-flex lg:items-center"
             >
               Contact
             </Link>
