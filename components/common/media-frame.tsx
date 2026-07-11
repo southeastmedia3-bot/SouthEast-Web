@@ -6,7 +6,13 @@ type MediaFrameProps = ComponentPropsWithoutRef<"div"> & {
   tone?: "sky" | "blue" | "gold" | "violet";
   ratio?: "portrait" | "wide" | "square" | "tall";
   src?: string;
+  /** Optional autoplay-muted loop that fills the frame (takes priority over src). */
+  video?: string;
+  /** Poster still for the video / first-paint. */
+  poster?: string;
   alt?: string;
+  sizes?: string;
+  priority?: boolean;
 };
 
 const tones = {
@@ -25,28 +31,63 @@ const ratios = {
 
 /**
  * The frame real photography/video will fill. Reserves the correct aspect
- * ratio for its slot; renders a temporary reference image when `src` is
- * supplied (client documents, not final production assets), or a toned
- * gradient placeholder otherwise. Never a flat gray box.
+ * ratio for its slot; renders a looping video when `video` is supplied, a
+ * reference image when `src` is supplied, or a toned gradient placeholder
+ * otherwise. Never a flat gray box.
  */
 export function MediaFrame({
   tone = "sky",
   ratio = "wide",
   src,
+  video,
+  poster,
   alt = "",
+  sizes = "90vw",
+  priority = false,
   className,
   ...props
 }: MediaFrameProps) {
+  const hasMedia = Boolean(video || src);
+
   return (
     <div
       className={cn("relative isolate overflow-hidden rounded-[0.35rem]", ratios[ratio], className)}
-      style={src ? undefined : { backgroundImage: tones[tone] }}
-      aria-hidden={src ? undefined : "true"}
+      style={hasMedia ? undefined : { backgroundImage: tones[tone] }}
+      aria-hidden={hasMedia ? undefined : "true"}
       {...props}
     >
-      {src ? (
-        <Image src={src} alt={alt} fill sizes="90vw" className="object-cover" priority={false} />
-      ) : null}
+      {video ? (
+        <video
+          className="absolute inset-0 h-full w-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster={poster}
+        >
+          <source src={video} type="video/mp4" />
+        </video>
+      ) : src ? (
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          className="object-cover"
+          priority={priority}
+        />
+      ) : (
+        // Placeholder-only flourish: a soft off-center key light so empty
+        // frames read as "cinematic, awaiting grade" rather than blank.
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(120% 90% at 28% 18%, rgba(255,255,255,0.10), transparent 46%)",
+          }}
+        />
+      )}
       <div className="grain absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.08),transparent_38%)]" />
     </div>

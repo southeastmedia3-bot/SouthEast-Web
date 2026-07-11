@@ -34,8 +34,8 @@ export function DesktopNav() {
               />
             </Link>
             {item.children ? (
-              <div className="invisible absolute left-1/2 top-full w-[30rem] -translate-x-1/2 translate-y-2 border-t border-border bg-background opacity-0 shadow-[0_32px_60px_-24px_rgba(21,20,26,0.16)] transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                <ul className="flex flex-col px-2 py-2">
+              <div className="invisible absolute left-1/2 top-full w-[30rem] -translate-x-1/2 translate-y-2 overflow-hidden rounded-2xl border border-border bg-background/90 opacity-0 shadow-[0_32px_70px_-24px_rgba(21,20,26,0.28)] backdrop-blur-2xl transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <ul className="flex flex-col p-2">
                   {item.children.map((child, index) => (
                     <li key={child.href}>
                       <Link

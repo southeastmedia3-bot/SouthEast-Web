@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 .npm-cache/
+
+# Heavy source media masters (web versions live in public/media/generated)
+source-media/

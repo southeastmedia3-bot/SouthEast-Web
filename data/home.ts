@@ -1,8 +1,33 @@
 export const heroContent = {
   eyebrow: "01 — Arrival",
   headlineLines: ["Elite CGI,", "Enterprise Media", "& Immersive VFX"],
-  body: "We engineer the visual architecture that secures funding and drives institutional growth. By combining physically accurate 8K rendering with strategic communication, we deliver flawless Medical MoA, Institutional Real Estate visualization, Film VFX and high-converting startup explainer ecosystems.",
+  body: "A cinematic animation and visual-effects studio. We combine physically accurate 8K rendering with strategic storytelling — delivering flawless Medical MoA, institutional real-estate visualization, film VFX and high-converting startup films for institutions that cannot afford to look uncertain.",
 };
+
+export const filmContent = {
+  eyebrow: "The Reel — in motion",
+  headline: "We make the unseen cinematic.",
+  sublines: ["Frame by frame, rendered to be believed."],
+  body: "Scroll to move through the sequence. Every asset is built at 8K in an in-house Maya-to-Octane pipeline — anatomy that a review board will sign off on, architecture that sells before ground is broken, worlds that hold up on the big screen.",
+  primaryCta: { label: "View our verticals", href: "/verticals" },
+  secondaryCta: { label: "Start a project", href: "/contact" },
+};
+
+export const showcaseContent = {
+  eyebrow: "05 — Selected Work",
+  heading: "A library of proof.",
+  intro: "A scroll through representative frames across every discipline we run in-house.",
+};
+
+export const disciplineTags = [
+  "Medical & Pharma",
+  "Institutional Real Estate",
+  "Film & VFX",
+  "Startup / Incubator",
+  "Product & E-Commerce",
+  "Animation Systems",
+  "Design & Graphics",
+];
 
 export const trustBar = {
   statement:
@@ -24,7 +49,7 @@ export const reelMoments = [
     ratio: "wide",
     description:
       "A doctor-reviewed 3D anatomy and disease-state library, paired with Cinema 4D–Octane MoA animation and 3D-print-ready molecular models for HCP education.",
-    mediaSrc: "/media/placeholder/pharma-heart.png",
+    mediaSrc: "/media/generated/interior-01.jpg",
   },
   {
     title: "Pre-construction renders that secure institutional buyers before ground is broken.",
@@ -33,7 +58,7 @@ export const reelMoments = [
     ratio: "wide",
     description:
       "Photorealistic interior and exterior renders, cinematic walkthroughs, and virtual tours built for corporate boards and investor presentations.",
-    mediaSrc: "/media/placeholder/real-estate-interior.png",
+    mediaSrc: "/media/generated/exterior-05.jpg",
   },
   {
     title: "8K capture through an in-house Maya-to-Octane finishing pipeline.",
@@ -42,7 +67,7 @@ export const reelMoments = [
     ratio: "square",
     description:
       "Uncompressed 8K live-action capture, DI color grading, and VFX compositing handled end-to-end by our in-house cinematic production division.",
-    mediaSrc: undefined,
+    mediaSrc: "/media/generated/exterior-07.jpg",
   },
   {
     title: "An elite visual incubation suite for high-stakes investor pitches.",
@@ -51,14 +76,14 @@ export const reelMoments = [
     ratio: "tall",
     description:
       "Abstract ideas visualized for funding rounds, product explainer videos, market research, and a daily-ready social media presence.",
-    mediaSrc: undefined,
+    mediaSrc: "/media/generated/interior-10.jpg",
   },
   {
     title: "Lifecycle visual support, from launch film to continuous commerce content.",
     discipline: "Product & E-Commerce",
     tone: "blue",
     ratio: "portrait",
-    mediaSrc: undefined,
+    mediaSrc: "/media/generated/interior-04.jpg",
     description:
       "End-to-end visual support from the high-fidelity website hero launch video to a continuous stream of premium social and marketing assets.",
   },

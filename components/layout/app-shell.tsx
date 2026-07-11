@@ -2,6 +2,7 @@ import { SiteFooter } from "@/components/footer/site-footer";
 import { ScrollProgress } from "@/components/layout/scroll-progress";
 import { SiteHeader } from "@/components/navigation/site-header";
 import { Threshold } from "@/components/scenes/threshold";
+import { CustomCursor } from "@/components/effects/custom-cursor";
 import type { WithChildren } from "@/types/global";
 
 export function AppShell({ children }: WithChildren) {
@@ -13,6 +14,7 @@ export function AppShell({ children }: WithChildren) {
       >
         Skip to content
       </a>
+      <CustomCursor />
       <Threshold />
       <ScrollProgress />
       <SiteHeader />

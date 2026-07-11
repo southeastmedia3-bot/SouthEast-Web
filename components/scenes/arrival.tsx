@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MediaFrame } from "@/components/common/media-frame";
+import { ParticleField } from "@/components/effects/particle-field";
 import { heroContent, reelMoments } from "@/data/home";
 import { setupGsap } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -91,6 +92,8 @@ export function Arrival() {
         }}
         aria-hidden="true"
       />
+
+      <ParticleField className="pointer-events-none absolute inset-0 -z-10" />
 
       <div className="grid items-start gap-10 xl:grid-cols-[1fr_auto] xl:gap-14">
         <div>

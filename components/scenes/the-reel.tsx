@@ -156,12 +156,12 @@ export function TheReel() {
     <section id="the-reel" aria-label="Enterprise verticals — selected capability">
       <div
         ref={wrapperRef}
-        className="relative"
+        className="relative bg-[#05070d]"
         style={{ height: `${reelMoments.length * 100 + 200}vh` }}
       >
         <div
           ref={pinRef}
-          className="relative h-dvh w-full overflow-hidden bg-background"
+          className="relative h-dvh w-full overflow-hidden bg-[#05070d]"
           onPointerMove={(event) => setCursorPos({ x: event.clientX, y: event.clientY })}
         >
           {reelMoments.map((moment, index) => (
@@ -175,10 +175,12 @@ export function TheReel() {
                 index === 0 ? "opacity-100" : "opacity-0",
               )}
             >
-              <span className="type-index text-muted">
+              <span className="type-index text-[color:var(--brand-ice)]/55">
                 0{index + 1} / 0{reelMoments.length}
               </span>
-              <span className="type-display text-center text-foreground">{moment.discipline}</span>
+              <span className="type-display text-center text-[var(--ink-frame-foreground)]">
+                {moment.discipline}
+              </span>
               <span
                 className="h-px w-16"
                 style={{ background: toneColorVar[moment.tone] }}
