@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ParticleDrift } from "@/components/effects/particle-drift";
+import { CursorField } from "@/components/effects/cursor-field";
 import { LinkButton } from "@/components/ui/link-button";
 import { heroContent } from "@/data/home";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -25,7 +25,7 @@ export function Hero() {
       aria-label="Southeast Media — opening"
       className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-white px-6 pb-24 pt-32 text-center"
     >
-      <ParticleDrift className="pointer-events-none absolute inset-0 z-0" />
+      <CursorField className="pointer-events-none absolute inset-0 z-0" />
 
       <div className="relative z-10 flex flex-col items-center">
         <motion.p
