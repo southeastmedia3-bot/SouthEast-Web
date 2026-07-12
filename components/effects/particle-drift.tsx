@@ -22,6 +22,9 @@ type Fleck = {
   z: number;
   c: number;
   a: number;
+  /** Rendered angle. Eased toward the heading rather than snapped to it, so a
+   *  shove never whips the fleck round — the field stays calm. */
+  ang: number;
   /** Own slow wander, so the field never marches in lockstep. */
   phase: number;
 };
@@ -32,16 +35,29 @@ type Fleck = {
  */
 const COLORS = [
   "#1951a8", // brand blue
+  "#2f7cc4", // mid blue
   "#36a1df", // sky
   "#362b5a", // violet
   "#5647a0", // indigo (between violet and blue)
-  "#7bb8e6", // light sky
   "#c6963b", // gold
   "#c2242c", // red
 ];
 
-const CURSOR_RADIUS = 210;
-const CURSOR_PUSH = 0.85;
+/**
+ * Measured off the reference at 1:1. The flecks are small, chubby pills —
+ * roughly 2:1, 3–8px long — that hold a near-vertical attitude and fall slowly.
+ * Longer, thinner, faster, more diagonal: all of those make it read as confetti.
+ */
+const LEN_MIN = 3.5;
+const LEN_RANGE = 3.8; // -> 3.5..7.3px
+const ASPECT = 0.55; // chubby: the reference flecks are pills, not hairlines
+const FALL = Math.PI / 2; // straight down
+const FALL_SPREAD = 0.42; // +/- ~12 degrees, so the field stays coherent
+const SPEED_MIN = 0.12;
+const SPEED_RANGE = 0.5; // slow. Calm is the whole point.
+
+const CURSOR_RADIUS = 190;
+const CURSOR_PUSH = 0.42;
 const WIDTH_BANDS = 4; // for batching strokes
 
 /**
@@ -59,7 +75,7 @@ const WIDTH_BANDS = 4; // for batching strokes
  * Transparent canvas (the page supplies the white), pointer-events-none, paused
  * off-screen, inert under reduced motion.
  */
-export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftProps) {
+export function ParticleDrift({ className, maxParticles = 1200 }: ParticleDriftProps) {
   const reducedMotion = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -78,37 +94,34 @@ export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftPr
     let t = 0;
     let flecks: Fleck[] = [];
 
-    // The whole field leans one way, and that lean rotates very slowly — it is
-    // what stops the drift looking like random noise.
-    let driftAngle = Math.random() * Math.PI * 2;
-
     const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0, active: false };
 
     const makeFleck = (): Fleck => {
-      // Heavily skewed to the small end. The field has to stay airy enough for
-      // the headline to breathe: mostly faint specks, only a scattering of bold
-      // dashes. A flatter curve here and the hero turns to confetti.
-      const z = Math.pow(Math.random(), 2.4);
-      const len = 2.5 + z * 12;
-      const speed = 0.28 + z * 1.2;
-      const dir = driftAngle + (Math.random() - 0.5) * 2.8;
+      // Skewed to the small end, but not so hard that the field goes to dust.
+      const z = Math.pow(Math.random(), 1.9);
+      const len = LEN_MIN + z * LEN_RANGE;
+      const speed = SPEED_MIN + z * SPEED_RANGE;
+      const dir = FALL + (Math.random() - 0.5) * FALL_SPREAD;
       return {
         x: Math.random() * width,
         y: Math.random() * height,
         vx: Math.cos(dir) * speed,
         vy: Math.sin(dir) * speed,
         len,
-        w: Math.max(1.1, len * 0.34),
+        w: Math.max(2.2, len * ASPECT),
         z,
         c: (Math.random() * COLORS.length) | 0,
-        a: 0.35 + z * 0.6,
+        a: 0.55 + z * 0.4,
+        ang: dir,
         phase: Math.random() * Math.PI * 2,
       };
     };
 
     const seed = () => {
-      const target = Math.round((width * height) / 3600);
-      const n = Math.max(70, Math.min(maxParticles, target));
+      // The field is thinned through the middle by the mask below, so this is
+      // the density at the EDGES, where it is actually seen.
+      const target = Math.round((width * height) / 2900);
+      const n = Math.max(90, Math.min(maxParticles, target));
       flecks = Array.from({ length: n }, makeFleck);
     };
 
@@ -131,15 +144,18 @@ export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftPr
 
     const frame = () => {
       t += 0.0016;
-      driftAngle += 0.0006;
 
       ctx.clearRect(0, 0, width, height);
       for (const band of buckets) for (const list of band) list.length = 0;
 
       for (const f of flecks) {
-        // a slow personal wander on top of the shared drift
-        f.vx += Math.cos(t * 2 + f.phase) * 0.008 * f.z;
-        f.vy += Math.sin(t * 1.7 + f.phase) * 0.008 * f.z;
+        // The rest velocity every fleck is always pulled back toward: a slow,
+        // near-vertical fall. This is the "flow", and keeping it vertical and
+        // coherent is what makes the field read as calm rather than as confetti.
+        const restDir = FALL + Math.sin(t * 1.4 + f.phase) * (FALL_SPREAD * 0.5);
+        const restSpeed = SPEED_MIN + f.z * SPEED_RANGE;
+        const rvx = Math.cos(restDir) * restSpeed;
+        const rvy = Math.sin(restDir) * restSpeed;
 
         if (mouse.active) {
           const dx = f.x - mouse.x;
@@ -147,26 +163,19 @@ export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftPr
           const d2 = dx * dx + dy * dy;
           if (d2 < CURSOR_RADIUS * CURSOR_RADIUS) {
             const d = Math.sqrt(d2) || 1;
-            const fall = (1 - d / CURSOR_RADIUS) ** 2;
-            // shove outward...
-            f.vx += (dx / d) * fall * CURSOR_PUSH;
-            f.vy += (dy / d) * fall * CURSOR_PUSH;
-            // ...and drag along with the pointer, so it leaves a wake
-            f.vx += mouse.vx * fall * 0.16;
-            f.vy += mouse.vy * fall * 0.16;
+            const falloff = (1 - d / CURSOR_RADIUS) ** 2;
+            // a gentle shove outward, plus a little of the pointer's own motion
+            f.vx += (dx / d) * falloff * CURSOR_PUSH;
+            f.vy += (dy / d) * falloff * CURSOR_PUSH;
+            f.vx += mouse.vx * falloff * 0.09;
+            f.vy += mouse.vy * falloff * 0.09;
           }
         }
 
-        // bleed off the shove, but keep a floor of motion
-        f.vx *= 0.965;
-        f.vy *= 0.965;
-        const sp = Math.hypot(f.vx, f.vy);
-        const target = 0.28 + f.z * 1.2;
-        if (sp < target * 0.55) {
-          const dir = driftAngle + (Math.random() - 0.5) * 2.8;
-          f.vx += Math.cos(dir) * 0.05;
-          f.vy += Math.sin(dir) * 0.05;
-        }
+        // Always settle back into the fall. The disturbance is a guest, not the
+        // resident behaviour.
+        f.vx += (rvx - f.vx) * 0.045;
+        f.vy += (rvy - f.vy) * 0.045;
 
         f.x += f.vx;
         f.y += f.vy;
@@ -178,13 +187,23 @@ export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftPr
         if (f.y < -m) f.y = height + m;
         else if (f.y > height + m) f.y = -m;
 
-        // orient the capsule along its heading
-        const s = Math.hypot(f.vx, f.vy) || 1;
-        const ux = f.vx / s;
-        const uy = f.vy / s;
+        // Ease the drawn angle toward the heading — never snap it. A snap turns
+        // every shove into a spray of diagonals.
+        const heading = Math.atan2(f.vy, f.vx);
+        let diff = heading - f.ang;
+        while (diff > Math.PI) diff -= Math.PI * 2;
+        while (diff < -Math.PI) diff += Math.PI * 2;
+        f.ang += diff * 0.05;
+
+        const ux = Math.cos(f.ang);
+        const uy = Math.sin(f.ang);
         const half = f.len / 2;
 
-        const band = Math.min(WIDTH_BANDS - 1, ((f.w / 5) * WIDTH_BANDS) | 0);
+        // widths run 2.2..4.1px, so bucket across that range
+        const band = Math.max(
+          0,
+          Math.min(WIDTH_BANDS - 1, (((f.w - 2.2) / 2.0) * WIDTH_BANDS) | 0),
+        );
         buckets[f.c]![band]!.push(
           f.x - ux * half,
           f.y - uy * half,
@@ -200,9 +219,10 @@ export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftPr
         for (let b = 0; b < WIDTH_BANDS; b++) {
           const list = buckets[c]![b]!;
           if (list.length === 0) continue;
-          ctx.lineWidth = 1.1 + (b / (WIDTH_BANDS - 1)) * 3.4;
+          // 2.2..4.2px, matching the reference
+          ctx.lineWidth = 2.2 + (b / (WIDTH_BANDS - 1)) * 2;
           // one alpha per band keeps this to a handful of stroke calls
-          ctx.globalAlpha = 0.38 + (b / (WIDTH_BANDS - 1)) * 0.56;
+          ctx.globalAlpha = 0.5 + (b / (WIDTH_BANDS - 1)) * 0.38;
           ctx.beginPath();
           for (let i = 0; i < list.length; i += 5) {
             ctx.moveTo(list[i]!, list[i + 1]!);
@@ -267,5 +287,20 @@ export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftPr
 
   if (reducedMotion) return null;
 
-  return <canvas ref={canvasRef} className={cn("block", className)} aria-hidden="true" />;
+  // The single thing that separates this from confetti: the field is masked out
+  // of the middle. It gathers at the edges and clears a hole around the
+  // headline, so it frames the words instead of crawling over them. The
+  // reference does exactly this, and without it no amount of size or density
+  // tuning will read as premium.
+  const mask =
+    "radial-gradient(ellipse 62% 58% at 50% 46%, transparent 14%, rgba(0,0,0,0.35) 45%, black 78%)";
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={cn("block", className)}
+      style={{ maskImage: mask, WebkitMaskImage: mask }}
+      aria-hidden="true"
+    />
+  );
 }
