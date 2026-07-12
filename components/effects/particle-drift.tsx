@@ -6,35 +6,60 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 type ParticleDriftProps = {
   className?: string;
-  /** Speck count on a full-size viewport; scaled down by area. */
-  density?: number;
+  /** Hard cap on the count; the real number scales with the viewport area. */
+  maxParticles?: number;
 };
 
-type Speck = {
+type Fleck = {
   x: number;
   y: number;
   vx: number;
   vy: number;
-  r: number;
-  c: string;
-  /** Parallax depth, 0.35–1. Nearer specks are bigger and move a touch more. */
+  /** Long axis, px. Short axis is derived from it. */
+  len: number;
+  w: number;
+  /** Depth, 0..1 — drives size, speed and opacity together. */
   z: number;
+  c: number;
+  a: number;
+  /** Own slow wander, so the field never marches in lockstep. */
   phase: number;
 };
 
-// Muted brand ramp with a couple of warm accents — never saturated, never loud.
-const COLORS = ["#1951a8", "#36a1df", "#362b5a", "#c6963b", "#8fbfe4", "#b9c7dd"];
+/**
+ * The brand ramp, warm and cool, so the field has the same spread of hue as the
+ * reference rather than reading as one flat blue.
+ */
+const COLORS = [
+  "#1951a8", // brand blue
+  "#36a1df", // sky
+  "#362b5a", // violet
+  "#5647a0", // indigo (between violet and blue)
+  "#7bb8e6", // light sky
+  "#c6963b", // gold
+  "#c2242c", // red
+];
+
+const CURSOR_RADIUS = 210;
+const CURSOR_PUSH = 0.85;
+const WIDTH_BANDS = 4; // for batching strokes
 
 /**
- * A quiet field of specks on a bright ground. They drift on their own gentle
- * currents and part very slightly around the pointer — no bursts, no trails, no
- * cloud gathering at the cursor. The restraint is the point: the field should be
- * felt, not watched.
+ * A field of drifting flecks on a bright ground.
+ *
+ * They are capsules, not dots: each is stroked as a short round-capped segment
+ * oriented along its own velocity, so it reads as a mote in motion. Size, speed
+ * and opacity all key off one depth value, which gives the field parallax — the
+ * big, fast, solid flecks read as near, the small pale ones as far.
+ *
+ * The pointer shoves them: flecks inside its radius are pushed outward and take
+ * on some of the cursor's own velocity, so the mouse leaves a wake instead of
+ * gathering a clump.
  *
  * Transparent canvas (the page supplies the white), pointer-events-none, paused
- * off-screen, and inert under reduced motion.
+ * off-screen, inert under reduced motion.
  */
-export function ParticleDrift({ className, density = 90 }: ParticleDriftProps) {
+export function ParticleDrift({ className, maxParticles = 700 }: ParticleDriftProps) {
   const reducedMotion = useReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -51,29 +76,40 @@ export function ParticleDrift({ className, density = 90 }: ParticleDriftProps) {
     let height = 0;
     let raf = 0;
     let t = 0;
-    let specks: Speck[] = [];
+    let flecks: Fleck[] = [];
 
-    // The pointer only ever nudges specks aside, and only a little.
-    const mouse = { x: -9999, y: -9999, active: false };
-    const NUDGE_RADIUS = 110;
-    const NUDGE_STRENGTH = 0.05;
+    // The whole field leans one way, and that lean rotates very slowly — it is
+    // what stops the drift looking like random noise.
+    let driftAngle = Math.random() * Math.PI * 2;
+
+    const mouse = { x: -9999, y: -9999, px: -9999, py: -9999, vx: 0, vy: 0, active: false };
+
+    const makeFleck = (): Fleck => {
+      // Heavily skewed to the small end. The field has to stay airy enough for
+      // the headline to breathe: mostly faint specks, only a scattering of bold
+      // dashes. A flatter curve here and the hero turns to confetti.
+      const z = Math.pow(Math.random(), 2.4);
+      const len = 2.5 + z * 12;
+      const speed = 0.28 + z * 1.2;
+      const dir = driftAngle + (Math.random() - 0.5) * 2.8;
+      return {
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: Math.cos(dir) * speed,
+        vy: Math.sin(dir) * speed,
+        len,
+        w: Math.max(1.1, len * 0.34),
+        z,
+        c: (Math.random() * COLORS.length) | 0,
+        a: 0.35 + z * 0.6,
+        phase: Math.random() * Math.PI * 2,
+      };
+    };
 
     const seed = () => {
-      const target = Math.round((width * height) / 15000);
-      const n = Math.max(30, Math.min(density, target));
-      specks = Array.from({ length: n }, () => {
-        const z = 0.35 + Math.random() * 0.65;
-        return {
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.12 * z,
-          vy: (Math.random() - 0.5) * 0.12 * z,
-          r: (Math.random() * 1.1 + 0.7) * z,
-          c: COLORS[Math.floor(Math.random() * COLORS.length)] ?? "#36a1df",
-          z,
-          phase: Math.random() * Math.PI * 2,
-        };
-      });
+      const target = Math.round((width * height) / 3600);
+      const n = Math.max(70, Math.min(maxParticles, target));
+      flecks = Array.from({ length: n }, makeFleck);
     };
 
     const resize = () => {
@@ -88,45 +124,95 @@ export function ParticleDrift({ className, density = 90 }: ParticleDriftProps) {
       seed();
     };
 
-    const frame = () => {
-      t += 0.004;
-      ctx.clearRect(0, 0, width, height);
+    // buckets[color][widthBand] -> flat list of x1,y1,x2,y2,alpha
+    const buckets: number[][][] = Array.from({ length: COLORS.length }, () =>
+      Array.from({ length: WIDTH_BANDS }, () => [] as number[]),
+    );
 
-      for (const s of specks) {
-        // A slow, wandering current — enough to feel alive, not enough to distract.
-        s.vx += Math.cos(t + s.phase) * 0.0022 * s.z;
-        s.vy += Math.sin(t * 0.8 + s.phase) * 0.0022 * s.z;
+    const frame = () => {
+      t += 0.0016;
+      driftAngle += 0.0006;
+
+      ctx.clearRect(0, 0, width, height);
+      for (const band of buckets) for (const list of band) list.length = 0;
+
+      for (const f of flecks) {
+        // a slow personal wander on top of the shared drift
+        f.vx += Math.cos(t * 2 + f.phase) * 0.008 * f.z;
+        f.vy += Math.sin(t * 1.7 + f.phase) * 0.008 * f.z;
 
         if (mouse.active) {
-          const dx = s.x - mouse.x;
-          const dy = s.y - mouse.y;
+          const dx = f.x - mouse.x;
+          const dy = f.y - mouse.y;
           const d2 = dx * dx + dy * dy;
-          if (d2 < NUDGE_RADIUS * NUDGE_RADIUS) {
+          if (d2 < CURSOR_RADIUS * CURSOR_RADIUS) {
             const d = Math.sqrt(d2) || 1;
-            const f = (1 - d / NUDGE_RADIUS) * NUDGE_STRENGTH;
-            s.vx += (dx / d) * f;
-            s.vy += (dy / d) * f;
+            const fall = (1 - d / CURSOR_RADIUS) ** 2;
+            // shove outward...
+            f.vx += (dx / d) * fall * CURSOR_PUSH;
+            f.vy += (dy / d) * fall * CURSOR_PUSH;
+            // ...and drag along with the pointer, so it leaves a wake
+            f.vx += mouse.vx * fall * 0.16;
+            f.vy += mouse.vy * fall * 0.16;
           }
         }
 
-        s.vx *= 0.99;
-        s.vy *= 0.99;
-        s.x += s.vx;
-        s.y += s.vy;
+        // bleed off the shove, but keep a floor of motion
+        f.vx *= 0.965;
+        f.vy *= 0.965;
+        const sp = Math.hypot(f.vx, f.vy);
+        const target = 0.28 + f.z * 1.2;
+        if (sp < target * 0.55) {
+          const dir = driftAngle + (Math.random() - 0.5) * 2.8;
+          f.vx += Math.cos(dir) * 0.05;
+          f.vy += Math.sin(dir) * 0.05;
+        }
 
-        if (s.x < -8) s.x = width + 8;
-        else if (s.x > width + 8) s.x = -8;
-        if (s.y < -8) s.y = height + 8;
-        else if (s.y > height + 8) s.y = -8;
+        f.x += f.vx;
+        f.y += f.vy;
 
-        ctx.globalAlpha = 0.2 + s.z * 0.4;
-        ctx.fillStyle = s.c;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
+        // wrap
+        const m = f.len;
+        if (f.x < -m) f.x = width + m;
+        else if (f.x > width + m) f.x = -m;
+        if (f.y < -m) f.y = height + m;
+        else if (f.y > height + m) f.y = -m;
+
+        // orient the capsule along its heading
+        const s = Math.hypot(f.vx, f.vy) || 1;
+        const ux = f.vx / s;
+        const uy = f.vy / s;
+        const half = f.len / 2;
+
+        const band = Math.min(WIDTH_BANDS - 1, ((f.w / 5) * WIDTH_BANDS) | 0);
+        buckets[f.c]![band]!.push(
+          f.x - ux * half,
+          f.y - uy * half,
+          f.x + ux * half,
+          f.y + uy * half,
+          f.a,
+        );
       }
 
+      ctx.lineCap = "round";
+      for (let c = 0; c < COLORS.length; c++) {
+        ctx.strokeStyle = COLORS[c]!;
+        for (let b = 0; b < WIDTH_BANDS; b++) {
+          const list = buckets[c]![b]!;
+          if (list.length === 0) continue;
+          ctx.lineWidth = 1.1 + (b / (WIDTH_BANDS - 1)) * 3.4;
+          // one alpha per band keeps this to a handful of stroke calls
+          ctx.globalAlpha = 0.38 + (b / (WIDTH_BANDS - 1)) * 0.56;
+          ctx.beginPath();
+          for (let i = 0; i < list.length; i += 5) {
+            ctx.moveTo(list[i]!, list[i + 1]!);
+            ctx.lineTo(list[i + 2]!, list[i + 3]!);
+          }
+          ctx.stroke();
+        }
+      }
       ctx.globalAlpha = 1;
+
       raf = visible ? requestAnimationFrame(frame) : 0;
     };
 
@@ -148,6 +234,15 @@ export function ParticleDrift({ className, density = 90 }: ParticleDriftProps) {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
+      if (mouse.active) {
+        mouse.vx = x - mouse.px;
+        mouse.vy = y - mouse.py;
+      } else {
+        mouse.vx = 0;
+        mouse.vy = 0;
+      }
+      mouse.px = x;
+      mouse.py = y;
       mouse.x = x;
       mouse.y = y;
       mouse.active = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
@@ -168,7 +263,7 @@ export function ParticleDrift({ className, density = 90 }: ParticleDriftProps) {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
     };
-  }, [reducedMotion, density]);
+  }, [reducedMotion, maxParticles]);
 
   if (reducedMotion) return null;
 
