@@ -56,20 +56,16 @@ export function SiteHeader() {
       <div
         className={cn(
           "border-b border-transparent transition-[background-color,border-color,backdrop-filter] duration-500",
-          // Light frosted chrome once it appears. Before that the bar is
-          // transparent over whatever the page opens on.
+          // Light frosted chrome — the site opens on a bright field, so the bar
+          // stays light and the wordmark stays dark.
           chromeVisible && "border-border/60 bg-white/75 backdrop-blur-xl",
         )}
       >
         <div className="mx-auto flex h-20 max-w-[100rem] items-center justify-between px-6 sm:px-10 lg:px-16">
-          {/* Logo — present from the top. On home it sits on the dark hero until
-              the frosted bar arrives, so the wordmark inverts to stay legible. */}
+          {/* Logo — always visible from the top. */}
           <Link
             href="/"
-            className={cn(
-              "group inline-flex items-center gap-3 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              chromeVisible ? "text-foreground" : "text-[var(--ink-frame-foreground)]",
-            )}
+            className="group inline-flex items-center gap-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label={`${siteConfig.name} home`}
           >
             <BrandMark className="transition duration-300 group-hover:opacity-80" />
