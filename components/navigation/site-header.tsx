@@ -72,23 +72,22 @@ export function SiteHeader() {
             <span className="sr-only">{siteConfig.projectName}</span>
           </Link>
 
-          {/* Nav cluster — revealed on scroll (home) / present (inner pages) */}
+          {/* Nav cluster — revealed on scroll (home) / present (inner pages).
+              Opacity ONLY: a transform here (even an identity one) would become a
+              containing block, and the verticals mega-panel is `position: fixed`
+              — it would end up anchored to this little flex cluster instead of the
+              viewport. Same trap that broke the pinned scroll stages. */}
           <div
             className="flex items-center gap-6"
             style={{
               opacity: navProgress,
-              transform: `translateY(${(1 - navProgress) * -6}px)`,
               pointerEvents: navProgress > 0.2 ? "auto" : "none",
             }}
             aria-hidden={navProgress < 0.4}
           >
+            {/* Contact already lives in `primaryNavigation` — a second link here
+                rendered it twice in the bar. */}
             <DesktopNav />
-            <Link
-              href="/contact"
-              className="type-label relative hidden text-muted-foreground transition hover:text-foreground lg:inline-flex lg:items-center"
-            >
-              Contact
-            </Link>
             <MobileNav />
           </div>
         </div>

@@ -44,12 +44,18 @@ export function TrustBar() {
         </div>
       </Container>
 
-      {/* A large invisible box. The blocks float inside it and bolt away from the
-          cursor — they can be chased, never caught. */}
-      <Container size="xl" className="mt-14">
-        <PhysicsBlocks blocks={trustBar.blocks} className="h-[28rem] md:h-[34rem]" />
-        <p className="type-caption mt-3 text-center text-muted">
-          Go on — try to catch one.
+      {/* Each block holds a fixed slot in the row. Run the cursor through them and
+          they scatter out of the way; take it away and they settle straight back
+          into place. */}
+      <Container size="xl" className="mt-16">
+        {/* Taller than the row needs: the headroom is what a shoved block flies
+            into before the spring reels it back. */}
+        <PhysicsBlocks blocks={trustBar.blocks} className="h-[24rem] md:h-[26rem]" />
+        {/* mx-auto is load-bearing: the global `p { max-width: 68ch }` shrinks the
+            box, so text-center alone would only centre the text *within* a box
+            still hugging the left margin. */}
+        <p className="type-caption mx-auto mt-6 text-center text-muted">
+          Run your cursor through them — they always find their way back.
         </p>
       </Container>
     </section>
