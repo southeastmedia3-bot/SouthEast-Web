@@ -22,22 +22,33 @@ type Spark = {
 };
 
 /**
- * The brand ramp. NOTE: these are drawn with normal `source-over` compositing —
- * see the warning in the render loop. There is no pink in the brand palette.
+ * The brand palette, and *only* the brand palette — every entry here is a token
+ * from `styles/tokens.css`. (An earlier version mixed in a "mid blue" #2f7cc4 and
+ * an indigo #5647a0 that were invented to smooth the ramp; they aren't ours, and
+ * they read as off-brand in the field.) Brand ice is deliberately absent: it's
+ * near-white and would be invisible on a white hero.
+ *
+ * Repeats are weights: the cool end of the brand carries the effect, with gold
+ * and red as occasional accents rather than confetti.
+ *
+ * NOTE: drawn with normal `source-over` compositing — see the render loop.
  */
 const COLORS = [
-  "#1951a8", // blue
-  "#2f7cc4", // mid blue
-  "#36a1df", // sky
-  "#362b5a", // violet
-  "#5647a0", // indigo
-  "#c6963b", // gold
-  "#c2242c", // red
+  "#1951a8", // brand blue
+  "#1951a8",
+  "#36a1df", // brand sky
+  "#36a1df",
+  "#362b5a", // brand violet
+  "#362b5a",
+  "#c6963b", // brand gold
+  "#c2242c", // brand red
 ];
 
-const SPAWN_EVERY_PX = 6; // one spark per this much pointer travel
-const MAX_PER_EVENT = 4;
-const MAX_SPARKS = 140;
+// Density: one spark per this much pointer travel. Raising it from 6px thins the
+// trail out noticeably without emptying it.
+const SPAWN_EVERY_PX = 11;
+const MAX_PER_EVENT = 2;
+const MAX_SPARKS = 85;
 const LIFE_MIN = 0.5;
 const LIFE_MAX = 1.5;
 const FADE_IN = 0.12; // fraction of life spent fading in
