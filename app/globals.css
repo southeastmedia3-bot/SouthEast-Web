@@ -327,55 +327,53 @@ p {
   backface-visibility: hidden;
 }
 
-/* Custom cursor — a small brand dot with a lagging ring. Enabled only on fine
-   pointers (mounted by CustomCursor); native cursor is hidden while active. */
-.has-custom-cursor,
-.has-custom-cursor * {
-  cursor: none !important;
-}
+/* Cursor halo — a brand ring that eases along behind the NATIVE pointer and
+   swells over interactive elements. Mounted only on fine pointers (CustomCursor).
 
-.cursor-dot,
+   The native cursor is deliberately NOT hidden. This used to set
+   `cursor: none !important` and draw a dot in the pointer's place, which is the
+   one flaw a custom cursor cannot engineer away: the OS composites the real
+   pointer with zero latency, while anything we draw goes input -> JS -> style ->
+   composite -> display and lands a frame or more late. That gap is what read as
+   lag. Now you point with the real cursor and the halo is plainly a follower, so
+   its trail reads as intent rather than as latency.
+
+   Everything here is transform + opacity ONLY. The old ring swelled by
+   transitioning width/height/margin — layout properties, which re-rasterise the
+   layer every frame and cancel out the will-change promotion. The box is a fixed
+   size forever now; the swell is a scale(), and centring lives in the transform
+   rather than in negative margins. */
 .cursor-ring {
   position: fixed;
   top: 0;
   left: 0;
+  width: 34px;
+  height: 34px;
   pointer-events: none;
   z-index: 9999;
   border-radius: 9999px;
+  border: 1.5px solid color-mix(in srgb, var(--brand-sky) 65%, transparent);
+  /* Own layer, and nothing inside it can invalidate anything outside it. */
   will-change: transform;
-}
-
-.cursor-dot {
-  width: 7px;
-  height: 7px;
-  margin: -3.5px 0 0 -3.5px;
-  background: var(--brand-sky);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--brand-sky) 70%, transparent);
+  contain: layout style paint;
   transition: opacity 0.2s ease;
 }
 
-.cursor-ring {
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border: 1.5px solid color-mix(in srgb, var(--brand-sky) 65%, transparent);
-  transition:
-    width 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.28s ease,
-    border-color 0.28s ease,
-    opacity 0.2s ease;
+/* The hover fill cross-fades on its own node, so the ring's background never
+   changes and its layer never needs repainting. */
+.cursor-ring-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--brand-sky) 16%, transparent);
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
 
-.cursor-active .cursor-ring {
-  width: 56px;
-  height: 56px;
-  margin: -28px 0 0 -28px;
-  background: color-mix(in srgb, var(--brand-sky) 12%, transparent);
-  border-color: var(--brand-sky);
+.cursor-active .cursor-ring-fill {
+  opacity: 1;
 }
 
-.cursor-hidden .cursor-dot,
 .cursor-hidden .cursor-ring {
   opacity: 0;
 }
