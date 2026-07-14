@@ -1,17 +1,23 @@
-/** Homepage content. One module, so copy never hides inside components. */
+/**
+ * Homepage content. One module, so copy never hides inside components.
+ *
+ * The copy here is drawn from the client's Corporate Capability Deck. Figures
+ * (100TB, 15 servers, 96GB VRAM, 8K, 20+ years, Bengaluru & Hyderabad) are the
+ * deck's own — don't invent new ones.
+ */
 
 export const heroContent = {
-  eyebrow: "Animation · Film · Visual Effects",
+  eyebrow: "Elite digital infrastructure & immersive studio",
   headline: "Cinematic worlds, engineered to be believed.",
-  body: "A studio for the frames that cannot be wrong — medical, architectural and cinematic imagery built at physically accurate 8K, in-house and under NDA.",
+  body: "An elite digital infrastructure studio in Bengaluru and Hyderabad, translating Mechanism of Action data and high-stakes structural concepts into pristine 8K cinematic assets — in-house, and under NDA.",
   primaryCta: { label: "Start a project", href: "/contact" },
   secondaryCta: { label: "Explore our work", href: "/verticals" },
 };
 
 export const trustBar = {
-  eyebrow: "Why studios and boards trust us",
+  eyebrow: "The embedded media partner model",
   statement:
-    "Southeast Media operates as your embedded visual division — under NDA, on secure servers, for institutions that cannot afford to look uncertain.",
+    "We replace the ad-hoc agency model. Southeast Media becomes your outsourced digital infrastructure partner — dedicated resource allocation, on access-controlled servers, for institutions that cannot afford to look uncertain.",
   /** Rendered as physics bodies you can shove around. Keep labels to 2–3 words. */
   blocks: [
     { value: "20+", label: "years of CGI", tone: "blue" },
@@ -23,85 +29,40 @@ export const trustBar = {
   ],
 } as const;
 
-/** Scene: capability grid. Hovering a card assembles its particles into a shape. */
-export const capabilities = {
-  eyebrow: "What we build",
-  heading: "Six disciplines. One pipeline.",
-  intro: "Hover a discipline — the field will show you what it makes.",
-  items: [
-    {
-      shape: "anatomy",
-      title: "Medical & Pharma",
-      blurb: "Doctor-reviewed anatomy and mechanism-of-action films built to clear a review board.",
-      href: "/pharma",
-    },
-    {
-      shape: "building",
-      title: "Institutional Real Estate",
-      blurb: "Pre-construction visualization that secures buyers before ground is broken.",
-      href: "/real-estate",
-    },
-    {
-      shape: "camera",
-      title: "Film & Production",
-      blurb: "Uncompressed 8K capture, DI colour grading and finishing, end to end in-house.",
-      href: "/films",
-    },
-    {
-      shape: "vfx",
-      title: "Visual Effects",
-      blurb: "CG integration and compositing rendered to a zero-imperfection standard.",
-      href: "/vfx",
-    },
-    {
-      shape: "character",
-      title: "Animation",
-      blurb: "High-fidelity 2D and 3D motion systems, from brand idents to investor films.",
-      href: "/animation",
-    },
-    {
-      shape: "graphics",
-      title: "Design & Graphics",
-      blurb: "Token-driven design systems — the DNA a brand is built from — and campaign collateral at studio finish.",
-      href: "/graphics",
-    },
-  ],
-} as const;
-
 /** Scene: the big services list. Hovering drops physics word-pills + a preview. */
 export const servicesList = {
   eyebrow: "We know what we're good at",
   heading: "Pick a discipline.",
   items: [
     {
-      title: "3D Animation",
-      href: "/animation",
-      media: "/media/generated/interior-08.jpg",
-      pills: ["Character", "Rigging", "Previz", "Motion", "Rendering"],
-    },
-    {
       title: "Medical & Pharma",
       href: "/pharma",
       media: "/media/generated/interior-06.jpg",
-      pills: ["MoA Films", "Anatomy", "Molecular", "HCP", "Review-ready"],
+      pills: ["MoA Animation", "Anatomy", "Molecular", "Cellular", "Dermatology"],
     },
     {
       title: "Architectural CGI",
       href: "/real-estate",
       media: "/media/generated/exterior-05.jpg",
-      pills: ["Exteriors", "Interiors", "Walkthrough", "Masterplan"],
+      pills: ["Interiors", "Exteriors", "Virtual Tours", "Walkthroughs", "VR"],
     },
     {
-      title: "Film & VFX",
-      href: "/vfx",
+      title: "Film & Production",
+      href: "/films",
       media: "/media/generated/exterior-07.jpg",
-      pills: ["Compositing", "Simulation", "DI Grade", "8K Plates"],
+      pills: ["8K Capture", "DI Grade", "Ad Films", "Podcasts"],
     },
     {
-      title: "Design & Graphics",
-      href: "/graphics",
+      title: "VFX & Rendering",
+      href: "/vfx",
+      media: "/media/generated/interior-08.jpg",
+      pills: ["Compositing", "X-Particles", "EmberGen", "LiquiGen", "Octane"],
+    },
+    {
+      title: "Motion & Immersive",
+      href: "/animation",
       media: "/media/generated/interior-03.jpg",
-      pills: ["Systems", "Key Art", "Social", "Collateral"],
+      pills: ["Explainers", "Anamorphic", "AR / VR", "Projection"],
     },
   ],
 } as const;
@@ -123,27 +84,30 @@ export const pipeline = {
     },
     {
       title: "Previz & Animatic",
-      detail: "Timing, camera and blocking locked before expensive frames are committed.",
+      detail:
+        "Reallusion Character Creator and iClone into Unreal Engine — real-time previews and structural validation before expensive frames are committed.",
       media: "/media/generated/interior-10.jpg",
     },
     {
       title: "Modelling & Look-Dev",
-      detail: "Physically based materials and assets built to survive a close-up.",
+      detail: "Autodesk Maya and 3ds Max: modelling, rigging and physically based materials.",
       media: "/media/generated/interior-07.jpg",
     },
     {
       title: "Lighting & Rendering",
-      detail: "8K on a 15-server farm with dual 96GB VRAM nodes.",
+      detail:
+        "Blender and Cinema 4D through Octane — 8K on a 15-server farm with 96GB VRAM nodes.",
       media: "/media/generated/exterior-05.jpg",
     },
     {
-      title: "VFX & Compositing",
-      detail: "CG integrated into plates until the seam is gone.",
+      title: "VFX & Simulation",
+      detail:
+        "X-Particles, Marvelous Designer, EmberGen and LiquiGen — CG integrated into plates until the seam is gone.",
       media: "/media/generated/exterior-07.jpg",
     },
     {
       title: "Final Delivery",
-      detail: "Conformed, graded and mastered to every format you need.",
+      detail: "Conformed, Digital Intermediate graded, and mastered to every format you need.",
       media: "/media/generated/interior-13.jpg",
     },
   ],
@@ -185,7 +149,7 @@ export const filmContent = {
   eyebrow: "The reel — in motion",
   headline: "We make the unseen cinematic.",
   sublines: ["Frame by frame, rendered to be believed."],
-  body: "Scroll to move through the sequence. Every asset is built at 8K in an in-house Maya-to-Octane pipeline.",
+  body: "Scroll to move through the sequence. Every asset is built at 8K, in-house — Maya and 3ds Max through to Octane.",
   primaryCta: { label: "View our verticals", href: "/verticals" },
   secondaryCta: { label: "Start a project", href: "/contact" },
 };
@@ -206,19 +170,23 @@ export const mandate = {
   pillars: [
     {
       label: "Security",
-      detail: "NDA-bound engagements, zero-tolerance breach policy, access-controlled servers.",
+      detail:
+        "NDA-bound engagements on access-controlled servers, with a zero-tolerance policy on data breaches.",
     },
     {
       label: "Infrastructure",
-      detail: "100TB RAID storage, dual 96GB VRAM render nodes, a 15-server dedicated farm.",
+      detail:
+        "A 100TB RAID storage array, dual enterprise NVIDIA 96GB VRAM cards, and a 15-server farm on RTX 5090s.",
     },
     {
       label: "Pipeline",
-      detail: "Maya, 3ds Max, Blender & Octane — physically accurate 8K output, every asset.",
+      detail:
+        "Maya and 3ds Max into Blender and Cinema 4D, finished through Octane — physically accurate 8K, every asset.",
     },
     {
       label: "Governance",
-      detail: "Milestone-based SOWs tracked in real time for total procurement visibility.",
+      detail:
+        "Milestone-based Statements of Work, tracked in Zoho Projects for real-time procurement visibility.",
     },
   ],
 };

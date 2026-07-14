@@ -26,7 +26,8 @@ export function SiteFooter() {
               className="inline-flex rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label={`${siteConfig.name} home`}
             >
-              <BrandMark />
+              {/* Black ground — the brand-blue wordmark has no contrast here. */}
+              <BrandMark tone="light" />
               <span className="sr-only">{siteConfig.projectName}</span>
             </Link>
             <p className="max-w-md text-sm type-body text-[color:var(--brand-ice)]/60 md:text-base">

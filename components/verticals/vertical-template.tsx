@@ -82,22 +82,85 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
         </div>
       </Container>
 
-      {/* Case study */}
+      {/* Long-form — only the verticals with real source material carry it. */}
+      {vertical.sections?.length ? (
+        <div className="border-t border-border bg-[var(--surface)]">
+          {vertical.sections.map((section, i) => (
+            <Container
+              key={section.heading}
+              className={cn("py-16 md:py-24", i !== 0 && "border-t border-border")}
+            >
+              <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[22rem_1fr]">
+                <div className="lg:sticky lg:top-28 lg:self-start">
+                  {section.eyebrow ? (
+                    <p className="type-label mb-4" style={{ color: rule }}>
+                      {section.eyebrow}
+                    </p>
+                  ) : null}
+                  <h2 className="type-h3 text-balance text-foreground">{section.heading}</h2>
+                </div>
+
+                <div>
+                  {section.lead ? (
+                    <p className="type-body-lg max-w-2xl text-foreground">{section.lead}</p>
+                  ) : null}
+
+                  {section.body?.map((para) => (
+                    <p key={para.slice(0, 40)} className="type-body mt-5 max-w-2xl text-muted">
+                      {para}
+                    </p>
+                  ))}
+
+                  {section.bullets?.length ? (
+                    <ul className="mt-8 grid gap-x-10 gap-y-3 sm:grid-cols-2">
+                      {section.bullets.map((bullet) => (
+                        <li key={bullet} className="flex gap-3 type-body text-muted">
+                          <span
+                            className="mt-[0.6em] size-1.5 shrink-0 rounded-full"
+                            style={{ background: rule }}
+                            aria-hidden="true"
+                          />
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+
+                  {section.items?.length ? (
+                    <dl className="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+                      {section.items.map((item) => (
+                        <div key={item.name} className="border-t border-border pt-5">
+                          <dt className="type-h4 text-[1.05rem] text-foreground">{item.name}</dt>
+                          <dd className="type-body mt-2 text-muted">{item.detail}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : null}
+                </div>
+              </div>
+            </Container>
+          ))}
+        </div>
+      ) : null}
+
+      {/* Proof — capability and terms. Never a fabricated client story. */}
       <section className="relative overflow-hidden bg-[#0a0a0d] py-24 md:py-32">
         <Container>
-          <p className="type-label mb-6 text-[color:var(--brand-ice)]/60">
-            {vertical.caseStudy.label}
-          </p>
+          <p className="type-label mb-6 text-[color:var(--brand-ice)]/60">{vertical.proof.label}</p>
           <h2 className="type-h2 max-w-3xl text-balance text-[var(--ink-frame-foreground)]">
-            {vertical.caseStudy.title}
+            {vertical.proof.title}
           </h2>
           <p className="type-body-lg mt-6 max-w-2xl text-[color:var(--brand-ice)]/70">
-            {vertical.caseStudy.body}
+            {vertical.proof.body}
           </p>
           <dl className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-3">
-            {vertical.caseStudy.metrics.map((m) => (
+            {vertical.proof.metrics.map((m) => (
               <div key={m.label} className="border-t border-white/15 pt-5">
-                <dt className="type-display text-[var(--ink-frame-foreground)]">{m.value}</dt>
+                {/* type-h3, not type-display: these values are words now
+                    ("Unlimited", "1–2 wks"), and display size would burst the column. */}
+                <dt className="type-h3 text-balance text-[var(--ink-frame-foreground)]">
+                  {m.value}
+                </dt>
                 <dd className="type-caption mt-2 uppercase tracking-[0.1em] text-[color:var(--brand-ice)]/55">
                   {m.label}
                 </dd>

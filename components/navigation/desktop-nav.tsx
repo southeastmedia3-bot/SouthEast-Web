@@ -235,8 +235,11 @@ export function DesktopNav() {
                         </Link>
                       </div>
 
+                      {/* Capped: a vertical may carry eight capabilities (pharma
+                          does) and rendering them all would stretch the panel far
+                          past the height it is designed for. The page has the rest. */}
                       <ul className="mt-6 grid grid-cols-2 gap-x-8 gap-y-1">
-                        {active.capabilities.map((capability) => (
+                        {active.capabilities.slice(0, 4).map((capability) => (
                           <li key={capability.name}>
                             <Link
                               href={`/${active.slug}`}
