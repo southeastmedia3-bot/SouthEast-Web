@@ -12,7 +12,7 @@ function clamp(value: number, min: number, max: number) {
 }
 
 /**
- * Scene 05 — Enterprise Close. The one hard cut on the page: a freeze, then a
+ * Scene 06 — Enterprise Close. The one hard cut on the page: a freeze, then a
  * true cut to black, then the closing line resolves. The page's only button
  * lives here, and only here — framed as vendor onboarding, not a pitch.
  */
@@ -93,7 +93,7 @@ export function Invitation() {
           aria-hidden="true"
         />
         <span className="absolute left-6 top-6 z-10 type-label text-[rgba(243,240,232,0.4)] sm:left-10 lg:left-14">
-          05 — Enterprise Close
+          06 — Enterprise Close
         </span>
         <div
           ref={contentRef}

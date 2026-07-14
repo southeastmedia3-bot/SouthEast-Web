@@ -191,6 +191,83 @@ export const mandate = {
   ],
 };
 
+/**
+ * Scene 05 — the discipline mosaic. A wall of frames; point at one and the frame
+ * morphs into the shape of the mark and turns over to show what it is.
+ *
+ * `span` drives the mosaic on a 4-column grid. `corner` is the radius of the
+ * logo silhouette for that tile — it has to scale with the tile or the shape
+ * stops reading as the mark.
+ */
+export const disciplineWall = {
+  eyebrow: "05 — Every discipline",
+  heading: "One studio. Six disciplines.",
+  intro:
+    "Point at any frame. Each one opens the vertical behind it — the people, the pipeline, and the work.",
+  tiles: [
+    {
+      slug: "pharma",
+      kicker: "Core vertical",
+      title: "Medical & Pharmaceutical",
+      sub: "Mechanism of Action, anatomy, molecular",
+      href: "/pharma",
+      media: "/media/generated/interior-06.jpg",
+      span: "md:col-span-2 md:row-span-2",
+      corner: "6rem",
+    },
+    {
+      slug: "real-estate",
+      kicker: "Core vertical",
+      title: "Architectural CGI",
+      sub: "Pre-construction visualization",
+      href: "/real-estate",
+      media: "/media/generated/exterior-05.jpg",
+      span: "md:col-span-2 md:row-span-1",
+      corner: "3.25rem",
+    },
+    {
+      slug: "films",
+      kicker: "Capability",
+      title: "Film & Production",
+      sub: "Uncompressed 8K, in-house",
+      href: "/films",
+      media: "/media/generated/exterior-07.jpg",
+      span: "md:col-span-1 md:row-span-1",
+      corner: "3.25rem",
+    },
+    {
+      slug: "vfx",
+      kicker: "Capability",
+      title: "VFX & Rendering",
+      sub: "The zero-imperfection pipeline",
+      href: "/vfx",
+      media: "/media/generated/interior-11.jpg",
+      span: "md:col-span-1 md:row-span-1",
+      corner: "3.25rem",
+    },
+    {
+      slug: "animation",
+      kicker: "Capability",
+      title: "Motion & Immersive",
+      sub: "Explainers, anamorphic, AR / VR",
+      href: "/animation",
+      media: "/media/generated/interior-03.jpg",
+      span: "md:col-span-2 md:row-span-1",
+      corner: "3.25rem",
+    },
+    {
+      slug: "graphics",
+      kicker: "Engagement",
+      title: "The Embedded Partner",
+      sub: "Your outsourced media division",
+      href: "/graphics",
+      media: "/media/generated/exterior-02.jpg",
+      span: "md:col-span-2 md:row-span-1",
+      corner: "3.25rem",
+    },
+  ],
+} as const;
+
 export const enterpriseClose = {
   eyebrow: "Q3 / Q4 Production Bandwidth Allocation",
   headline: "Secure your production slot before capacity closes.",

@@ -11,6 +11,19 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 const STEPS = pipeline.steps;
 
 /**
+ * Scroll distance, in vh, that advances the stage by one step.
+ *
+ * The section used to be `STEPS.length * 100vh` tall. With the stage pinned from
+ * "top top" to "bottom bottom", the actual scrubbed distance is (height - 100vh)
+ * — so seven steps over 700vh meant ~86vh of scrolling to advance a single step,
+ * which is most of a screen per stage and read as the section being stuck.
+ * At 40vh a step advances in roughly one comfortable scroll gesture.
+ */
+const SCROLL_PER_STEP_VH = 40;
+/** 100vh of the height is consumed holding the pin; the rest is the scrub. */
+const STAGE_HEIGHT_VH = STEPS.length * SCROLL_PER_STEP_VH + 100;
+
+/**
  * Scene — the pipeline. A pinned stage the visitor scrolls through: the index
  * ticks up, the frame for that stage cross-reveals, and the stage list beside it
  * marks the active step. The image alternates sides so the eye keeps moving.
@@ -77,7 +90,7 @@ export function Pipeline() {
 
   return (
     <section aria-label={pipeline.heading}>
-      <div ref={rootRef} className="relative" style={{ height: `${STEPS.length * 100}vh` }}>
+      <div ref={rootRef} className="relative" style={{ height: `${STAGE_HEIGHT_VH}vh` }}>
         <div
           ref={stageRef}
           className="relative flex h-dvh w-full items-center overflow-hidden bg-[#f8f6f1]"

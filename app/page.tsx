@@ -5,6 +5,7 @@ import { FilmReel } from "@/components/scenes/film-reel";
 import { ServicesList } from "@/components/scenes/services-list";
 import { Pipeline } from "@/components/scenes/pipeline";
 import { Mandate } from "@/components/scenes/mandate";
+import { DisciplineWall } from "@/components/scenes/discipline-wall";
 import { Invitation } from "@/components/scenes/invitation";
 import { PageWrapper } from "@/components/layout/page-wrapper";
 
@@ -23,6 +24,7 @@ export default function Home() {
       <ServicesList /> {/* white */}
       <Pipeline /> {/* cream */}
       <Mandate /> {/* light */}
+      <DisciplineWall /> {/* white — frames that morph into the mark */}
       <Invitation /> {/* dark close */}
     </PageWrapper>
   );

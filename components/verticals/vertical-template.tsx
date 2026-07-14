@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { Plus } from "lucide-react";
 import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
 import { MediaFrame } from "@/components/common/media-frame";
 import { Container } from "@/components/common/container";
@@ -14,9 +16,16 @@ const toneRule: Record<string, string> = {
 };
 
 /**
- * The shared layout every vertical subpage renders — hero, capabilities, a
- * representative case study, and a close. Fed by a single `Vertical` record so
- * the six pages stay identical in structure and never drift.
+ * The shared layout every vertical subpage renders.
+ *
+ * These pages have to stand entirely on their own. A pharmaceutical client who
+ * lands here has no interest in real estate, and sending them back to the
+ * homepage to understand us is how you lose them — so each vertical carries its
+ * own full argument: what it is, the capability, the long-form case for it, the
+ * work, how the engagement actually runs, the terms, and the objections answered.
+ *
+ * Sections render only when the data supports them, so the four verticals without
+ * deep source material degrade to the short form rather than showing empty frames.
  */
 export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
   const hero = verticalHeroes[vertical.slug];
@@ -48,6 +57,20 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
               All verticals
             </LinkButton>
           </div>
+
+          {/* The terms, stated up front. A buyer shouldn't have to scroll for them. */}
+          {vertical.headline?.length ? (
+            <dl className="mt-14 flex flex-wrap gap-x-14 gap-y-6">
+              {vertical.headline.map((m) => (
+                <div key={m.label}>
+                  <dt className="type-h3 text-[var(--ink-frame-foreground)]">{m.value}</dt>
+                  <dd className="type-caption mt-1.5 uppercase tracking-[0.1em] text-[color:var(--brand-ice)]/55">
+                    {m.label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
         </Container>
       </section>
 
@@ -143,6 +166,59 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
         </div>
       ) : null}
 
+      {/* The engagement, start to finish. */}
+      {vertical.process?.length ? (
+        <section className="border-t border-border bg-[var(--surface-elevated)] py-20 md:py-28">
+          <Container>
+            <div className="mb-14 flex items-center gap-4">
+              <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
+              <h2 className="type-h3 text-foreground">How the engagement runs</h2>
+            </div>
+            <ol className="grid gap-x-10 gap-y-10 md:grid-cols-3">
+              {vertical.process.map((step, i) => (
+                <li key={step.step} className="border-t border-border pt-6">
+                  <span className="type-index text-muted">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="type-h4 mt-3 text-[1.15rem] text-foreground">{step.step}</h3>
+                  <p className="type-body mt-2 text-muted">{step.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </Container>
+        </section>
+      ) : null}
+
+      {/* Selected work. The frames morph into the mark on hover — same shape
+          language as the discipline wall on the homepage. */}
+      {vertical.gallery?.length ? (
+        <section className="border-t border-border bg-[var(--surface)] py-20 md:py-28">
+          <Container size="xl">
+            <div className="mb-12 flex items-center gap-4">
+              <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
+              <h2 className="type-h3 text-foreground">Selected work</h2>
+            </div>
+            <ul className="grid grid-cols-2 gap-4 md:grid-cols-3">
+              {vertical.gallery.map((src, i) => (
+                <li
+                  key={src + i}
+                  className="group relative aspect-[4/3] overflow-hidden"
+                  style={{ "--corner": "3rem" } as React.CSSProperties}
+                >
+                  <div className="brand-shape-morph relative h-full w-full overflow-hidden bg-[#0a0a0d]">
+                    <Image
+                      src={src}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 30vw, 45vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+      ) : null}
+
       {/* Proof — capability and terms. Never a fabricated client story. */}
       <section className="relative overflow-hidden bg-[#0a0a0d] py-24 md:py-32">
         <Container>
@@ -169,6 +245,36 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
           </dl>
         </Container>
       </section>
+
+      {/* The objections, answered. Native <details> — an accordion needs no
+          JavaScript, and this way it works before hydration and inside find-in-page. */}
+      {vertical.faqs?.length ? (
+        <Container className="py-20 md:py-28">
+          <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[22rem_1fr]">
+            <div className="lg:sticky lg:top-28 lg:self-start">
+              <p className="type-label mb-4" style={{ color: rule }}>
+                Before you call
+              </p>
+              <h2 className="type-h3 text-balance text-foreground">Questions we get asked.</h2>
+            </div>
+
+            <div className="border-t border-border">
+              {vertical.faqs.map((faq) => (
+                <details key={faq.q} className="group border-b border-border">
+                  <summary className="flex cursor-pointer list-none items-start justify-between gap-8 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                    <span className="type-h4 text-[1.15rem] text-foreground">{faq.q}</span>
+                    <Plus
+                      className="mt-1 size-5 shrink-0 text-muted transition-transform duration-300 group-open:rotate-45"
+                      aria-hidden="true"
+                    />
+                  </summary>
+                  <p className="type-body max-w-2xl pb-7 text-muted">{faq.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </Container>
+      ) : null}
 
       {/* Close */}
       <Container className="py-24 text-center md:py-32">

@@ -331,6 +331,40 @@ p {
    field behind it — both were removed deliberately. Anything drawn in the page to
    stand in for the hardware cursor is structurally a frame or more behind it. */
 
+/* ---------------------------------------------------------------------------
+   The mark's silhouette.
+
+   Measured off the master artwork (`public/brand/logo-mark.png`, 512x200), not
+   guessed: the top-left and bottom-right corners are swept away with a large
+   radius (~45% and ~42% of the mark's height respectively) while the top-right
+   and bottom-left corners are perfectly square. That asymmetry IS the logo —
+   every panel of the four-band mark is this shape.
+
+   `--corner` is set per element, because the radius has to read as a proportion
+   of the tile it is cut into. Applied to a rectangle, it turns that rectangle
+   into the logo.
+   --------------------------------------------------------------------------- */
+.brand-shape {
+  border-radius: var(--corner, 3rem) 0 var(--corner, 3rem) 0;
+}
+
+/* The morph: square at rest, the logo silhouette on hover/focus. */
+.brand-shape-morph {
+  border-radius: 0;
+  transition: border-radius 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.group:hover .brand-shape-morph,
+.group:focus-visible .brand-shape-morph {
+  border-radius: var(--corner, 3rem) 0 var(--corner, 3rem) 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-shape-morph {
+    transition: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
