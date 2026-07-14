@@ -1,65 +1,97 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useMotionTemplate, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { BrandMark } from "@/components/brand/brand-mark";
 import { enterpriseClose } from "@/data/home";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
-
 /**
  * Scene 06 — Enterprise Close. The page's only button lives here, and only here —
  * framed as vendor onboarding, not a pitch.
  *
- * This used to be a 230vh scroll-scrubbed "hard cut": a cream stage that held,
- * cut to black, and then resolved the line. The problem was structural — a cut
- * needs an empty frame to cut *from*, and that empty frame was 750px of screen
- * with nothing on it that you had to drag through, followed by another ~1,100px
- * of holding an already-finished frame. Two and a half screens of scroll for one
- * sentence.
+ * ## The unveil
  *
- * So the cut is gone and the close simply arrives: black, full-bleed, resolving
- * as it comes into view. It costs one screen instead of two and a half, and there
- * is no point at which the visitor is looking at nothing.
+ * The old close was a 230vh scroll-scrubbed hard cut: hold on cream, cut to
+ * black, resolve the line. It cost ~750px of a genuinely empty screen to set the
+ * cut up, because a cut needs an empty frame to cut *from* — that emptiness was
+ * the mechanism, not an oversight, which is why it had to go rather than be
+ * shortened.
+ *
+ * This replaces it with a reveal that costs nothing. The black panel enters as a
+ * card cut to the silhouette of our own mark — top-left and bottom-right swept
+ * away, the other corners square — and as the section rises into view it expands
+ * to full bleed and squares off, the line resolving inside it. The whole thing is
+ * driven off the section's natural entry (its top travelling from the bottom of
+ * the viewport to the top), so it adds not one pixel of scroll: the transition
+ * happens in the distance the page was going to travel anyway.
+ *
+ * Under reduced motion it is simply the finished frame.
  */
 export function Invitation() {
   const reducedMotion = useReducedMotion();
+  const ref = useRef<HTMLElement | null>(null);
 
-  const rise = (delay: number) =>
-    reducedMotion
-      ? undefined
-      : {
-          initial: { opacity: 0, y: 18 },
-          whileInView: { opacity: 1, y: 0 },
-          viewport: { once: true, amount: 0.4 },
-          transition: { duration: 0.8, ease: EASE, delay },
-        };
+  // 0 -> the section's top is at the bottom of the viewport (just arriving)
+  // 1 -> the section's top is at the top of the viewport (fully arrived)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "start start"],
+  });
+
+  // The panel opens out of the mark's shape into a full-bleed field.
+  const insetX = useTransform(scrollYProgress, [0, 0.62], [9, 0]);
+  const insetY = useTransform(scrollYProgress, [0, 0.62], [7, 0]);
+  const corner = useTransform(scrollYProgress, [0, 0.62], [160, 0]);
+  const clipPath = useMotionTemplate`inset(${insetY}% ${insetX}% ${insetY}% ${insetX}% round ${corner}px 0px ${corner}px 0px)`;
+
+  // The line only resolves once it has a field to sit on.
+  const textOpacity = useTransform(scrollYProgress, [0.34, 0.68], [0, 1]);
+  const textY = useTransform(scrollYProgress, [0.34, 0.68], [22, 0]);
+  const ctaOpacity = useTransform(scrollYProgress, [0.58, 0.85], [0, 1]);
+  const markOpacity = useTransform(scrollYProgress, [0.72, 0.95], [0, 0.7]);
+
+  const still = reducedMotion;
 
   return (
     <section
+      ref={ref}
       id="invitation"
-      className="relative flex min-h-dvh flex-col items-center justify-center gap-10 overflow-hidden bg-[var(--ink-frame)] px-6 py-32 text-center"
+      // White ground: it is what the mark-shaped panel is revealed *against*.
+      className="relative flex min-h-dvh flex-col items-center justify-center gap-10 overflow-hidden bg-white px-6 py-32 text-center"
     >
-      <span className="absolute left-6 top-8 type-label text-[rgba(243,240,232,0.4)] sm:left-10 lg:left-14">
-        06 — Enterprise Close
-      </span>
+      <motion.div
+        className="absolute inset-0 bg-[var(--ink-frame)]"
+        style={still ? undefined : { clipPath }}
+        aria-hidden="true"
+      />
 
-      <motion.p className="type-label text-[rgba(243,240,232,0.55)]" {...rise(0)}>
+      <motion.span
+        className="absolute left-6 top-8 z-10 type-label text-[rgba(243,240,232,0.4)] sm:left-10 lg:left-14"
+        style={still ? undefined : { opacity: ctaOpacity }}
+      >
+        06 — Enterprise Close
+      </motion.span>
+
+      <motion.p
+        className="relative z-10 type-label text-[rgba(243,240,232,0.55)]"
+        style={still ? undefined : { opacity: textOpacity, y: textY }}
+      >
         {enterpriseClose.eyebrow}
       </motion.p>
 
       <motion.h2
-        className="voice-quiet max-w-4xl text-balance text-[clamp(2.4rem,7vw,5.75rem)] leading-[1.0] text-[var(--ink-frame-foreground)]"
-        {...rise(0.1)}
+        className="relative z-10 voice-quiet max-w-4xl text-balance text-[clamp(2.4rem,7vw,5.75rem)] leading-[1.0] text-[var(--ink-frame-foreground)]"
+        style={still ? undefined : { opacity: textOpacity, y: textY }}
       >
         {enterpriseClose.headline}
       </motion.h2>
 
       <motion.a
         href="/contact"
-        className="group inline-flex items-center gap-3 border-b border-[rgba(243,240,232,0.35)] pb-2 text-[var(--ink-frame-foreground)] transition-colors hover:border-[var(--ink-frame-foreground)]"
-        {...rise(0.28)}
+        className="group relative z-10 inline-flex items-center gap-3 border-b border-[rgba(243,240,232,0.35)] pb-2 text-[var(--ink-frame-foreground)] transition-colors hover:border-[var(--ink-frame-foreground)]"
+        style={still ? undefined : { opacity: ctaOpacity }}
       >
         <span className="type-h4">{enterpriseClose.cta}</span>
         <ArrowRight
@@ -68,8 +100,11 @@ export function Invitation() {
         />
       </motion.a>
 
-      <motion.div {...rise(0.42)} className="mt-2">
-        <BrandMark compact showWordmark={false} className="opacity-70" />
+      <motion.div
+        className="relative z-10 mt-2"
+        style={still ? undefined : { opacity: markOpacity }}
+      >
+        <BrandMark compact showWordmark={false} className={still ? "opacity-70" : undefined} />
       </motion.div>
     </section>
   );
