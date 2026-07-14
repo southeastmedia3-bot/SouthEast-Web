@@ -98,10 +98,11 @@ export function DisciplineWall() {
                   </div>
                 </div>
 
-                {/* The hairline rule that reads the shape back to you — it traces
-                    the same silhouette the frame just morphed into. */}
+                {/* The rule that traces the silhouette the frame just morphed into.
+                    2px, not a hairline: at 1px against a white card the shape barely
+                    registered, and the whole point is that you see the mark. */}
                 <span
-                  className="brand-shape-morph pointer-events-none absolute inset-0 border border-transparent transition-colors duration-500 group-hover:border-[color:var(--border-strong)] group-focus-visible:border-[color:var(--brand-sky)]"
+                  className="brand-shape-morph pointer-events-none absolute inset-0 border-2 border-transparent transition-colors duration-500 group-hover:border-[rgba(21,20,26,0.55)] group-focus-visible:border-[color:var(--brand-sky)]"
                   aria-hidden="true"
                 />
               </Link>
