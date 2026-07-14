@@ -1,12 +1,17 @@
-import Image from "next/image";
-import { Plus } from "lucide-react";
-import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
-import { MediaFrame } from "@/components/common/media-frame";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/container";
+import { Reveal } from "@/components/common/reveal";
 import { LinkButton } from "@/components/ui/link-button";
+import { ContrastBlock } from "@/components/verticals/contrast-block";
+import { FaqList } from "@/components/verticals/faq-list";
+import { ProcessRail } from "@/components/verticals/process-rail";
+import { SignatureFrame } from "@/components/verticals/signature-frame";
+import { VerticalHero } from "@/components/verticals/vertical-hero";
+import { VerticalNav, type NavSection } from "@/components/verticals/vertical-nav";
+import { WorkGrid } from "@/components/verticals/work-grid";
 import type { Vertical } from "@/data/verticals";
 import { verticalHeroes } from "@/data/media";
-import { cn } from "@/lib/utils";
 
 const toneRule: Record<string, string> = {
   blue: "var(--brand-blue)",
@@ -20,9 +25,15 @@ const toneRule: Record<string, string> = {
  *
  * These pages have to stand entirely on their own. A pharmaceutical client who
  * lands here has no interest in real estate, and sending them back to the
- * homepage to understand us is how you lose them — so each vertical carries its
- * own full argument: what it is, the capability, the long-form case for it, the
- * work, how the engagement actually runs, the terms, and the objections answered.
+ * homepage to understand us is how you lose them — so each vertical carries the
+ * full argument: what it is, the terms, the capability, the case against carrying
+ * on as they are, how the engagement runs, the work, the proof, and the objections
+ * answered.
+ *
+ * The order is the one every studio that sells a single discipline converges on
+ * (3dforscience, maverickframe, opus, 3dlabz): state the terms, show the work,
+ * make the case, show the process, answer the objections, ask for the call — with
+ * a way to jump straight to any of it.
  *
  * Sections render only when the data supports them, so the four verticals without
  * deep source material degrade to the short form rather than showing empty frames.
@@ -31,90 +42,60 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
   const hero = verticalHeroes[vertical.slug];
   const rule = toneRule[vertical.tone] ?? "var(--brand-sky)";
 
+  const sections: NavSection[] = [
+    { id: "capabilities", label: "Capabilities" },
+    ...(vertical.sections?.length ? [{ id: "approach", label: "Approach" }] : []),
+    ...(vertical.contrast ? [{ id: "why", label: "Why us" }] : []),
+    ...(vertical.process?.length ? [{ id: "process", label: "Process" }] : []),
+    ...(vertical.gallery?.length ? [{ id: "work", label: "Work" }] : []),
+    ...(vertical.faqs?.length ? [{ id: "faq", label: "FAQ" }] : []),
+  ];
+
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative flex min-h-[86vh] items-end overflow-hidden bg-[#05070d] pb-16 pt-40">
-        <CinematicBackdrop tone={vertical.tone === "gold" ? "mixed" : vertical.tone} scan />
-        <Container>
-          <p className="type-label mb-6 text-[color:var(--brand-ice)]/70">{vertical.eyebrow}</p>
-          <h1 className="type-h1 max-w-4xl text-balance text-[var(--ink-frame-foreground)]">
-            {vertical.title}
-          </h1>
-          <p className="type-body-lg mt-8 max-w-2xl text-[color:var(--brand-ice)]/75">
-            {vertical.intro}
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <LinkButton href="/contact" variant="primary" size="lg">
-              Start a project
-            </LinkButton>
-            <LinkButton
-              href="/verticals"
-              variant="outline"
-              size="lg"
-              className="border-white/25 text-[var(--ink-frame-foreground)] hover:border-white/60 hover:text-[var(--ink-frame-foreground)]"
-            >
-              All verticals
-            </LinkButton>
-          </div>
+    <main id="main-content">
+      <VerticalHero vertical={vertical} />
 
-          {/* The terms, stated up front. A buyer shouldn't have to scroll for them. */}
-          {vertical.headline?.length ? (
-            <dl className="mt-14 flex flex-wrap gap-x-14 gap-y-6">
-              {vertical.headline.map((m) => (
-                <div key={m.label}>
-                  <dt className="type-h3 text-[var(--ink-frame-foreground)]">{m.value}</dt>
-                  <dd className="type-caption mt-1.5 uppercase tracking-[0.1em] text-[color:var(--brand-ice)]/55">
-                    {m.label}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          ) : null}
-        </Container>
-      </section>
+      <VerticalNav label={vertical.label} sections={sections} />
 
-      {/* Signature frame */}
-      <Container className="py-16 md:py-20">
-        <MediaFrame
-          tone={hero?.tone ?? vertical.tone}
-          ratio="wide"
-          src={hero?.src}
-          video={hero?.video}
-          poster={hero?.poster}
-          alt={hero?.alt ?? vertical.title}
-          className="w-full"
-          sizes="(min-width: 1024px) 80vw, 92vw"
-        />
-      </Container>
+      <SignatureFrame
+        tone={hero?.tone ?? vertical.tone}
+        src={hero?.src}
+        video={hero?.video}
+        poster={hero?.poster}
+        alt={hero?.alt ?? vertical.title}
+      />
 
       {/* Capabilities */}
-      <Container className="py-16 md:py-24">
-        <div className="mb-12 flex items-center gap-4">
-          <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
-          <h2 className="type-h3 text-foreground">Capabilities</h2>
-        </div>
+      <Container id="capabilities" className="scroll-mt-36 py-16 md:py-24">
+        <Reveal>
+          <div className="mb-12 flex items-center gap-4">
+            <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
+            <h2 className="type-h3 text-foreground">Capabilities</h2>
+          </div>
+        </Reveal>
         <div className="grid gap-x-10 gap-y-12 md:grid-cols-2">
           {vertical.capabilities.map((cap, i) => (
-            <div key={cap.name} className="border-t border-border pt-6">
-              <span className="type-index text-muted">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="type-h4 mt-3 text-foreground">{cap.name}</h3>
-              <p className="type-body mt-2 text-muted">{cap.detail}</p>
-            </div>
+            <Reveal key={cap.name} delay={(i % 2) * 0.06}>
+              <div className="group border-t border-border pt-6 transition-colors duration-300 hover:border-[color:var(--border-strong)]">
+                <span className="type-index text-muted">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="type-h4 mt-3 text-foreground">{cap.name}</h3>
+                <p className="type-body mt-2 text-muted">{cap.detail}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </Container>
 
       {/* Long-form — only the verticals with real source material carry it. */}
       {vertical.sections?.length ? (
-        <div className="border-t border-border bg-[var(--surface)]">
+        <div id="approach" className="scroll-mt-36 border-t border-border bg-[var(--surface)]">
           {vertical.sections.map((section, i) => (
             <Container
               key={section.heading}
-              className={cn("py-16 md:py-24", i !== 0 && "border-t border-border")}
+              className={`py-16 md:py-24 ${i !== 0 ? "border-t border-border" : ""}`}
             >
               <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[22rem_1fr]">
-                <div className="lg:sticky lg:top-28 lg:self-start">
+                <div className="lg:sticky lg:top-40 lg:self-start">
                   {section.eyebrow ? (
                     <p className="type-label mb-4" style={{ color: rule }}>
                       {section.eyebrow}
@@ -123,7 +104,7 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
                   <h2 className="type-h3 text-balance text-foreground">{section.heading}</h2>
                 </div>
 
-                <div>
+                <Reveal>
                   {section.lead ? (
                     <p className="type-body-lg max-w-2xl text-foreground">{section.lead}</p>
                   ) : null}
@@ -159,134 +140,91 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
                       ))}
                     </dl>
                   ) : null}
-                </div>
+                </Reveal>
               </div>
             </Container>
           ))}
         </div>
       ) : null}
 
-      {/* The engagement, start to finish. */}
-      {vertical.process?.length ? (
-        <section className="border-t border-border bg-[var(--surface-elevated)] py-20 md:py-28">
-          <Container>
-            <div className="mb-14 flex items-center gap-4">
-              <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
-              <h2 className="type-h3 text-foreground">How the engagement runs</h2>
-            </div>
-            <ol className="grid gap-x-10 gap-y-10 md:grid-cols-3">
-              {vertical.process.map((step, i) => (
-                <li key={step.step} className="border-t border-border pt-6">
-                  <span className="type-index text-muted">{String(i + 1).padStart(2, "0")}</span>
-                  <h3 className="type-h4 mt-3 text-[1.15rem] text-foreground">{step.step}</h3>
-                  <p className="type-body mt-2 text-muted">{step.detail}</p>
-                </li>
-              ))}
-            </ol>
-          </Container>
-        </section>
-      ) : null}
+      {vertical.contrast ? <ContrastBlock contrast={vertical.contrast} rule={rule} /> : null}
 
-      {/* Selected work. The frames morph into the mark on hover — same shape
-          language as the discipline wall on the homepage. */}
-      {vertical.gallery?.length ? (
-        <section className="border-t border-border bg-[var(--surface)] py-20 md:py-28">
-          <Container size="xl">
-            <div className="mb-12 flex items-center gap-4">
-              <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
-              <h2 className="type-h3 text-foreground">Selected work</h2>
+      {vertical.process?.length ? <ProcessRail steps={vertical.process} rule={rule} /> : null}
+
+      {vertical.gallery?.length ? <WorkGrid images={vertical.gallery} rule={rule} /> : null}
+
+      {/* Mid-page CTA. Every reference site repeats the ask rather than saving it
+          all for the foot of a nine-screen page. */}
+      <section className="border-t border-border bg-[var(--surface-elevated)] py-16">
+        <Container>
+          <Reveal>
+            <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+              <p className="type-h4 max-w-2xl text-balance text-foreground">
+                Have a brief already? Send it over and we will tell you what it takes.
+              </p>
+              <Link
+                href="/contact"
+                className="group inline-flex shrink-0 items-center gap-2.5 rounded-full border border-[color:var(--border-strong)] px-6 py-3 text-sm font-medium text-foreground transition hover:border-foreground"
+              >
+                Start a project
+                <ArrowRight
+                  className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </Link>
             </div>
-            <ul className="grid grid-cols-2 gap-4 md:grid-cols-3">
-              {vertical.gallery.map((src, i) => (
-                <li
-                  key={src + i}
-                  className="group relative aspect-[4/3] overflow-hidden"
-                  style={{ "--corner": "3rem" } as React.CSSProperties}
-                >
-                  <div className="brand-shape-morph relative h-full w-full overflow-hidden bg-[#0a0a0d]">
-                    <Image
-                      src={src}
-                      alt=""
-                      fill
-                      sizes="(min-width: 768px) 30vw, 45vw"
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </Container>
-        </section>
-      ) : null}
+          </Reveal>
+        </Container>
+      </section>
 
       {/* Proof — capability and terms. Never a fabricated client story. */}
       <section className="relative overflow-hidden bg-[#0a0a0d] py-24 md:py-32">
         <Container>
-          <p className="type-label mb-6 text-[color:var(--brand-ice)]/60">{vertical.proof.label}</p>
-          <h2 className="type-h2 max-w-3xl text-balance text-[var(--ink-frame-foreground)]">
-            {vertical.proof.title}
-          </h2>
-          <p className="type-body-lg mt-6 max-w-2xl text-[color:var(--brand-ice)]/70">
-            {vertical.proof.body}
-          </p>
+          <Reveal>
+            <p className="type-label mb-6 text-[color:var(--brand-ice)]/60">
+              {vertical.proof.label}
+            </p>
+            <h2 className="type-h2 max-w-3xl text-balance text-[var(--ink-frame-foreground)]">
+              {vertical.proof.title}
+            </h2>
+            <p className="type-body-lg mt-6 max-w-2xl text-[color:var(--brand-ice)]/70">
+              {vertical.proof.body}
+            </p>
+          </Reveal>
           <dl className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-3">
-            {vertical.proof.metrics.map((m) => (
-              <div key={m.label} className="border-t border-white/15 pt-5">
-                {/* type-h3, not type-display: these values are words now
-                    ("Unlimited", "1–2 wks"), and display size would burst the column. */}
-                <dt className="type-h3 text-balance text-[var(--ink-frame-foreground)]">
-                  {m.value}
-                </dt>
-                <dd className="type-caption mt-2 uppercase tracking-[0.1em] text-[color:var(--brand-ice)]/55">
-                  {m.label}
-                </dd>
-              </div>
+            {vertical.proof.metrics.map((m, i) => (
+              <Reveal key={m.label} delay={i * 0.08}>
+                <div className="border-t border-white/15 pt-5">
+                  {/* type-h3, not type-display: these values are words now
+                      ("Unlimited", "1–2 wks"), and display size would burst the column. */}
+                  <dt className="type-h3 text-balance text-[var(--ink-frame-foreground)]">
+                    {m.value}
+                  </dt>
+                  <dd className="type-caption mt-2 uppercase tracking-[0.1em] text-[color:var(--brand-ice)]/55">
+                    {m.label}
+                  </dd>
+                </div>
+              </Reveal>
             ))}
           </dl>
         </Container>
       </section>
 
-      {/* The objections, answered. Native <details> — an accordion needs no
-          JavaScript, and this way it works before hydration and inside find-in-page. */}
-      {vertical.faqs?.length ? (
-        <Container className="py-20 md:py-28">
-          <div className="grid gap-x-16 gap-y-8 lg:grid-cols-[22rem_1fr]">
-            <div className="lg:sticky lg:top-28 lg:self-start">
-              <p className="type-label mb-4" style={{ color: rule }}>
-                Before you call
-              </p>
-              <h2 className="type-h3 text-balance text-foreground">Questions we get asked.</h2>
-            </div>
-
-            <div className="border-t border-border">
-              {vertical.faqs.map((faq) => (
-                <details key={faq.q} className="group border-b border-border">
-                  <summary className="flex cursor-pointer list-none items-start justify-between gap-8 py-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
-                    <span className="type-h4 text-[1.15rem] text-foreground">{faq.q}</span>
-                    <Plus
-                      className="mt-1 size-5 shrink-0 text-muted transition-transform duration-300 group-open:rotate-45"
-                      aria-hidden="true"
-                    />
-                  </summary>
-                  <p className="type-body max-w-2xl pb-7 text-muted">{faq.a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </Container>
-      ) : null}
+      {vertical.faqs?.length ? <FaqList faqs={vertical.faqs} rule={rule} /> : null}
 
       {/* Close */}
       <Container className="py-24 text-center md:py-32">
-        <h2 className={cn("type-h2 mx-auto max-w-3xl text-balance text-foreground")}>
-          Bring us the frame that has to be right.
-        </h2>
-        <div className="mt-10">
-          <LinkButton href="/contact" variant="primary" size="lg">
-            Initiate Vendor Protocol
-          </LinkButton>
-        </div>
+        <Reveal>
+          <h2 className="type-h2 mx-auto max-w-3xl text-balance text-foreground">
+            Bring us the frame that has to be right.
+          </h2>
+          <div className="mt-10">
+            <LinkButton href="/contact" variant="primary" size="lg">
+              Initiate Vendor Protocol
+            </LinkButton>
+          </div>
+        </Reveal>
       </Container>
-    </div>
+    </main>
   );
 }

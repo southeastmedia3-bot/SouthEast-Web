@@ -57,6 +57,13 @@ export type Vertical = {
   capabilities: { name: string; detail: string }[];
   /** Long-form content. Only the verticals with real source material carry it. */
   sections?: VerticalSection[];
+  /** The case for the discipline, stated as a contrast. Costs nothing to read and
+   *  it is the one section that answers "why not just keep doing what we do". */
+  contrast?: {
+    heading: string;
+    without: { label: string; points: string[] };
+    with: { label: string; points: string[] };
+  };
   /** The engagement, start to finish. Every vertical runs the studio's one
    *  pipeline; the wording is what changes. */
   process?: { step: string; detail: string }[];
@@ -254,6 +261,27 @@ export const verticals: Vertical[] = [
         ],
       },
     ],
+    contrast: {
+      heading: "What changes when the science is the constraint.",
+      without: {
+        label: "The usual",
+        points: [
+          "Stock anatomy a clinician can pick apart in the first review round.",
+          "A vendor learning your science on your time, and your budget.",
+          "Material moving through third-party services you cannot audit.",
+          "Assets that die with the campaign that paid for them.",
+        ],
+      },
+      with: {
+        label: "With Southeast Media",
+        points: [
+          "An anatomy library reviewed by medical doctors — extended, not reinvented, for each project.",
+          "Scientific sign-off at storyboard and again at animatic, before render cost is committed.",
+          "NDA, access-controlled servers, zero tolerance on breaches. Nothing leaves the building.",
+          "Rigged, reusable assets that carry into print, 3D-print, AR, VR and the next launch.",
+        ],
+      },
+    },
     process: [
       {
         step: "Brief, under NDA",
@@ -444,6 +472,27 @@ export const verticals: Vertical[] = [
         ],
       },
     ],
+    contrast: {
+      heading: "What changes when the building doesn't exist yet.",
+      without: {
+        label: "The usual",
+        points: [
+          "Waiting for construction to photograph the thing you are trying to sell.",
+          "Concept art that looks like concept art, and buyers left to imagine the rest.",
+          "Change requests discovered on site, at the point they are most expensive.",
+          "A different look in every listing, brochure and pitch deck.",
+        ],
+      },
+      with: {
+        label: "With Southeast Media",
+        points: [
+          "Photorealistic renders of a property that has not been built, in one to two weeks.",
+          "Materials, lighting and scale accurate enough to be trusted, not merely admired.",
+          "Grey-shader validation first: the geometry is signed off before it is made beautiful.",
+          "One consistent set of assets across listings, brochures, decks and campaigns.",
+        ],
+      },
+    },
     process: [
       {
         step: "Plans & brief",
