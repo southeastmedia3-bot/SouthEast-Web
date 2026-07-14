@@ -1,8 +1,8 @@
 import { Hero } from "@/components/scenes/hero";
 import { TheFilm } from "@/components/scenes/the-film";
 import { TrustBar } from "@/components/scenes/trust-bar";
-import { ServicesList } from "@/components/scenes/services-list";
 import { FilmReel } from "@/components/scenes/film-reel";
+import { ServicesList } from "@/components/scenes/services-list";
 import { Pipeline } from "@/components/scenes/pipeline";
 import { Mandate } from "@/components/scenes/mandate";
 import { Invitation } from "@/components/scenes/invitation";
@@ -19,8 +19,8 @@ export default function Home() {
       <Hero /> {/* white */}
       <TheFilm /> {/* dark — scroll-scrubbed villa footage */}
       <TrustBar /> {/* white */}
-      <ServicesList /> {/* white */}
       <FilmReel /> {/* black — the rotating film drum */}
+      <ServicesList /> {/* white */}
       <Pipeline /> {/* cream */}
       <Mandate /> {/* light */}
       <Invitation /> {/* dark close */}
