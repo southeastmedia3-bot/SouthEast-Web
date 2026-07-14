@@ -327,56 +327,9 @@ p {
   backface-visibility: hidden;
 }
 
-/* Cursor halo — a brand ring that eases along behind the NATIVE pointer and
-   swells over interactive elements. Mounted only on fine pointers (CustomCursor).
-
-   The native cursor is deliberately NOT hidden. This used to set
-   `cursor: none !important` and draw a dot in the pointer's place, which is the
-   one flaw a custom cursor cannot engineer away: the OS composites the real
-   pointer with zero latency, while anything we draw goes input -> JS -> style ->
-   composite -> display and lands a frame or more late. That gap is what read as
-   lag. Now you point with the real cursor and the halo is plainly a follower, so
-   its trail reads as intent rather than as latency.
-
-   Everything here is transform + opacity ONLY. The old ring swelled by
-   transitioning width/height/margin — layout properties, which re-rasterise the
-   layer every frame and cancel out the will-change promotion. The box is a fixed
-   size forever now; the swell is a scale(), and centring lives in the transform
-   rather than in negative margins. */
-.cursor-ring {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 34px;
-  height: 34px;
-  pointer-events: none;
-  z-index: 9999;
-  border-radius: 9999px;
-  border: 1.5px solid color-mix(in srgb, var(--brand-sky) 65%, transparent);
-  /* Own layer, and nothing inside it can invalidate anything outside it. */
-  will-change: transform;
-  contain: layout style paint;
-  transition: opacity 0.2s ease;
-}
-
-/* The hover fill cross-fades on its own node, so the ring's background never
-   changes and its layer never needs repainting. */
-.cursor-ring-fill {
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  background: color-mix(in srgb, var(--brand-sky) 16%, transparent);
-  opacity: 0;
-  transition: opacity 0.28s ease;
-}
-
-.cursor-active .cursor-ring-fill {
-  opacity: 1;
-}
-
-.cursor-hidden .cursor-ring {
-  opacity: 0;
-}
+/* No custom cursor. The pointer is the OS pointer, and the hero has no particle
+   field behind it — both were removed deliberately. Anything drawn in the page to
+   stand in for the hardware cursor is structurally a frame or more behind it. */
 
 @media (prefers-reduced-motion: reduce) {
   *,

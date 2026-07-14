@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CursorSparkles } from "@/components/effects/cursor-sparkles";
 import { LinkButton } from "@/components/ui/link-button";
 import { heroContent } from "@/data/home";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -10,8 +9,8 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 /**
  * Scene 01 — the opening. Deliberately spare: a bright field, a centred
- * statement, two ways in. All the motion lives in the speck field behind it,
- * which answers the cursor. Restraint is the point — the work is the spectacle,
+ * statement, two ways in. Nothing behind the type — the only motion is the
+ * headline setting itself. Restraint is the point; the work is the spectacle,
  * not the homepage.
  */
 export function Hero() {
@@ -25,8 +24,6 @@ export function Hero() {
       aria-label="Southeast Media — opening"
       className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-white px-6 pb-24 pt-32 text-center"
     >
-      <CursorSparkles className="pointer-events-none absolute inset-0 z-0" />
-
       <div className="relative z-10 flex flex-col items-center">
         <motion.p
           className="type-label mb-10 text-muted"
