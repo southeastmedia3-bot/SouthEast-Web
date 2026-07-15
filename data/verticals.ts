@@ -68,14 +68,17 @@ export type Vertical = {
    *  pipeline; the wording is what changes. */
   process?: { step: string; detail: string }[];
   /**
-   * Selected work.
+   * Selected work. Each frame morphs into the mark on hover and turns over to a
+   * caption card — so `title` (and optional `note`) name what the image is.
    *
-   * PLACEHOLDER MEDIA: the only assets we hold are the real-estate renders, so
-   * they stand in on every vertical for now, at the client's instruction. On the
-   * pharma page in particular these images are wrong and should be swapped the
-   * moment medical stills exist.
+   * PLACEHOLDER MEDIA: the four verticals without a real library still stand on
+   * the architectural renders, at the client's instruction, with generic
+   * captions. Pharma and real estate carry their own.
    */
-  gallery?: string[];
+  gallery?: { src: string; title: string; note?: string }[];
+  /** A wall of animation loops that autoplay together — "the library in motion".
+   *  Only pharma has a video library today. */
+  videos?: { src: string; poster: string; label: string }[];
   /** Answers a buyer needs before they will call. Grounded in the source decks —
    *  do not invent a timeline or a guarantee that isn't written down. */
   faqs?: { q: string; a: string }[];
@@ -90,13 +93,13 @@ export type Vertical = {
 };
 
 /** Stand-in imagery. See the note on `Vertical.gallery`. */
-const PLACEHOLDER_GALLERY = [
-  "/media/generated/interior-06.jpg",
-  "/media/generated/exterior-05.jpg",
-  "/media/generated/interior-11.jpg",
-  "/media/generated/exterior-02.jpg",
-  "/media/generated/interior-03.jpg",
-  "/media/generated/exterior-07.jpg",
+const PLACEHOLDER_GALLERY: NonNullable<Vertical["gallery"]> = [
+  { src: "/media/generated/interior-06.jpg", title: "Interior study", note: "Material & light" },
+  { src: "/media/generated/exterior-05.jpg", title: "Exterior massing", note: "Full elevation" },
+  { src: "/media/generated/interior-11.jpg", title: "Stair & light well", note: "Interior detail" },
+  { src: "/media/generated/exterior-02.jpg", title: "Dusk approach", note: "Tower elevation" },
+  { src: "/media/generated/interior-03.jpg", title: "Living volume", note: "Daylight study" },
+  { src: "/media/generated/exterior-07.jpg", title: "Night elevation", note: "Lighting pass" },
 ];
 
 /**
@@ -317,12 +320,22 @@ export const verticals: Vertical[] = [
     // Real medical work from the studio's pharma library. Text-free stills cut
     // from the anatomy / MoA animations, plus a clean brain render.
     gallery: [
-      "/media/pharma/heart-poster.jpg",
-      "/media/pharma/lung-poster.jpg",
-      "/media/pharma/brain.jpg",
-      "/media/pharma/skin-poster.jpg",
-      "/media/pharma/fetus-poster.jpg",
-      "/media/pharma/protein.jpg",
+      { src: "/media/pharma/heart-poster.jpg", title: "Heart", note: "Real cardiac dynamics" },
+      { src: "/media/pharma/lung-poster.jpg", title: "Lung", note: "Disease progression" },
+      { src: "/media/pharma/brain.jpg", title: "Brain", note: "Neurological structures" },
+      { src: "/media/pharma/skin-poster.jpg", title: "Skin", note: "Cosmetic & dermatology" },
+      { src: "/media/pharma/fetus-poster.jpg", title: "Fetal development", note: "Prenatal stages" },
+      { src: "/media/pharma/protein.jpg", title: "Mechanism of Action", note: "Drug–target binding" },
+    ],
+    // The library in motion — these autoplay together lower on the page, beneath
+    // the 66s Mechanism-of-Action film that runs as the signature.
+    videos: [
+      { src: "/media/pharma/heart.mp4", poster: "/media/pharma/heart-poster.jpg", label: "Anatomical heart" },
+      { src: "/media/pharma/lung.mp4", poster: "/media/pharma/lung-poster.jpg", label: "Lung — disease comparison" },
+      { src: "/media/pharma/skin.mp4", poster: "/media/pharma/skin-poster.jpg", label: "Skin & dermatology" },
+      { src: "/media/pharma/heart-cross.mp4", poster: "/media/pharma/heart-cross-poster.jpg", label: "Heart — cross-section" },
+      { src: "/media/pharma/fetus.mp4", poster: "/media/pharma/fetus-poster.jpg", label: "Fetal development" },
+      { src: "/media/pharma/moa2.mp4", poster: "/media/pharma/moa2-poster.jpg", label: "Molecular interaction" },
     ],
     faqs: [
       {

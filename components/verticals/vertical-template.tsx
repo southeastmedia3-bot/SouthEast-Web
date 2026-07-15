@@ -9,6 +9,7 @@ import { ProcessRail } from "@/components/verticals/process-rail";
 import { SignatureFrame } from "@/components/verticals/signature-frame";
 import { VerticalHero } from "@/components/verticals/vertical-hero";
 import { VerticalNav, type NavSection } from "@/components/verticals/vertical-nav";
+import { VideoWall } from "@/components/verticals/video-wall";
 import { WorkGrid } from "@/components/verticals/work-grid";
 import type { Vertical } from "@/data/verticals";
 import { verticalHeroes } from "@/data/media";
@@ -48,6 +49,7 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
     ...(vertical.contrast ? [{ id: "why", label: "Why us" }] : []),
     ...(vertical.process?.length ? [{ id: "process", label: "Process" }] : []),
     ...(vertical.gallery?.length ? [{ id: "work", label: "Work" }] : []),
+    ...(vertical.videos?.length ? [{ id: "motion", label: "In motion" }] : []),
     ...(vertical.faqs?.length ? [{ id: "faq", label: "FAQ" }] : []),
   ];
 
@@ -152,6 +154,8 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
       {vertical.process?.length ? <ProcessRail steps={vertical.process} rule={rule} /> : null}
 
       {vertical.gallery?.length ? <WorkGrid images={vertical.gallery} rule={rule} /> : null}
+
+      {vertical.videos?.length ? <VideoWall videos={vertical.videos} rule={rule} /> : null}
 
       {/* Mid-page CTA. Every reference site repeats the ask rather than saving it
           all for the foot of a nine-screen page. */}

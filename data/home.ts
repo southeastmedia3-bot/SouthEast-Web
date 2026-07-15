@@ -67,7 +67,21 @@ export const servicesList = {
   ],
 } as const;
 
-/** Scene: the pinned production pipeline. */
+/**
+ * Scene: the pinned production pipeline.
+ *
+ * Two stages use real process imagery from the client's `ext` set (script,
+ * lighting) instead of finished renders — the whole point of this section is to
+ * show *how* the work is made, not the output.
+ *
+ * WITHHELD: the set also included an animatic and a modelling still, but both
+ * arrived carrying other artists' watermarks ("© Robert Schlunze 2021" and a
+ * "Demon Bust W.I.P." credit). Publishing another artist's work on a client's
+ * production site is not something to do on a cropped-watermark basis, so those
+ * two stay on generated stand-ins until the client confirms they are licensed or
+ * supplies the studio's own captures (a real Maya viewport, a real grey-shader
+ * pass). `script` and `lighting` carry no such attribution and are used here.
+ */
 export const pipeline = {
   eyebrow: "How the work gets made",
   heading: "Our pipeline.",
@@ -80,7 +94,7 @@ export const pipeline = {
     {
       title: "Script & Storyboard",
       detail: "The argument the visuals have to make, drawn frame by frame.",
-      media: "/media/generated/interior-03.jpg",
+      media: "/media/process/script.jpg",
     },
     {
       title: "Previz & Animatic",
@@ -97,7 +111,7 @@ export const pipeline = {
       title: "Lighting & Rendering",
       detail:
         "Blender and Cinema 4D through Octane — 8K on a 15-server farm with 96GB VRAM nodes.",
-      media: "/media/generated/exterior-05.jpg",
+      media: "/media/process/lighting.jpg",
     },
     {
       title: "VFX & Simulation",
