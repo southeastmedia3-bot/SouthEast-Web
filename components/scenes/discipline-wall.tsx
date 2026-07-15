@@ -59,15 +59,31 @@ export function DisciplineWall() {
                 style={{ "--corner": tile.corner } as React.CSSProperties}
               >
                 {/* The frame. overflow-hidden + the morphing radius is what makes
-                    the picture itself take the shape of the mark. */}
+                    the picture itself take the shape of the mark. A tile may carry
+                    a looping video (the pharma tile plays the beating heart); it
+                    falls back to the still as its poster. */}
                 <div className="brand-shape-morph relative h-full w-full overflow-hidden bg-[#0a0a0d]">
-                  <Image
-                    src={tile.media}
-                    alt=""
-                    fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0 group-focus-visible:opacity-0"
-                  />
+                  {"video" in tile && tile.video ? (
+                    <video
+                      className="absolute inset-0 h-full w-full object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0 group-focus-visible:opacity-0"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      poster={tile.media}
+                    >
+                      <source src={tile.video} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <Image
+                      src={tile.media}
+                      alt=""
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0 group-focus-visible:opacity-0"
+                    />
+                  )}
 
                   {/* Resting state: just the name, over a soft scrim. */}
                   <div

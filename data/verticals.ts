@@ -314,7 +314,16 @@ export const verticals: Vertical[] = [
           "Iterative review against scientific accuracy, then conform and master to every format the campaign needs.",
       },
     ],
-    gallery: PLACEHOLDER_GALLERY,
+    // Real medical work from the studio's pharma library. Text-free stills cut
+    // from the anatomy / MoA animations, plus a clean brain render.
+    gallery: [
+      "/media/pharma/heart-poster.jpg",
+      "/media/pharma/lung-poster.jpg",
+      "/media/pharma/brain.jpg",
+      "/media/pharma/skin-poster.jpg",
+      "/media/pharma/fetus-poster.jpg",
+      "/media/pharma/protein.jpg",
+    ],
     faqs: [
       {
         q: "How do you guarantee scientific accuracy?",

@@ -37,7 +37,7 @@ export const servicesList = {
     {
       title: "Medical & Pharma",
       href: "/pharma",
-      media: "/media/generated/interior-06.jpg",
+      media: "/media/pharma/heart-poster.jpg",
       pills: ["MoA Animation", "Anatomy", "Molecular", "Cellular", "Dermatology"],
     },
     {
@@ -117,30 +117,37 @@ export const pipeline = {
  *  the verticals page. */
 export const filmReel = {
   eyebrow: "The reel",
-  heading: "Thirty-six frames, one drum.",
+  // Count kept honest against the array below — it used to read "thirty-six" over
+  // twenty frames. Now it is medical and architectural work interleaved, so the
+  // drum reads as one studio across disciplines rather than one vertical.
+  heading: "Twenty-four frames, one drum.",
   intro: "Scroll to turn it. Pick any frame — it opens the work.",
   cta: { label: "Explore all verticals", href: "/verticals" },
   href: "/verticals",
   images: [
+    "/media/pharma/heart-poster.jpg",
     "/media/generated/exterior-01.jpg",
+    "/media/pharma/lung-poster.jpg",
     "/media/generated/interior-01.jpg",
+    "/media/pharma/brain.jpg",
     "/media/generated/exterior-02.jpg",
-    "/media/generated/interior-02.jpg",
-    "/media/generated/exterior-03.jpg",
+    "/media/pharma/skin-poster.jpg",
     "/media/generated/interior-03.jpg",
-    "/media/generated/exterior-04.jpg",
-    "/media/generated/interior-04.jpg",
-    "/media/generated/exterior-05.jpg",
+    "/media/pharma/molecular.jpg",
+    "/media/generated/exterior-03.jpg",
+    "/media/pharma/fetus-poster.jpg",
     "/media/generated/interior-05.jpg",
-    "/media/generated/exterior-06.jpg",
-    "/media/generated/interior-06.jpg",
-    "/media/generated/exterior-07.jpg",
+    "/media/pharma/protein.jpg",
+    "/media/generated/exterior-05.jpg",
+    "/media/pharma/heart-cross-poster.jpg",
     "/media/generated/interior-07.jpg",
-    "/media/generated/interior-08.jpg",
+    "/media/pharma/tumor.jpg",
+    "/media/generated/exterior-07.jpg",
     "/media/generated/interior-09.jpg",
     "/media/generated/interior-10.jpg",
+    "/media/generated/exterior-04.jpg",
     "/media/generated/interior-11.jpg",
-    "/media/generated/interior-12.jpg",
+    "/media/generated/exterior-06.jpg",
     "/media/generated/interior-13.jpg",
   ],
 } as const;
@@ -211,7 +218,9 @@ export const disciplineWall = {
       title: "Medical & Pharmaceutical",
       sub: "Mechanism of Action, anatomy, molecular",
       href: "/pharma",
-      media: "/media/generated/interior-06.jpg",
+      media: "/media/pharma/heart-poster.jpg",
+      // The biggest slot on the homepage plays the beating anatomical heart.
+      video: "/media/pharma/heart.mp4",
       span: "md:col-span-2 md:row-span-2",
       corner: "6rem",
     },

@@ -103,10 +103,14 @@ export const towerAssets: MediaAsset[] = [
  *  carries a looping video. Others reuse the architectural stills as trial fill. */
 export const verticalHeroes: Record<string, MediaAsset> = {
   pharma: {
-    src: `${G}/interior-06.jpg`,
+    // The Aumolertinib mechanism-of-action film — the studio's marquee pharma
+    // asset. Cinematic protein-binding sequence, cut to a clean 18s web loop.
+    video: `/media/pharma/moa.mp4`,
+    poster: `/media/pharma/moa-poster.jpg`,
+    src: `/media/pharma/moa-poster.jpg`,
     tone: "blue",
     ratio: "wide",
-    alt: "Architectural interior visualization",
+    alt: "3D mechanism-of-action animation — EGFR protein binding",
   },
   "real-estate": {
     src: `${G}/exterior-05.jpg`,

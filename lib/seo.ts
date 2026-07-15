@@ -17,7 +17,9 @@ export function createMetadata({
   title,
   description = siteConfig.description,
   path = "/",
-  image,
+  // Every page gets a share card. Pass a page-specific image to override the
+  // branded default (the wordmark over the anatomical-heart render).
+  image = "/brand/og.jpg",
   noIndex,
 }: MetadataInput = {}): Metadata {
   const canonical = absoluteUrl(path);
