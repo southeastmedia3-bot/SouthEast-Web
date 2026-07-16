@@ -132,8 +132,10 @@ export function AnatomyReveal() {
   );
 }
 
-/** One cross-fading layer. Full opacity when the scroll sits on its index; fades
- *  out as the scroll moves to either neighbour. First and last hold at the ends. */
+/** One cross-fading layer. A trapezoid: the layer holds at full opacity for a
+ *  band around its index (so it reads cleanly, solo), then cross-fades quickly to
+ *  its neighbour at the edges rather than ghosting through the whole range. First
+ *  and last hold at the ends. */
 function AnatomyLayer({
   src,
   index,
@@ -143,7 +145,12 @@ function AnatomyLayer({
   index: number;
   p: import("framer-motion").MotionValue<number>;
 }) {
-  const opacity = useTransform(p, [index - 1, index, index + 1], [0, 1, 0], { clamp: true });
+  const opacity = useTransform(
+    p,
+    [index - 0.5, index - 0.28, index + 0.28, index + 0.5],
+    [0, 1, 1, 0],
+    { clamp: true },
+  );
   return (
     <motion.div className="absolute inset-0" style={{ opacity }}>
       <Image
