@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { LinkButton } from "@/components/ui/link-button";
+import { AnatomyReveal } from "@/components/verticals/anatomy-reveal";
 import { ContrastBlock } from "@/components/verticals/contrast-block";
 import { FaqList } from "@/components/verticals/faq-list";
 import { ProcessRail } from "@/components/verticals/process-rail";
@@ -42,10 +43,13 @@ const toneRule: Record<string, string> = {
 export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
   const hero = verticalHeroes[vertical.slug];
   const rule = toneRule[vertical.tone] ?? "var(--brand-sky)";
+  // The anatomy-reveal set-piece is built from pharma's own rigged-model layers.
+  const hasAnatomy = vertical.slug === "pharma";
 
   const sections: NavSection[] = [
     { id: "capabilities", label: "Capabilities" },
     ...(vertical.sections?.length ? [{ id: "approach", label: "Approach" }] : []),
+    ...(hasAnatomy ? [{ id: "anatomy", label: "Anatomy" }] : []),
     ...(vertical.contrast ? [{ id: "why", label: "Why us" }] : []),
     ...(vertical.process?.length ? [{ id: "process", label: "Process" }] : []),
     ...(vertical.gallery?.length ? [{ id: "work", label: "Work" }] : []),
@@ -148,6 +152,8 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
           ))}
         </div>
       ) : null}
+
+      {hasAnatomy ? <AnatomyReveal /> : null}
 
       {vertical.contrast ? <ContrastBlock contrast={vertical.contrast} rule={rule} /> : null}
 

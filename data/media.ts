@@ -28,6 +28,7 @@ export type MediaAsset = {
 };
 
 const G = "/media/generated";
+const G_PHARMA = "/media/pharma/anat";
 // Note: stills are optimized JPGs (converted from the source PNG renders).
 
 /** The hero "scroll film". A short (11.6s) night-lit villa loop — ideal length
@@ -145,6 +146,28 @@ export const verticalHeroes: Record<string, MediaAsset> = {
     alt: "Interior design layout",
   },
 };
+
+/**
+ * The anatomy-reveal layers on the pharma page.
+ *
+ * Extracted from a single deck slide (Page 03) — the same rigged figure rendered
+ * as ten anatomical layers, cut out registered so they stack in place. Ordered
+ * kidney -> whole body: scrolling cross-dissolves through them so the figure
+ * assembles from one organ to the complete build. Black-bg JPGs, so they sit
+ * seamlessly on the section's black ground.
+ */
+export const anatomyLayers = [
+  { src: `${G_PHARMA}/1-kidney.png`, label: "Renal", detail: "One organ, in isolation." },
+  { src: `${G_PHARMA}/2-lungs.png`, label: "Respiratory", detail: "The lungs and airway, added." },
+  { src: `${G_PHARMA}/3-digestive.png`, label: "Digestive", detail: "The gut, layered in." },
+  { src: `${G_PHARMA}/4-organs.png`, label: "Viscera", detail: "The organs, assembled in the torso." },
+  { src: `${G_PHARMA}/5-nervous.png`, label: "Nervous", detail: "The full neural network, head to foot." },
+  { src: `${G_PHARMA}/6-circulatory.png`, label: "Circulatory", detail: "Arteries and veins throughout." },
+  { src: `${G_PHARMA}/7-skeleton.png`, label: "Skeletal", detail: "The frame it all hangs on." },
+  { src: `${G_PHARMA}/8-skeletomuscular.png`, label: "Musculoskeletal", detail: "Muscle laid over bone." },
+  { src: `${G_PHARMA}/9-muscular.png`, label: "Muscular", detail: "Every muscle group." },
+  { src: `${G_PHARMA}/10-full.png`, label: "Complete", detail: "The whole body — fully rigged." },
+] as const;
 
 /** Atmospheric stills used on the About / Who We Are page. */
 export const aboutAssets: MediaAsset[] = [

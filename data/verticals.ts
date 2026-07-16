@@ -335,6 +335,7 @@ export const verticals: Vertical[] = [
       { src: "/media/pharma/skin.mp4", poster: "/media/pharma/skin-poster.jpg", label: "Skin & dermatology" },
       { src: "/media/pharma/heart-cross.mp4", poster: "/media/pharma/heart-cross-poster.jpg", label: "Heart — cross-section" },
       { src: "/media/pharma/fetus.mp4", poster: "/media/pharma/fetus-poster.jpg", label: "Fetal development" },
+      { src: "/media/pharma/heartbeat.mp4", poster: "/media/pharma/heartbeat-poster.jpg", label: "Cardiac cycle" },
       { src: "/media/pharma/moa2.mp4", poster: "/media/pharma/moa2-poster.jpg", label: "Molecular interaction" },
     ],
     faqs: [
