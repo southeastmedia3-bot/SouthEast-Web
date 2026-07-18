@@ -4,9 +4,10 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
+import { MorphTile } from "@/components/pharma/morph-tile";
+import { SpecimenPlate } from "@/components/pharma/specimen-plate";
 import { pharmaBodyTypes } from "@/data/pharma";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
-import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -34,15 +35,20 @@ export function PharmaInclusive() {
         <div className="grid gap-4 sm:grid-cols-2">
           {images.map((img, i) => (
             <Reveal key={img.src} delay={i * 0.08}>
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-white">
+              <SpecimenPlate
+                index={String(i + 1).padStart(2, "0")}
+                label={i === 0 ? "Body-type set A" : "Body-type set B"}
+                meta="FULL-BODY VARIANTS"
+                className="aspect-[16/10]"
+              >
                 <Image
                   src={img.src}
                   alt={img.alt}
                   fill
                   sizes="(min-width: 640px) 45vw, 92vw"
-                  className="object-contain"
+                  className="object-contain px-6 pb-6 pt-14"
                 />
-              </div>
+              </SpecimenPlate>
             </Reveal>
           ))}
         </div>
@@ -51,20 +57,19 @@ export function PharmaInclusive() {
           {studies.map((study, i) => (
             <motion.div
               key={study.src}
-              className={cn(
-                "relative aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] bg-black",
-              )}
               initial={reducedMotion ? undefined : { opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, ease: EASE, delay: (i % 3) * 0.07 }}
             >
-              <Image
-                src={study.src}
-                alt={study.alt}
-                fill
+              <MorphTile
+                title={study.title}
+                kicker="Head study"
+                sub={study.sub}
+                image={study.src}
+                corner="3.25rem"
                 sizes="(min-width: 640px) 30vw, 92vw"
-                className="object-cover"
+                className="aspect-[4/3]"
               />
             </motion.div>
           ))}

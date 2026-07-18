@@ -55,9 +55,24 @@ export const pharmaBodyTypes = {
     { src: `${DECK}/bodytypes-b.jpg`, alt: "A second set of diverse full-body anatomy variants" },
   ],
   studies: [
-    { src: `${DECK}/head-cutaway.jpg`, alt: "Head anatomy cutaway — musculature and vasculature over the skull" },
-    { src: `${DECK}/head-cross.jpg`, alt: "Layered cross-section of the head, skin to skull" },
-    { src: `${DECK}/eye-skull.jpg`, alt: "Eye anatomy set within the orbital bone of the skull" },
+    {
+      src: `${DECK}/head-cutaway.jpg`,
+      alt: "Head anatomy cutaway — musculature and vasculature over the skull",
+      title: "Head cutaway",
+      sub: "Musculature and vasculature layered over the skull.",
+    },
+    {
+      src: `${DECK}/head-cross.jpg`,
+      alt: "Layered cross-section of the head, skin to skull",
+      title: "Head cross-section",
+      sub: "Every layer registered, skin through to skull.",
+    },
+    {
+      src: `${DECK}/eye-skull.jpg`,
+      alt: "Eye anatomy set within the orbital bone of the skull",
+      title: "Orbital & eye",
+      sub: "The eye set within the orbital bone of the skull.",
+    },
   ],
 };
 
@@ -165,13 +180,6 @@ export const pharmaAtlas: { eyebrow: string; title: string; body: string; featur
       name: "Hand",
       detail: "Detailed muscle structure, tendon connections and functional movement of the hand.",
       image: `${DECK}/hand.jpg`,
-    },
-    {
-      slug: "leg",
-      name: "Leg",
-      detail:
-        "Highly detailed leg-muscle visuals for injury, treatment, movement and rehabilitation.",
-      image: `${DECK}/leg.jpg`,
     },
     {
       slug: "cell",

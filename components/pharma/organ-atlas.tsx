@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
-import { LoopVideo } from "@/components/pharma/loop-video";
+import { MorphTile } from "@/components/pharma/morph-tile";
 import { pharmaAtlas, type Organ } from "@/data/pharma";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
@@ -13,10 +12,11 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 /**
  * The atlas — deck slides 9–22, the organ-by-organ disease-state library.
  *
- * The three organs with animation loops (heart, lung, fetal) are featured large
- * and play in view; the remaining eleven form a specimen grid, each a still with
- * a caption that rises on hover. Set on black, because a medical render reads as
- * volume against darkness.
+ * The three organs with animation loops (heart, lung, fetal) are featured large;
+ * the rest form a specimen grid. Every tile is a MorphTile: point at it and the
+ * frame turns into the studio's mark and a card explains the subject — the same
+ * interaction the homepage discipline wall uses, applied to stills and loops
+ * alike. Set on black, because a medical render reads as volume against darkness.
  */
 export function OrganAtlas() {
   const reducedMotion = useReducedMotion();
@@ -38,35 +38,18 @@ export function OrganAtlas() {
         <div className="grid gap-4 lg:grid-cols-3">
           {pharmaAtlas.featured.map((organ, i) => (
             <Reveal key={organ.slug} delay={(i % 3) * 0.08}>
-              <figure className="group relative flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-white/10 bg-black">
-                <div className="relative aspect-[4/3] w-full overflow-hidden">
-                  {organ.video && organ.poster ? (
-                    <LoopVideo src={organ.video} poster={organ.poster} />
-                  ) : (
-                    <Image src={organ.image} alt={organ.name} fill sizes="33vw" className="object-cover" />
-                  )}
-                </div>
-                <figcaption className="flex flex-1 flex-col p-6">
-                  <h3 className="type-h4 text-[1.15rem] text-[var(--ink-frame-foreground)]">
-                    {organ.name}
-                  </h3>
-                  <p className="type-caption mt-2.5 text-[color:var(--brand-ice)]/55">
-                    {organ.detail}
-                  </p>
-                  {organ.states?.length ? (
-                    <ul className="mt-4 flex flex-wrap gap-2">
-                      {organ.states.map((s) => (
-                        <li
-                          key={s}
-                          className="rounded-full border border-white/15 px-2.5 py-1 text-xs font-medium text-[color:var(--brand-ice)]/70"
-                        >
-                          {s}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </figcaption>
-              </figure>
+              <MorphTile
+                title={organ.name}
+                kicker="Animated study"
+                sub={organ.detail}
+                image={organ.image}
+                video={organ.video}
+                poster={organ.poster}
+                states={organ.states}
+                corner="4.5rem"
+                sizes="(min-width: 1024px) 32vw, 92vw"
+                className="aspect-[4/3]"
+              />
             </Reveal>
           ))}
         </div>
@@ -84,35 +67,23 @@ export function OrganAtlas() {
 
 function SpecimenCard({ organ, index, reduced }: { organ: Organ; index: number; reduced: boolean }) {
   return (
-    <motion.article
-      className="group relative aspect-[4/5] overflow-hidden rounded-[1.25rem] border border-white/10 bg-black"
+    <motion.div
       initial={reduced ? undefined : { opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{ duration: 0.55, ease: EASE, delay: (index % 4) * 0.05 }}
     >
-      {organ.video && organ.poster ? (
-        <LoopVideo src={organ.video} poster={organ.poster} className="transition-transform duration-700 ease-out group-hover:scale-105" />
-      ) : (
-        <Image
-          src={organ.image}
-          alt={organ.name}
-          fill
-          sizes="(min-width: 1024px) 22vw, 45vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
-      )}
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent"
-        aria-hidden="true"
+      <MorphTile
+        title={organ.name}
+        kicker="Specimen"
+        sub={organ.detail}
+        image={organ.image}
+        video={organ.video}
+        poster={organ.poster}
+        corner="3rem"
+        sizes="(min-width: 1024px) 22vw, 45vw"
+        className="aspect-[4/5]"
       />
-      <div className="absolute inset-x-0 bottom-0 p-5">
-        <h3 className="type-h4 text-[1rem] text-[var(--ink-frame-foreground)]">{organ.name}</h3>
-        {/* Detail rises in on hover so the grid stays clean at rest. */}
-        <p className="type-caption mt-1 max-h-0 overflow-hidden text-[color:var(--brand-ice)]/70 opacity-0 transition-all duration-500 group-hover:max-h-24 group-hover:opacity-100">
-          {organ.detail}
-        </p>
-      </div>
-    </motion.article>
+    </motion.div>
   );
 }
