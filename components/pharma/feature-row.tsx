@@ -1,11 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { Check } from "lucide-react";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
-import { LoopVideo } from "@/components/pharma/loop-video";
-import { SpecimenPlate } from "@/components/pharma/specimen-plate";
+import { NaturalMedia } from "@/components/pharma/natural-media";
 import { cn } from "@/lib/utils";
 
 type FeatureRowProps = {
@@ -23,18 +21,13 @@ type FeatureRowProps = {
   side?: "left" | "right";
   /** Dark ground (for the black-background renders / loops). */
   dark?: boolean;
-  imageContain?: boolean;
-  /** Specimen-plate framing for a white-ground contained render. */
-  plateIndex?: string;
-  plateLabel?: string;
-  plateMeta?: string;
 };
 
 /**
  * A single deck subject as a media-and-text row, sides alternating down the page.
- * Renders a looping video when one is supplied, otherwise the still. This carries
- * the library (slide 2) and dermatology (slide 24) sections and is the workhorse
- * of the rebuilt page.
+ * The media is shown whole at its own shape (NaturalMedia) — never cropped —
+ * whether it is a still or a looping video. Carries the library (slide 2) and
+ * dermatology (slide 24) sections.
  */
 export function FeatureRow({
   id,
@@ -49,14 +42,7 @@ export function FeatureRow({
   poster,
   side = "right",
   dark = false,
-  imageContain = false,
-  plateIndex,
-  plateLabel,
-  plateMeta,
 }: FeatureRowProps) {
-  // A white-ground contained render is framed as a specimen plate; everything
-  // else (dark loops, cover stills) keeps the plain media frame.
-  const asPlate = imageContain && !dark && Boolean(plateLabel);
   return (
     <section
       id={id}
@@ -135,43 +121,22 @@ export function FeatureRow({
           </div>
 
           <Reveal delay={0.1} className={cn(side === "left" && "lg:order-1")}>
-            {asPlate ? (
-              <SpecimenPlate
-                index={plateIndex}
-                label={plateLabel!}
-                meta={plateMeta}
-                className="aspect-[4/3]"
-              >
-                <Image
-                  src={image}
-                  alt={imageAlt}
-                  fill
-                  sizes="(min-width: 1024px) 45vw, 92vw"
-                  className="object-contain px-8 pb-8 pt-16"
-                />
-              </SpecimenPlate>
-            ) : (
-              <div
-                className={cn(
-                  "relative aspect-[4/3] w-full overflow-hidden rounded-[1.75rem]",
-                  // A cover image or video fills a dark frame; cream is gone — it
-                  // was what produced the side bars.
-                  dark ? "bg-black" : "bg-[#f3f0e8]",
-                )}
-              >
-                {video && poster ? (
-                  <LoopVideo src={video} poster={poster} />
-                ) : (
-                  <Image
-                    src={image}
-                    alt={imageAlt}
-                    fill
-                    sizes="(min-width: 1024px) 45vw, 92vw"
-                    className={imageContain ? "object-contain p-6" : "object-cover"}
-                  />
-                )}
-              </div>
-            )}
+            <div
+              className={cn(
+                "overflow-hidden rounded-[1.5rem] border",
+                dark
+                  ? "border-white/10 bg-[#0a0c11]"
+                  : "border-border bg-white shadow-[0_40px_90px_-55px_rgba(21,20,26,0.4)]",
+              )}
+            >
+              <NaturalMedia
+                image={image}
+                video={video}
+                poster={poster}
+                alt={imageAlt}
+                sizes="(min-width: 1024px) 46vw, 92vw"
+              />
+            </div>
           </Reveal>
         </div>
       </Container>

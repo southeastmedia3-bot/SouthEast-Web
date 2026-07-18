@@ -2,22 +2,23 @@
 
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
-import { MediaFill } from "@/components/pharma/media-fill";
+import { NaturalMedia } from "@/components/pharma/natural-media";
 import { pharmaMolecular } from "@/data/pharma";
-import { cn } from "@/lib/utils";
 
 /**
  * The pharma core — deck slides 23, 25, 26, 27, 28. Molecular science and
- * Mechanism of Action, built as a sequence: the protein, the animation, the
- * pipeline that makes it, the structure model, the interaction. The first item
- * is featured full-width; the rest alternate. Videos play in view.
+ * Mechanism of Action: the protein, the animation, the pipeline, the structure,
+ * the interaction. Each render is shown whole at its own shape in a masonry;
+ * videos play in view.
  */
 export function MolecularSection() {
   const { eyebrow, title, body, items } = pharmaMolecular;
-  const [lead, ...rest] = items;
 
   return (
-    <section id="molecular" className="scroll-mt-36 border-t border-border bg-[var(--surface)] py-24 md:py-32">
+    <section
+      id="molecular"
+      className="scroll-mt-36 border-t border-border bg-[var(--surface)] py-24 md:py-32"
+    >
       <Container size="xl">
         <div className="mb-14 max-w-2xl">
           <Reveal>
@@ -27,46 +28,19 @@ export function MolecularSection() {
           </Reveal>
         </div>
 
-        {/* Lead item — full width, media on top. */}
-        {lead ? (
-          <Reveal>
-            <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
-              <div className="relative aspect-[21/9] w-full overflow-hidden">
-                <MediaFill
-                  image={lead.image}
-                  video={lead.video}
-                  poster={lead.poster}
-                  alt={lead.title}
-                  sizes="90vw"
+        <div className="gap-5 [column-fill:_balance] md:columns-2">
+          {items.map((item, i) => (
+            <Reveal key={item.slug} className="mb-5 break-inside-avoid">
+              <article className="overflow-hidden rounded-[1.4rem] border border-border bg-white shadow-[0_30px_70px_-55px_rgba(21,20,26,0.35)]">
+                <NaturalMedia
+                  image={item.image}
+                  video={item.video}
+                  poster={item.poster}
+                  alt={item.title}
+                  priority={i === 0}
+                  sizes="(min-width: 768px) 46vw, 92vw"
                 />
-              </div>
-              <div className="bg-white p-7 md:p-9">
-                <h3 className="type-h4 text-foreground">{lead.title}</h3>
-                <p className="type-body mt-3 max-w-3xl text-muted">{lead.body}</p>
-              </div>
-            </div>
-          </Reveal>
-        ) : null}
-
-        {/* The rest — a two-up grid of cards. */}
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {rest.map((item, i) => (
-            <Reveal key={item.slug} delay={(i % 2) * 0.08}>
-              <article
-                className={cn(
-                  "flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-black",
-                )}
-              >
-                <div className="relative aspect-[16/10] w-full overflow-hidden">
-                  <MediaFill
-                    image={item.image}
-                    video={item.video}
-                    poster={item.poster}
-                    alt={item.title}
-                    sizes="(min-width: 768px) 45vw, 92vw"
-                  />
-                </div>
-                <div className="flex flex-1 flex-col bg-white p-6 md:p-7">
+                <div className="p-6 md:p-7">
                   <h3 className="type-h4 text-[1.15rem] text-foreground">{item.title}</h3>
                   <p className="type-body mt-2.5 text-muted">{item.body}</p>
                 </div>

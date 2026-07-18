@@ -65,10 +65,6 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
         points={pharmaLibrary.points}
         image={pharmaLibrary.image}
         imageAlt={pharmaLibrary.imageAlt}
-        imageContain
-        plateIndex="02"
-        plateLabel="Anatomical systems"
-        plateMeta="MUSCULAR → COMPLETE"
         side="right"
       />
 
