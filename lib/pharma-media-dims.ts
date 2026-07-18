@@ -13,7 +13,7 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   // Full-width organs, cropped to the render (baked slide text removed)
   "/media/pharma/slides/brain-crop.jpg": { w: 2400, h: 820 },
   "/media/pharma/slides/lung-crop.jpg": { w: 2400, h: 790 },
-  "/media/pharma/slides/liver-crop.jpg": { w: 770, h: 1250 },
+  "/media/pharma/slides/liver-full.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/brain.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/heart.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/liver.jpg": { w: 2400, h: 1350 },
@@ -69,6 +69,7 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   // Library / anatomy
   "/media/pharma/deck/systems.jpg": { w: 1600, h: 829 },
   "/media/pharma/deck/family.jpg": { w: 1082, h: 1600 },
+  "/media/pharma/deck/orbital-eyes.jpg": { w: 850, h: 857 },
 
   // Molecular — stills
   "/media/pharma/deck/protein.jpg": { w: 1402, h: 1601 },

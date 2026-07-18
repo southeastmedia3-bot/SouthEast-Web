@@ -17,8 +17,8 @@ export const pharmaIntro = {
   eyebrow: "Medical, pharmaceutical & scientific visualization",
   title: "Medical 3D visuals that make complex healthcare clear.",
   body: "High-quality 3D renders, animation, and visual storytelling for pharma brands, hospital chains, healthcare campaigns, and medical education — built for product launches, patient awareness, doctor communication, and digital-first healthcare marketing.",
-  image: `${DECK}/protein.jpg`,
-  imageAlt: "An accurate 3D antibody protein model, rendered for pharma communication",
+  image: `${DECK}/orbital-eyes.jpg`,
+  imageAlt: "A 3D render of the eyes set within the orbital bones of the skull",
   stats: [
     { value: "10 yrs", label: "building the model library" },
     { value: "Since 2015", label: "scientifically accurate 3D" },
@@ -141,7 +141,7 @@ export const pharmaAtlas: {
     {
       slug: "liver",
       name: "Liver health",
-      image: `${SLIDES}/liver-crop.jpg`,
+      image: `${SLIDES}/liver-full.jpg`,
       title: "Visualizing liver health",
       blurb: "3D liver visuals that simplify disease progression — from a healthy liver to fatty liver and cancer-affected liver.",
     },

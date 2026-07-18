@@ -60,9 +60,7 @@ export function OrganAtlas() {
           </Reveal>
           {liverPlate ? (
             <Reveal y={28}>
-              <div className="flex justify-center">
-                <MorphPlate plate={liverPlate} corner="2rem" className="w-full max-w-[380px]" />
-              </div>
+              <MorphPlate plate={liverPlate} corner="3rem" />
             </Reveal>
           ) : null}
         </div>
