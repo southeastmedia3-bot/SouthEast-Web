@@ -12,7 +12,7 @@ import { pharmaBodyTypes } from "@/data/pharma";
  * ground), the head studies on dark cards. Nothing is cropped.
  */
 export function PharmaInclusive() {
-  const { eyebrow, title, body, images, studies } = pharmaBodyTypes;
+  const { eyebrow, title, body, images, studies, orbitalSlide } = pharmaBodyTypes;
 
   return (
     <section
@@ -52,27 +52,38 @@ export function PharmaInclusive() {
           ))}
         </div>
 
-        {/* Head studies — dark cards. */}
-        <div className="mt-5 grid items-start gap-5 sm:grid-cols-3">
+        {/* Head studies — cutaway and cross-section, side by side, enlarged and whole. */}
+        <div className="mt-5 grid items-start gap-5 sm:grid-cols-2">
           {studies.map((study, i) => (
             <Reveal key={study.src} delay={i * 0.07}>
               <figure className="group overflow-hidden rounded-[1.4rem] border border-white/10 bg-[#0a0c11]">
                 <NaturalMedia
                   image={study.src}
                   alt={study.alt}
-                  sizes="(min-width: 640px) 30vw, 92vw"
+                  sizes="(min-width: 640px) 46vw, 92vw"
                   imgClassName="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                 />
-                <figcaption className="p-5">
-                  <h3 className="type-h4 text-[1.05rem] text-[var(--ink-frame-foreground)]">
+                <figcaption className="flex items-baseline gap-3 p-6">
+                  <h3 className="type-h4 text-[1.15rem] text-[var(--ink-frame-foreground)]">
                     {study.title}
                   </h3>
-                  <p className="type-caption mt-2 text-[color:var(--brand-ice)]/55">{study.sub}</p>
+                  <p className="type-caption text-[color:var(--brand-ice)]/55">{study.sub}</p>
                 </figcaption>
               </figure>
             </Reveal>
           ))}
         </div>
+
+        {/* Orbital & eye — the full source slide, shown whole. */}
+        <Reveal delay={0.05}>
+          <figure className="mt-5 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black">
+            <NaturalMedia
+              image={orbitalSlide.src}
+              alt={orbitalSlide.alt}
+              sizes="(min-width: 1280px) 1200px, 96vw"
+            />
+          </figure>
+        </Reveal>
       </Container>
     </section>
   );

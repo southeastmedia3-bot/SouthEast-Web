@@ -67,149 +67,48 @@ export const pharmaBodyTypes = {
       title: "Head cross-section",
       sub: "Every layer registered, skin through to skull.",
     },
-    {
-      src: `${DECK}/eye-skull.jpg`,
-      alt: "Eye anatomy set within the orbital bone of the skull",
-      title: "Orbital & eye",
-      sub: "The eye set within the orbital bone of the skull.",
-    },
   ],
+  // The orbital & eye study, shown as the full source slide, whole.
+  orbitalSlide: {
+    src: "/media/pharma/slides/orbital-eye.jpg",
+    alt: "Orbital and eye anatomy set within the skull — built on experience",
+  },
 };
 
 /**
- * Slides 9–22 — the atlas. Organ by organ, the disease-state library.
- * `video` marks the ones with an animation loop; those are featured. The rest
- * render as a specimen grid. Every slide's subject and copy is here.
+ * Slides 8–21 — the atlas. Organ by organ, the disease-state library.
+ *
+ * Each entry is one full source slide (uniform 16:9), shown whole: the slide
+ * already carries its own title, description and render, so the page frames it
+ * rather than re-captioning it. `name` is for the alt text only.
  */
-export type Organ = {
+const SLIDES = "/media/pharma/slides";
+
+export type OrganPlate = {
   slug: string;
   name: string;
-  detail: string;
   image: string;
-  video?: string;
-  poster?: string;
-  /** For the multi-state disease slides. */
-  states?: string[];
 };
 
-export const pharmaAtlas: { eyebrow: string; title: string; body: string; featured: Organ[]; grid: Organ[] } = {
+export const pharmaAtlas: { eyebrow: string; title: string; body: string; plates: OrganPlate[] } = {
   eyebrow: "The atlas",
   title: "Organ by organ, in medical clarity.",
-  body: "A disease-state library rendered to clear a review board — healthy tissue and pathology, sectioned, labelled and animated. Point at the animated studies; scan the rest.",
-  featured: [
-    {
-      slug: "heart",
-      name: "Heart",
-      detail:
-        "Our hero model — built with unmatched scientific precision and animated with real cardiac dynamics. Finally, a heart animation that reflects true physiology.",
-      video: `${PH}/heart.mp4`,
-      poster: `${PH}/heart-poster.jpg`,
-      image: `${DECK}/heart.jpg`,
-    },
-    {
-      slug: "lung",
-      name: "Lung — health to disease",
-      detail:
-        "Lung health, damage, infection and disease progression, side by side: healthy, smoker's, COVID-affected and tuberculosis-affected.",
-      video: `${PH}/lung.mp4`,
-      poster: `${PH}/lung-poster.jpg`,
-      image: `${DECK}/lung.jpg`,
-      states: ["Healthy", "Smoker's", "COVID-affected", "Tuberculosis-affected"],
-    },
-    {
-      slug: "fetal",
-      name: "Fetal development",
-      detail:
-        "3D fetal-development visuals that clearly show prenatal growth stages with medical accuracy and visual clarity.",
-      video: `${PH}/fetus.mp4`,
-      poster: `${PH}/fetus-poster.jpg`,
-      image: `${DECK}/fetal.jpg`,
-    },
-  ],
-  grid: [
-    {
-      slug: "brain",
-      name: "Brain",
-      detail:
-        "3D brain illustrations that present complex neurological structures with clarity, accuracy and visual impact.",
-      image: `${DECK}/brain.jpg`,
-    },
-    {
-      slug: "liver",
-      name: "Liver",
-      detail:
-        "Disease progression simplified — healthy liver, to fatty liver, to cancer-affected liver.",
-      image: `${DECK}/liver.jpg`,
-    },
-    {
-      slug: "bronchial",
-      name: "Bronchial inflammation",
-      detail:
-        "Airway inflammation, mucus build-up and breathing difficulty, revealed at a cellular level.",
-      image: `${DECK}/bronchial.jpg`,
-    },
-    {
-      slug: "stomach",
-      name: "Stomach cancer",
-      detail:
-        "Abnormal tissue growth, tumour formation and affected regions within the stomach.",
-      image: `${DECK}/stomach.jpg`,
-    },
-    {
-      slug: "kidney",
-      name: "Kidney & pancreas",
-      detail:
-        "Cross-section visuals that simplify internal anatomy and disease understanding.",
-      image: `${DECK}/kidney.jpg`,
-    },
-    {
-      slug: "orofacial",
-      name: "Orofacial",
-      detail: "Oral, dental, jaw and facial structures, simplified with medical clarity.",
-      image: `${DECK}/orofacial.jpg`,
-    },
-    {
-      slug: "musculoskeletal",
-      name: "Musculoskeletal",
-      detail:
-        "Spine and knee — vertebrae, discs, cartilage, ligaments and joint movement, for injury, pain and therapy.",
-      image: `${DECK}/knee.jpg`,
-    },
-    {
-      slug: "hand",
-      name: "Hand",
-      detail: "Detailed muscle structure, tendon connections and functional movement of the hand.",
-      image: `${DECK}/hand.jpg`,
-    },
-    {
-      slug: "cell",
-      name: "Cell & mitochondria",
-      detail:
-        "Cross-sectional views of eukaryotic cells and mitochondria — organelle structure and microscopic biological processes.",
-      image: `${DECK}/cell.jpg`,
-    },
-    {
-      slug: "thyroid",
-      name: "Thyroid",
-      detail: "Healthy thyroid through to thyroid cancer — gland, lobes and tumour, fully labelled.",
-      image: `${DECK}/thyroid.jpg`,
-    },
-    {
-      slug: "heart-cross",
-      name: "Heart — cross-section",
-      detail: "The four chambers sectioned, valves and flow made visible.",
-      video: `${PH}/heart-cross.mp4`,
-      poster: `${PH}/heart-cross-poster.jpg`,
-      image: `${PH}/heart-cross-poster.jpg`,
-    },
-    {
-      slug: "cardiac-cycle",
-      name: "Cardiac cycle",
-      detail: "A single beat, looped — the hero model in real cardiac motion.",
-      video: `${PH}/heartbeat.mp4`,
-      poster: `${PH}/heartbeat-poster.jpg`,
-      image: `${PH}/heartbeat-poster.jpg`,
-    },
+  body: "A disease-state library rendered to clear a review board — healthy tissue and pathology, sectioned, labelled and shown at full plate. Every organ, whole, at the shape it was made in.",
+  plates: [
+    { slug: "heart", name: "Heart anatomy", image: `${SLIDES}/heart.jpg` },
+    { slug: "brain", name: "Brain anatomy", image: `${SLIDES}/brain.jpg` },
+    { slug: "lung", name: "Lung — health to disease", image: `${SLIDES}/lung.jpg` },
+    { slug: "liver", name: "Liver health", image: `${SLIDES}/liver.jpg` },
+    { slug: "stomach", name: "Stomach cancer", image: `${SLIDES}/stomach.jpg` },
+    { slug: "kidney", name: "Kidney & pancreas", image: `${SLIDES}/kidney.jpg` },
+    { slug: "bronchial", name: "Bronchial inflammation", image: `${SLIDES}/bronchial.jpg` },
+    { slug: "fetal", name: "Fetal development", image: `${SLIDES}/fetal.jpg` },
+    { slug: "orofacial", name: "Orofacial anatomy", image: `${SLIDES}/orofacial.jpg` },
+    { slug: "musculoskeletal", name: "Musculoskeletal — spine & knee", image: `${SLIDES}/musculoskeletal.jpg` },
+    { slug: "hand", name: "Hand muscle anatomy", image: `${SLIDES}/hand.jpg` },
+    { slug: "leg", name: "Leg muscle anatomy", image: `${SLIDES}/leg.jpg` },
+    { slug: "cell", name: "Cellular & mitochondrial anatomy", image: `${SLIDES}/cell.jpg` },
+    { slug: "thyroid", name: "Thyroid — healthy to cancer", image: `${SLIDES}/thyroid.jpg` },
   ],
 };
 

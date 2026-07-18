@@ -8,6 +8,23 @@
  * loads (so there is no layout shift).
  */
 export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
+  // Full source slides (uniform 16:9) — shown whole, self-contained (title + copy baked in)
+  "/media/pharma/slides/orbital-eye.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/brain.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/heart.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/liver.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/lung.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/bronchial.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/stomach.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/kidney.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/fetal.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/orofacial.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/musculoskeletal.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/hand.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/leg.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/cell.jpg": { w: 2400, h: 1350 },
+  "/media/pharma/slides/thyroid.jpg": { w: 2400, h: 1350 },
+
   // Atlas — stills
   "/media/pharma/deck/heart.jpg": { w: 1596, h: 1601 },
   "/media/pharma/deck/lung.jpg": { w: 1600, h: 563 },
