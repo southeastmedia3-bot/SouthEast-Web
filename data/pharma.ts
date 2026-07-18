@@ -141,7 +141,7 @@ export const pharmaAtlas: {
     {
       slug: "liver",
       name: "Liver health",
-      image: `${SLIDES}/liver-full.jpg`,
+      image: `${SLIDES}/liver.jpg`,
       title: "Visualizing liver health",
       blurb: "3D liver visuals that simplify disease progression — from a healthy liver to fatty liver and cancer-affected liver.",
     },

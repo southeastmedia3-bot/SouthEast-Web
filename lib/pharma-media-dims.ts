@@ -13,7 +13,6 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   // Full-width organs, cropped to the render (baked slide text removed)
   "/media/pharma/slides/brain-crop.jpg": { w: 2400, h: 820 },
   "/media/pharma/slides/lung-crop.jpg": { w: 2400, h: 790 },
-  "/media/pharma/slides/liver-full.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/brain.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/heart.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/liver.jpg": { w: 2400, h: 1350 },
