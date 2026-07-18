@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
+import { NaturalMedia } from "@/components/pharma/natural-media";
 import { pharmaIntro } from "@/data/pharma";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
@@ -32,14 +33,24 @@ export function PharmaIntro() {
         </Reveal>
 
         <div className="mt-10 grid items-end gap-8 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-7">
             <Reveal>
               <h2 className="type-h1 text-balance text-foreground">{pharmaIntro.title}</h2>
             </Reveal>
-          </div>
-          <div className="lg:col-span-4">
             <Reveal delay={0.12}>
-              <p className="type-body-lg text-muted">{pharmaIntro.body}</p>
+              <p className="type-body-lg mt-6 max-w-xl text-muted">{pharmaIntro.body}</p>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-5">
+            <Reveal delay={0.08} y={28}>
+              <figure className="overflow-hidden rounded-[1.4rem] border border-border bg-white shadow-[0_30px_70px_-50px_rgba(21,20,26,0.4)]">
+                <NaturalMedia
+                  image={pharmaIntro.image}
+                  alt={pharmaIntro.imageAlt}
+                  priority
+                  sizes="(min-width: 1024px) 40vw, 92vw"
+                />
+              </figure>
             </Reveal>
           </div>
         </div>

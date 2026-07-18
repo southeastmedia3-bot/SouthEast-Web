@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
-import { NaturalMedia } from "@/components/pharma/natural-media";
 import { TiltCard } from "@/components/pharma/tilt-card";
 import { pharmaBodyTypes } from "@/data/pharma";
 
@@ -41,12 +41,15 @@ export function PharmaInclusive() {
                 className="group overflow-hidden rounded-[1.4rem] border border-border bg-white shadow-[0_30px_70px_-50px_rgba(21,20,26,0.4)]"
               >
                 <figure>
-                  <NaturalMedia
-                    image={img.src}
-                    alt={img.alt}
-                    sizes="(min-width: 640px) 46vw, 92vw"
-                    imgClassName="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
-                  />
+                  <div className="relative aspect-square w-full bg-white">
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      sizes="(min-width: 640px) 46vw, 92vw"
+                      className="object-contain transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                    />
+                  </div>
                   <figcaption className="flex items-center gap-3 px-6 py-4">
                     <span className="type-index text-[color:var(--brand-blue)]">
                       {String(i + 1).padStart(2, "0")}
@@ -68,12 +71,15 @@ export function PharmaInclusive() {
             <Reveal key={study.src} delay={i * 0.07} y={28}>
               <TiltCard className="group overflow-hidden rounded-[1.4rem] border border-white/10 bg-[#0a0c11]">
                 <figure>
-                  <NaturalMedia
-                    image={study.src}
-                    alt={study.alt}
-                    sizes="(min-width: 640px) 46vw, 92vw"
-                    imgClassName="transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
-                  />
+                  <div className="relative aspect-square w-full bg-white">
+                    <Image
+                      src={study.src}
+                      alt={study.alt}
+                      fill
+                      sizes="(min-width: 640px) 46vw, 92vw"
+                      className="object-contain transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                    />
+                  </div>
                   <figcaption className="flex items-baseline gap-3 p-6">
                     <h3 className="type-h4 text-[1.15rem] text-[var(--ink-frame-foreground)]">
                       {study.title}
@@ -86,24 +92,20 @@ export function PharmaInclusive() {
           ))}
         </div>
 
-        {/* Orbital & eye — the full source slide, shown whole. */}
-        <Reveal delay={0.05} y={28}>
-          <TiltCard
-            max={3.5}
-            lift={4}
-            className="group mt-5 overflow-hidden rounded-[1.4rem] border border-white/10 bg-black shadow-[0_40px_90px_-60px_rgba(21,20,26,0.6)]"
-          >
-            <figure>
-              <NaturalMedia
-                image={orbitalSlide.src}
-                alt={orbitalSlide.alt}
-                sizes="(min-width: 1280px) 1200px, 96vw"
-                imgClassName="transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
-              />
-            </figure>
-          </TiltCard>
-        </Reveal>
       </Container>
+
+      {/* Orbital & eye — the full source slide, shown to the full width of the window. */}
+      <Reveal delay={0.05} y={28} className="mt-14 md:mt-20">
+        <figure className="group relative aspect-[16/9] w-full overflow-hidden bg-black">
+          <Image
+            src={orbitalSlide.src}
+            alt={orbitalSlide.alt}
+            fill
+            sizes="100vw"
+            className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
+          />
+        </figure>
+      </Reveal>
     </section>
   );
 }

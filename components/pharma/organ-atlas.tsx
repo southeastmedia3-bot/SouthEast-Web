@@ -18,8 +18,13 @@ import { ratioOf } from "@/lib/pharma-media-dims";
  * atlas comes alive: the animation loops, structured, playing as they enter view.
  * Set on pure white, the medical renders read as framed specimen plates.
  */
+/** Organs shown full-width, one to a row (everything not called out for the grid). */
+const FULL_WIDTH_PLATES = new Set(["brain", "lung", "liver"]);
+
 export function OrganAtlas() {
   const { motion } = pharmaAtlas;
+  const keptPlates = pharmaAtlas.plates.filter((p) => !FULL_WIDTH_PLATES.has(p.slug));
+  const fullPlates = pharmaAtlas.plates.filter((p) => FULL_WIDTH_PLATES.has(p.slug));
 
   return (
     <section id="atlas" className="scroll-mt-36 bg-white py-24 md:py-32">
@@ -33,9 +38,18 @@ export function OrganAtlas() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:gap-7">
-          {pharmaAtlas.plates.map((plate, i) => (
+          {keptPlates.map((plate, i) => (
             <Reveal key={plate.slug} delay={(i % 2) * 0.08} y={28}>
               <Plate plate={plate} priority={i < 2} />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* The unlabelled organs — shown full-width, one to a row, at full plate. */}
+        <div className="mt-6 grid gap-6 lg:gap-7">
+          {fullPlates.map((plate) => (
+            <Reveal key={plate.slug} y={28}>
+              <Plate plate={plate} />
             </Reveal>
           ))}
         </div>
@@ -60,8 +74,8 @@ export function OrganAtlas() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {motion.squares.map((clip, i) => (
-              <Reveal key={clip.slug} delay={(i % 4) * 0.07} y={28}>
-                <MotionClipCard clip={clip} />
+              <Reveal key={clip.slug} delay={(i % 4) * 0.07} y={28} className="h-full">
+                <MotionClipCard clip={clip} ratio={1} />
               </Reveal>
             ))}
           </div>
@@ -77,7 +91,7 @@ export function OrganAtlas() {
   );
 }
 
-function Plate({ plate, priority }: { plate: OrganPlate; priority: boolean }) {
+function Plate({ plate, priority = false }: { plate: OrganPlate; priority?: boolean }) {
   return (
     <TiltCard className="group overflow-hidden rounded-[1.4rem] border border-black/[0.08] bg-white shadow-[0_28px_70px_-48px_rgba(21,20,26,0.45)]">
       <figure>
@@ -93,23 +107,23 @@ function Plate({ plate, priority }: { plate: OrganPlate; priority: boolean }) {
   );
 }
 
-function MotionClipCard({ clip }: { clip: MotionClip }) {
-  const ratio = ratioOf(clip.poster);
+function MotionClipCard({ clip, ratio }: { clip: MotionClip; ratio?: number }) {
+  const r = ratio ?? ratioOf(clip.poster);
 
   return (
     <TiltCard
       max={5}
-      className="group overflow-hidden rounded-[1.3rem] border border-black/[0.08] bg-[#05070d] shadow-[0_28px_70px_-48px_rgba(21,20,26,0.5)]"
+      className="group flex h-full flex-col overflow-hidden rounded-[1.3rem] border border-black/[0.08] bg-[#05070d] shadow-[0_28px_70px_-48px_rgba(21,20,26,0.5)]"
     >
-      <figure>
-        <div className="relative w-full overflow-hidden" style={{ aspectRatio: String(ratio) }}>
+      <figure className="flex h-full flex-col">
+        <div className="relative w-full overflow-hidden" style={{ aspectRatio: String(r) }}>
           <LoopVideo
             src={clip.video}
             poster={clip.poster}
             className="transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
           />
         </div>
-        <figcaption className="flex items-baseline gap-3 px-5 py-4">
+        <figcaption className="flex flex-1 items-baseline gap-3 px-5 py-4">
           <h4 className="type-h4 text-[1.02rem] text-[var(--ink-frame-foreground)]">{clip.name}</h4>
           <p className="type-caption text-[color:var(--brand-ice)]/55">{clip.note}</p>
         </figcaption>

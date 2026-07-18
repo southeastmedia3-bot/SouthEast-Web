@@ -50,6 +50,11 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   "/media/pharma/moa-poster.jpg": { w: 1920, h: 1080 },
   "/media/pharma/skin-poster.jpg": { w: 1920, h: 1080 },
 
+  // Molecular — motion loops trimmed from the MoA masters (16:9, shown whole)
+  "/media/pharma/moa-protein-poster.jpg": { w: 1280, h: 720 },
+  "/media/pharma/moa-pipeline-loop-poster.jpg": { w: 1280, h: 720 },
+  "/media/pharma/moa-structure-poster.jpg": { w: 960, h: 540 },
+
   // Inclusive — body types + head studies
   "/media/pharma/deck/bodytypes-a.jpg": { w: 1600, h: 1500 },
   "/media/pharma/deck/bodytypes-b.jpg": { w: 1486, h: 1601 },

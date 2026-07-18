@@ -161,6 +161,8 @@ export const pharmaMolecular = {
       slug: "protein",
       title: "Accurate 3D protein models",
       body: "Protein models that make mechanism of action, molecular interaction and drug-target communication clear and visually engaging.",
+      video: `${PH}/moa-protein.mp4`,
+      poster: `${PH}/moa-protein-poster.jpg`,
       image: `${DECK}/protein.jpg`,
     },
     {
@@ -175,12 +177,16 @@ export const pharmaMolecular = {
       slug: "pipeline",
       title: "The production pipeline",
       body: "Produced through industry-standard Cinema 4D and Octane Render workflows — crisp detailing, smooth motion and premium quality for collaterals, HCP education and scientific presentations.",
+      video: `${PH}/moa-pipeline-loop.mp4`,
+      poster: `${PH}/moa-pipeline-loop-poster.jpg`,
       image: `${DECK}/moa-pipeline.jpg`,
     },
     {
       slug: "structure",
       title: "Molecular structure models",
       body: "Complex scientific data as clear, striking structure models — extended into 3D-print-ready assets for exhibitions, medical conferences and activation spaces.",
+      video: `${PH}/moa-structure.mp4`,
+      poster: `${PH}/moa-structure-poster.jpg`,
       image: `${PH}/molecular.jpg`,
     },
     {

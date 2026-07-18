@@ -56,7 +56,7 @@ export function MolecularSection() {
                   "flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-black",
                 )}
               >
-                <div className="relative aspect-[16/10] w-full">
+                <div className="relative aspect-[16/9] w-full">
                   {item.video && item.poster ? (
                     <LoopVideo src={item.video} poster={item.poster} />
                   ) : (
