@@ -50,7 +50,7 @@ export function PharmaIntro() {
             </Reveal>
           </div>
           <div className="lg:col-span-5">
-            <Reveal delay={0.08} y={28} x={56} scale={1.04}>
+            <Reveal delay={0.08} y={16} scale={1.08} blur={16} duration={0.9}>
               <figure className="overflow-hidden rounded-[1.4rem] ring-1 ring-white/10">
                 <NaturalMedia
                   image={pharmaIntro.image}

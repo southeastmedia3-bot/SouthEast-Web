@@ -46,8 +46,8 @@ export function OrganAtlas() {
             <Reveal
               key={plate.slug}
               delay={(i % 2) * 0.08}
-              y={28}
-              x={i % 2 === 0 ? -40 : 40}
+              y={0}
+              scale={0.9}
               className="h-full"
             >
               <Plate plate={plate} priority={i < 2} />
@@ -59,14 +59,14 @@ export function OrganAtlas() {
             They enter from alternating sides; point at one and the frame morphs
             into the mark and turns to a card. */}
         <div className="mt-6 space-y-6 lg:space-y-7">
-          <Reveal y={28} x={-56}>
+          <Reveal y={0} scale={0.94} duration={0.85}>
             <MorphPlate plate={brainPlate} corner="3rem" />
           </Reveal>
-          <Reveal y={28} x={56}>
+          <Reveal y={0} scale={0.94} duration={0.85}>
             <MorphPlate plate={lungPlate} corner="3rem" />
           </Reveal>
           {liverPlate ? (
-            <Reveal y={28} x={-56}>
+            <Reveal y={0} scale={0.94} duration={0.85}>
               <MorphPlate plate={liverPlate} corner="3rem" />
             </Reveal>
           ) : null}
@@ -95,8 +95,8 @@ export function OrganAtlas() {
               <Reveal
                 key={clip.slug}
                 delay={(i % 4) * 0.07}
-                y={28}
-                scale={1.04}
+                y={0}
+                scale={0.9}
                 className="h-full"
               >
                 <MotionClipCard clip={clip} ratio={1} />
@@ -104,7 +104,7 @@ export function OrganAtlas() {
             ))}
           </div>
 
-          <Reveal delay={0.05} y={28} scale={1.03}>
+          <Reveal delay={0.05} y={0} scale={0.95} duration={0.85}>
             <div className="mt-6">
               <MotionClipCard clip={motion.wide} />
             </div>

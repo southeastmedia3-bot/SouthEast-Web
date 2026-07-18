@@ -93,7 +93,7 @@ export function PharmaInclusive() {
         </div>
 
         {/* Orbital & eye — the full source slide, shown whole at a comfortable size. */}
-        <Reveal delay={0.05} y={28} scale={1.04} className="mx-auto mt-12 max-w-3xl md:mt-16">
+        <Reveal delay={0.05} y={56} duration={0.85} className="mx-auto mt-12 max-w-3xl md:mt-16">
           <figure className="group relative aspect-[16/9] w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-black shadow-[0_40px_90px_-60px_rgba(21,20,26,0.6)]">
             <Image
               src={orbitalSlide.src}

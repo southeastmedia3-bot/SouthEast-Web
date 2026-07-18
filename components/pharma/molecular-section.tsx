@@ -30,7 +30,7 @@ export function MolecularSection() {
 
         {/* Lead item — full width, media on top. */}
         {lead ? (
-          <Reveal scale={1.03}>
+          <Reveal y={56} duration={0.85}>
             <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
               <div className="relative aspect-[21/9] w-full">
                 {lead.video && lead.poster ? (
@@ -50,7 +50,7 @@ export function MolecularSection() {
         {/* The rest — a two-up grid of cards. */}
         <div className="mt-4 grid gap-4 md:grid-cols-2">
           {rest.map((item, i) => (
-            <Reveal key={item.slug} delay={(i % 2) * 0.08} x={i % 2 === 0 ? -44 : 44}>
+            <Reveal key={item.slug} delay={(i % 2) * 0.08} y={48}>
               <article
                 className={cn(
                   "flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-black",

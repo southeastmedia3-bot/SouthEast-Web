@@ -122,8 +122,9 @@ export function FeatureRow({
 
           <Reveal
             delay={0.1}
-            x={side === "left" ? -52 : 52}
-            scale={1.03}
+            y={0}
+            rotateY={side === "left" ? -12 : 12}
+            duration={0.9}
             className={cn(side === "left" && "lg:order-1")}
           >
             <div
