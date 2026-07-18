@@ -54,7 +54,7 @@ export function FeatureRow({
       <Container>
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
           <div className={cn(side === "left" && "lg:order-2")}>
-            <Reveal>
+            <Reveal x={side === "left" ? 44 : -44}>
               <p
                 className="type-label mb-5"
                 style={{ color: dark ? "var(--brand-sky)" : "var(--brand-blue)" }}
@@ -120,7 +120,12 @@ export function FeatureRow({
             </Reveal>
           </div>
 
-          <Reveal delay={0.1} className={cn(side === "left" && "lg:order-1")}>
+          <Reveal
+            delay={0.1}
+            x={side === "left" ? -52 : 52}
+            scale={1.03}
+            className={cn(side === "left" && "lg:order-1")}
+          >
             <div
               className={cn(
                 "overflow-hidden rounded-[1.5rem] border",

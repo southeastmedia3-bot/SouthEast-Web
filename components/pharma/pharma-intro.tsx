@@ -30,21 +30,27 @@ export function PharmaIntro() {
           <div className="flex items-center gap-4">
             <span className="type-index text-[color:var(--brand-blue)]">01</span>
             <span className="type-label text-[color:var(--brand-blue)]">{pharmaIntro.eyebrow}</span>
-            <span className="h-px flex-1 bg-white/15" />
+            <motion.span
+              className="h-px flex-1 origin-left bg-white/15"
+              initial={reducedMotion ? undefined : { scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, amount: 1 }}
+              transition={{ duration: 0.9, ease: EASE, delay: 0.15 }}
+            />
           </div>
         </Reveal>
 
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-7">
-            <Reveal>
+            <Reveal x={-48} y={24}>
               <h2 className="type-h2 text-balance text-white">{pharmaIntro.title}</h2>
             </Reveal>
-            <Reveal delay={0.12}>
+            <Reveal delay={0.12} x={-32}>
               <p className="type-body-lg mt-5 max-w-xl text-white/70">{pharmaIntro.body}</p>
             </Reveal>
           </div>
           <div className="lg:col-span-5">
-            <Reveal delay={0.08} y={28}>
+            <Reveal delay={0.08} y={28} x={56} scale={1.04}>
               <figure className="overflow-hidden rounded-[1.4rem] ring-1 ring-white/10">
                 <NaturalMedia
                   image={pharmaIntro.image}

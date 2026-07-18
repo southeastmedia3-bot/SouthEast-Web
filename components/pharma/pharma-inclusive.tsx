@@ -24,7 +24,7 @@ export function PharmaInclusive() {
     >
       <Container>
         <div className="mb-12 max-w-2xl">
-          <Reveal>
+          <Reveal x={-40}>
             <p className="type-label mb-5 text-[color:var(--brand-blue)]">{eyebrow}</p>
             <h2 className="type-h3 text-balance text-foreground">{title}</h2>
             <p className="type-body-lg mt-5 text-muted">{body}</p>
@@ -34,7 +34,7 @@ export function PharmaInclusive() {
         {/* Body-type sets — white-ground plates. */}
         <div className="grid items-start gap-5 sm:grid-cols-2">
           {images.map((img, i) => (
-            <Reveal key={img.src} delay={i * 0.08} y={28}>
+            <Reveal key={img.src} delay={i * 0.08} y={28} x={i === 0 ? -44 : 44}>
               <TiltCard
                 max={5}
                 glow="rgba(130,185,255,0.14)"
@@ -68,7 +68,7 @@ export function PharmaInclusive() {
         {/* Head studies — cutaway and cross-section, side by side, enlarged and whole. */}
         <div className="mt-5 grid items-start gap-5 sm:grid-cols-2">
           {studies.map((study, i) => (
-            <Reveal key={study.src} delay={i * 0.07} y={28}>
+            <Reveal key={study.src} delay={i * 0.07} y={28} x={i === 0 ? -44 : 44}>
               <TiltCard className="group overflow-hidden rounded-[1.4rem] border border-white/10 bg-[#0a0c11]">
                 <figure>
                   <div className="relative aspect-square w-full bg-white">
@@ -93,7 +93,7 @@ export function PharmaInclusive() {
         </div>
 
         {/* Orbital & eye — the full source slide, shown whole at a comfortable size. */}
-        <Reveal delay={0.05} y={28} className="mx-auto mt-12 max-w-3xl md:mt-16">
+        <Reveal delay={0.05} y={28} scale={1.04} className="mx-auto mt-12 max-w-3xl md:mt-16">
           <figure className="group relative aspect-[16/9] w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-black shadow-[0_40px_90px_-60px_rgba(21,20,26,0.6)]">
             <Image
               src={orbitalSlide.src}

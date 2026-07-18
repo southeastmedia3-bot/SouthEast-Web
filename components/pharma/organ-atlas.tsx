@@ -34,7 +34,7 @@ export function OrganAtlas() {
     <section id="atlas" className="scroll-mt-36 bg-white py-24 md:py-32">
       <Container size="xl">
         <div className="mb-14 max-w-2xl">
-          <Reveal>
+          <Reveal x={-40}>
             <p className="type-label mb-5 text-[color:var(--brand-blue)]">{pharmaAtlas.eyebrow}</p>
             <h2 className="type-h2 text-balance text-[#15141a]">{pharmaAtlas.title}</h2>
             <p className="type-body-lg mt-5 text-[#55555f]">{pharmaAtlas.body}</p>
@@ -43,23 +43,30 @@ export function OrganAtlas() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:gap-7">
           {keptPlates.map((plate, i) => (
-            <Reveal key={plate.slug} delay={(i % 2) * 0.08} y={28}>
+            <Reveal
+              key={plate.slug}
+              delay={(i % 2) * 0.08}
+              y={28}
+              x={i % 2 === 0 ? -40 : 40}
+              className="h-full"
+            >
               <Plate plate={plate} priority={i < 2} />
             </Reveal>
           ))}
         </div>
 
         {/* The remaining organs — cropped to the render, sized to their own shape.
-            Point at one and the frame morphs into the mark and turns to a card. */}
+            They enter from alternating sides; point at one and the frame morphs
+            into the mark and turns to a card. */}
         <div className="mt-6 space-y-6 lg:space-y-7">
-          <Reveal y={28}>
+          <Reveal y={28} x={-56}>
             <MorphPlate plate={brainPlate} corner="3rem" />
           </Reveal>
-          <Reveal y={28}>
+          <Reveal y={28} x={56}>
             <MorphPlate plate={lungPlate} corner="3rem" />
           </Reveal>
           {liverPlate ? (
-            <Reveal y={28}>
+            <Reveal y={28} x={-56}>
               <MorphPlate plate={liverPlate} corner="3rem" />
             </Reveal>
           ) : null}
@@ -67,12 +74,12 @@ export function OrganAtlas() {
 
         {/* The atlas in motion — the animation loops, structured, playing in view. */}
         <div className="mt-24 md:mt-28">
-          <Reveal>
-            <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
-              <div className="max-w-2xl">
-                <h3 className="type-h3 text-balance text-[#15141a]">{motion.title}</h3>
-                <p className="type-body mt-3 text-[#55555f]">{motion.body}</p>
-              </div>
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+            <Reveal x={-40} className="max-w-2xl">
+              <h3 className="type-h3 text-balance text-[#15141a]">{motion.title}</h3>
+              <p className="type-body mt-3 text-[#55555f]">{motion.body}</p>
+            </Reveal>
+            <Reveal x={40}>
               <span className="type-label flex items-center gap-2 text-[color:var(--brand-blue)]">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--brand-blue)] opacity-70" />
@@ -80,18 +87,24 @@ export function OrganAtlas() {
                 </span>
                 Live loops
               </span>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {motion.squares.map((clip, i) => (
-              <Reveal key={clip.slug} delay={(i % 4) * 0.07} y={28} className="h-full">
+              <Reveal
+                key={clip.slug}
+                delay={(i % 4) * 0.07}
+                y={28}
+                scale={1.04}
+                className="h-full"
+              >
                 <MotionClipCard clip={clip} ratio={1} />
               </Reveal>
             ))}
           </div>
 
-          <Reveal delay={0.05} y={28}>
+          <Reveal delay={0.05} y={28} scale={1.03}>
             <div className="mt-6">
               <MotionClipCard clip={motion.wide} />
             </div>
