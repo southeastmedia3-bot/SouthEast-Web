@@ -40,7 +40,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
   return (
     <section
       ref={ref}
-      className="relative flex min-h-[88vh] items-end overflow-hidden bg-[#05070d] pb-20 pt-40"
+      className="relative flex min-h-[100svh] items-end overflow-hidden bg-[#05070d] pb-14 pt-28 md:pb-16 md:pt-32"
     >
       <motion.div
         className="absolute inset-0"
@@ -56,7 +56,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
       >
         <Container>
           <motion.p
-            className="type-label mb-6 text-[color:var(--brand-ice)]/70"
+            className="type-label mb-4 text-[color:var(--brand-ice)]/70"
             initial={reducedMotion ? undefined : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
@@ -64,7 +64,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
             {vertical.eyebrow}
           </motion.p>
 
-          <h1 className="type-h1 max-w-4xl text-balance text-[var(--ink-frame-foreground)]">
+          <h1 className="max-w-4xl text-balance text-[clamp(2.25rem,4.6vw,4rem)] font-bold leading-[1.04] tracking-[-0.02em] text-[var(--ink-frame-foreground)]">
             {words.map((word, i) => (
               <span
                 key={`${word}-${i}`}
@@ -84,7 +84,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
           </h1>
 
           <motion.p
-            className="type-body-lg mt-8 max-w-2xl text-[color:var(--brand-ice)]/75"
+            className="type-body-lg mt-5 max-w-2xl text-[color:var(--brand-ice)]/75"
             initial={reducedMotion ? undefined : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
@@ -93,7 +93,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
           </motion.p>
 
           <motion.div
-            className="mt-10 flex flex-wrap gap-4"
+            className="mt-7 flex flex-wrap gap-4"
             initial={reducedMotion ? undefined : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.5 }}
@@ -113,7 +113,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
 
           {/* The terms, stated up front. A buyer shouldn't have to scroll for them. */}
           {vertical.headline?.length ? (
-            <dl className="mt-14 flex flex-wrap gap-x-14 gap-y-6">
+            <dl className="mt-9 flex flex-wrap gap-x-14 gap-y-5">
               {vertical.headline.map((m, i) => (
                 <motion.div
                   key={m.label}
