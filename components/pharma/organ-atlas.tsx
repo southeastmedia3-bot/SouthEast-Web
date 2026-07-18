@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { LoopVideo } from "@/components/pharma/loop-video";
@@ -7,6 +8,7 @@ import { NaturalMedia } from "@/components/pharma/natural-media";
 import { TiltCard } from "@/components/pharma/tilt-card";
 import { pharmaAtlas, type MotionClip, type OrganPlate } from "@/data/pharma";
 import { ratioOf } from "@/lib/pharma-media-dims";
+import { cn } from "@/lib/utils";
 
 /**
  * The atlas — deck slides 8–21, the organ-by-organ disease-state library.
@@ -24,7 +26,9 @@ const FULL_WIDTH_PLATES = new Set(["brain", "lung", "liver"]);
 export function OrganAtlas() {
   const { motion } = pharmaAtlas;
   const keptPlates = pharmaAtlas.plates.filter((p) => !FULL_WIDTH_PLATES.has(p.slug));
-  const fullPlates = pharmaAtlas.plates.filter((p) => FULL_WIDTH_PLATES.has(p.slug));
+  const brainPlate = pharmaAtlas.plates.find((p) => p.slug === "brain")!;
+  const lungPlate = pharmaAtlas.plates.find((p) => p.slug === "lung")!;
+  const liverPlate = pharmaAtlas.plates.find((p) => p.slug === "liver");
 
   return (
     <section id="atlas" className="scroll-mt-36 bg-white py-24 md:py-32">
@@ -45,13 +49,22 @@ export function OrganAtlas() {
           ))}
         </div>
 
-        {/* The unlabelled organs — shown full-width, one to a row, at full plate. */}
-        <div className="mt-6 grid gap-6 lg:gap-7">
-          {fullPlates.map((plate) => (
-            <Reveal key={plate.slug} y={28}>
-              <Plate plate={plate} />
+        {/* The remaining organs — cropped to the render, sized to their own shape.
+            Point at one and the frame morphs into the mark and turns to a card. */}
+        <div className="mt-6 space-y-6 lg:space-y-7">
+          <Reveal y={28}>
+            <MorphPlate plate={brainPlate} corner="3rem" />
+          </Reveal>
+          <Reveal y={28}>
+            <MorphPlate plate={lungPlate} corner="3rem" />
+          </Reveal>
+          {liverPlate ? (
+            <Reveal y={28}>
+              <div className="flex justify-center">
+                <MorphPlate plate={liverPlate} corner="2rem" className="w-full max-w-[380px]" />
+              </div>
             </Reveal>
-          ))}
+          ) : null}
         </div>
 
         {/* The atlas in motion — the animation loops, structured, playing in view. */}
@@ -104,6 +117,62 @@ function Plate({ plate, priority = false }: { plate: OrganPlate; priority?: bool
         />
       </figure>
     </TiltCard>
+  );
+}
+
+/**
+ * A cropped organ render that morphs into the mark on hover.
+ *
+ * At rest it is just the render (the baked slide text is already cropped away).
+ * Point at it and the frame's corners sweep into the logo silhouette
+ * (`.brand-shape-morph`, `--corner`), the render fades, and a card naming the
+ * organ turns over in its place — the same gesture as the home-page discipline
+ * wall. The box takes the crop's own aspect, so nothing is cropped again here.
+ */
+function MorphPlate({
+  plate,
+  corner,
+  className,
+}: {
+  plate: OrganPlate;
+  corner: string;
+  className?: string;
+}) {
+  const ratio = ratioOf(plate.image);
+
+  return (
+    <div
+      className={cn("group relative", className)}
+      style={{ "--corner": corner } as React.CSSProperties}
+    >
+      <div
+        className="brand-shape-morph relative w-full overflow-hidden border border-black/[0.08] bg-white shadow-[0_28px_70px_-48px_rgba(21,20,26,0.45)]"
+        style={{ aspectRatio: String(ratio) }}
+      >
+        <Image
+          src={plate.image}
+          alt={plate.name}
+          fill
+          sizes="(min-width: 1024px) 90vw, 96vw"
+          className="object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0"
+        />
+
+        {/* Hovered state: the card, clipped to the same morphing box. */}
+        <div className="absolute inset-0 flex flex-col justify-center bg-white p-7 opacity-0 transition-opacity duration-500 group-hover:opacity-100 md:p-10">
+          <p className="type-label text-[color:var(--brand-blue)]">The atlas</p>
+          <h3 className="type-h3 mt-3 text-balance text-[#15141a]">{plate.title ?? plate.name}</h3>
+          {plate.blurb ? (
+            <p className="type-body mt-4 max-w-xl text-[#55555f]">{plate.blurb}</p>
+          ) : null}
+        </div>
+      </div>
+
+      {/* The rule that traces the silhouette the frame morphs into. */}
+      <span
+        className="brand-shape-morph pointer-events-none absolute inset-0 border-2 border-transparent transition-colors duration-500 group-hover:border-[rgba(21,20,26,0.4)]"
+        aria-hidden="true"
+      />
+    </div>
   );
 }
 

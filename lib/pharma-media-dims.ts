@@ -10,6 +10,10 @@
 export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   // Full source slides (uniform 16:9) — shown whole, self-contained (title + copy baked in)
   "/media/pharma/slides/orbital-eye.jpg": { w: 2400, h: 1350 },
+  // Full-width organs, cropped to the render (baked slide text removed)
+  "/media/pharma/slides/brain-crop.jpg": { w: 2400, h: 820 },
+  "/media/pharma/slides/lung-crop.jpg": { w: 2400, h: 790 },
+  "/media/pharma/slides/liver-crop.jpg": { w: 770, h: 1250 },
   "/media/pharma/slides/brain.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/heart.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/liver.jpg": { w: 2400, h: 1350 },

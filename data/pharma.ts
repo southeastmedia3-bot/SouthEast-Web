@@ -17,8 +17,8 @@ export const pharmaIntro = {
   eyebrow: "Medical, pharmaceutical & scientific visualization",
   title: "Medical 3D visuals that make complex healthcare clear.",
   body: "High-quality 3D renders, animation, and visual storytelling for pharma brands, hospital chains, healthcare campaigns, and medical education — built for product launches, patient awareness, doctor communication, and digital-first healthcare marketing.",
-  image: `${DECK}/family.jpg`,
-  imageAlt: "A family of realistic full-body anatomy models — male, female, child",
+  image: `${DECK}/protein.jpg`,
+  imageAlt: "An accurate 3D antibody protein model, rendered for pharma communication",
   stats: [
     { value: "10 yrs", label: "building the model library" },
     { value: "Since 2015", label: "scientifically accurate 3D" },
@@ -88,6 +88,9 @@ export type OrganPlate = {
   slug: string;
   name: string;
   image: string;
+  /** Full-width organs carry their own title + blurb, revealed on the morph hover. */
+  title?: string;
+  blurb?: string;
 };
 
 export type MotionClip = {
@@ -121,9 +124,27 @@ export const pharmaAtlas: {
   },
   plates: [
     { slug: "heart", name: "Heart anatomy", image: `${SLIDES}/heart.jpg` },
-    { slug: "brain", name: "Brain anatomy", image: `${SLIDES}/brain.jpg` },
-    { slug: "lung", name: "Lung — health to disease", image: `${SLIDES}/lung.jpg` },
-    { slug: "liver", name: "Liver health", image: `${SLIDES}/liver.jpg` },
+    {
+      slug: "brain",
+      name: "Brain anatomy",
+      image: `${SLIDES}/brain-crop.jpg`,
+      title: "Brain anatomy, visualized with scientific precision",
+      blurb: "3D brain illustrations that present complex neurological structures with clarity, accuracy and visual impact — helping brands, hospitals and clinicians communicate more effectively.",
+    },
+    {
+      slug: "lung",
+      name: "Lung — health to disease",
+      image: `${SLIDES}/lung-crop.jpg`,
+      title: "Lung health, damage, infection & disease progression",
+      blurb: "Healthy, smoker's, corona-affected and tuberculosis-affected lungs, side by side — disease progression rendered with clinical clarity.",
+    },
+    {
+      slug: "liver",
+      name: "Liver health",
+      image: `${SLIDES}/liver-crop.jpg`,
+      title: "Visualizing liver health",
+      blurb: "3D liver visuals that simplify disease progression — from a healthy liver to fatty liver and cancer-affected liver.",
+    },
     { slug: "stomach", name: "Stomach cancer", image: `${SLIDES}/stomach.jpg` },
     { slug: "kidney", name: "Kidney & pancreas", image: `${SLIDES}/kidney.jpg` },
     { slug: "bronchial", name: "Bronchial inflammation", image: `${SLIDES}/bronchial.jpg` },
@@ -131,7 +152,6 @@ export const pharmaAtlas: {
     { slug: "orofacial", name: "Orofacial anatomy", image: `${SLIDES}/orofacial.jpg` },
     { slug: "musculoskeletal", name: "Musculoskeletal — spine & knee", image: `${SLIDES}/musculoskeletal.jpg` },
     { slug: "hand", name: "Hand muscle anatomy", image: `${SLIDES}/hand.jpg` },
-    { slug: "leg", name: "Leg muscle anatomy", image: `${SLIDES}/leg.jpg` },
     { slug: "cell", name: "Cellular & mitochondrial anatomy", image: `${SLIDES}/cell.jpg` },
     { slug: "thyroid", name: "Thyroid — healthy to cancer", image: `${SLIDES}/thyroid.jpg` },
   ],
