@@ -90,10 +90,35 @@ export type OrganPlate = {
   image: string;
 };
 
-export const pharmaAtlas: { eyebrow: string; title: string; body: string; plates: OrganPlate[] } = {
+export type MotionClip = {
+  slug: string;
+  name: string;
+  note: string;
+  video: string;
+  poster: string;
+};
+
+export const pharmaAtlas: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  plates: OrganPlate[];
+  motion: { title: string; body: string; squares: MotionClip[]; wide: MotionClip };
+} = {
   eyebrow: "The atlas",
   title: "Organ by organ, in medical clarity.",
   body: "A disease-state library rendered to clear a review board — healthy tissue and pathology, sectioned, labelled and shown at full plate. Every organ, whole, at the shape it was made in.",
+  motion: {
+    title: "The atlas in motion",
+    body: "The same models, animated — the loops that play the moment they reach the screen.",
+    squares: [
+      { slug: "heart-cycle", name: "Heart", note: "Real cardiac dynamics, looped.", video: `${PH}/heart.mp4`, poster: `${PH}/heart-poster.jpg` },
+      { slug: "heart-cross", name: "Heart — cross-section", note: "Four chambers, valves and flow.", video: `${PH}/heart-cross.mp4`, poster: `${PH}/heart-cross-poster.jpg` },
+      { slug: "cardiac", name: "Cardiac cycle", note: "A single beat, held in loop.", video: `${PH}/heartbeat.mp4`, poster: `${PH}/heartbeat-poster.jpg` },
+      { slug: "fetal", name: "Fetal development", note: "Prenatal stages, in sequence.", video: `${PH}/fetus.mp4`, poster: `${PH}/fetus-poster.jpg` },
+    ],
+    wide: { slug: "lung", name: "Lung — health to disease", note: "Healthy, smoker's, COVID-affected and tuberculosis-affected, side by side.", video: `${PH}/lung.mp4`, poster: `${PH}/lung-poster.jpg` },
+  },
   plates: [
     { slug: "heart", name: "Heart anatomy", image: `${SLIDES}/heart.jpg` },
     { slug: "brain", name: "Brain anatomy", image: `${SLIDES}/brain.jpg` },
