@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
-import { LoopVideo } from "@/components/pharma/loop-video";
+import { MediaFill } from "@/components/pharma/media-fill";
 import { pharmaMolecular } from "@/data/pharma";
 import { cn } from "@/lib/utils";
 
@@ -32,12 +31,14 @@ export function MolecularSection() {
         {lead ? (
           <Reveal>
             <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
-              <div className="relative aspect-[21/9] w-full">
-                {lead.video && lead.poster ? (
-                  <LoopVideo src={lead.video} poster={lead.poster} />
-                ) : (
-                  <Image src={lead.image} alt={lead.title} fill sizes="90vw" className="object-cover" />
-                )}
+              <div className="relative aspect-[21/9] w-full overflow-hidden">
+                <MediaFill
+                  image={lead.image}
+                  video={lead.video}
+                  poster={lead.poster}
+                  alt={lead.title}
+                  sizes="90vw"
+                />
               </div>
               <div className="bg-white p-7 md:p-9">
                 <h3 className="type-h4 text-foreground">{lead.title}</h3>
@@ -56,18 +57,14 @@ export function MolecularSection() {
                   "flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-black",
                 )}
               >
-                <div className="relative aspect-[16/10] w-full">
-                  {item.video && item.poster ? (
-                    <LoopVideo src={item.video} poster={item.poster} />
-                  ) : (
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      sizes="(min-width: 768px) 45vw, 92vw"
-                      className="object-cover"
-                    />
-                  )}
+                <div className="relative aspect-[16/10] w-full overflow-hidden">
+                  <MediaFill
+                    image={item.image}
+                    video={item.video}
+                    poster={item.poster}
+                    alt={item.title}
+                    sizes="(min-width: 768px) 45vw, 92vw"
+                  />
                 </div>
                 <div className="flex flex-1 flex-col bg-white p-6 md:p-7">
                   <h3 className="type-h4 text-[1.15rem] text-foreground">{item.title}</h3>

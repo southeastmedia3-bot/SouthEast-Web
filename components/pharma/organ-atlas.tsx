@@ -34,8 +34,8 @@ export function OrganAtlas() {
           </Reveal>
         </div>
 
-        {/* Featured — the animated organs. */}
-        <div className="grid gap-4 lg:grid-cols-3">
+        {/* Featured — the animated organs, large and landscape. */}
+        <div className="grid gap-5 lg:grid-cols-3">
           {pharmaAtlas.featured.map((organ, i) => (
             <Reveal key={organ.slug} delay={(i % 3) * 0.08}>
               <MorphTile
@@ -48,14 +48,15 @@ export function OrganAtlas() {
                 states={organ.states}
                 corner="4.5rem"
                 sizes="(min-width: 1024px) 32vw, 92vw"
-                className="aspect-[4/3]"
+                className="aspect-[16/10]"
               />
             </Reveal>
           ))}
         </div>
 
-        {/* The specimen grid — every remaining organ. */}
-        <div className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {/* The specimen grid — every remaining organ. Landscape tiles, three to a
+            row: each render sits in full, the section breathes. */}
+        <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {pharmaAtlas.grid.map((organ, i) => (
             <SpecimenCard key={organ.slug} organ={organ} index={i} reduced={reducedMotion} />
           ))}
@@ -80,9 +81,9 @@ function SpecimenCard({ organ, index, reduced }: { organ: Organ; index: number; 
         image={organ.image}
         video={organ.video}
         poster={organ.poster}
-        corner="3rem"
-        sizes="(min-width: 1024px) 22vw, 45vw"
-        className="aspect-[4/5]"
+        corner="3.25rem"
+        sizes="(min-width: 1024px) 32vw, 90vw"
+        className="aspect-[4/3]"
       />
     </motion.div>
   );
