@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { useRef, type ReactNode } from "react";
+import { motion, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
@@ -71,17 +71,9 @@ export function Reveal({
   // slides up from just past its full height so no sliver shows at rest.
   if (mask) {
     return (
-      <span className={cn("block overflow-hidden pb-[0.12em]", className)}>
-        <motion.span
-          className="block will-change-transform"
-          initial={{ y: "115%" }}
-          whileInView={{ y: "0%" }}
-          viewport={{ once: true, amount }}
-          transition={{ duration: Math.max(duration, 0.85), ease: EASE, delay }}
-        >
-          {children}
-        </motion.span>
-      </span>
+      <MaskReveal delay={delay} duration={duration} amount={amount} className={className}>
+        {children}
+      </MaskReveal>
     );
   }
 
@@ -112,5 +104,42 @@ export function Reveal({
     >
       {children}
     </motion.div>
+  );
+}
+
+/**
+ * The masked title reveal, split out so it can observe its *own untransformed
+ * wrapper*. The inner line starts pushed fully below the clip and slides up to
+ * rest — but `whileInView` on that inner element watches its translated (off-
+ * screen-low) geometry, which can fail to register as "in view". Observing the
+ * static outer span with `useInView` and driving `animate` from it is reliable.
+ */
+function MaskReveal({
+  children,
+  delay,
+  duration,
+  amount,
+  className,
+}: {
+  children: ReactNode;
+  delay: number;
+  duration: number;
+  amount: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const inView = useInView(ref, { once: true, amount });
+
+  return (
+    <span ref={ref} className={cn("block overflow-hidden pb-[0.14em]", className)}>
+      <motion.span
+        className="block will-change-transform"
+        initial={{ y: "115%" }}
+        animate={inView ? { y: "0%" } : { y: "115%" }}
+        transition={{ duration: Math.max(duration, 0.85), ease: EASE, delay }}
+      >
+        {children}
+      </motion.span>
+    </span>
   );
 }
