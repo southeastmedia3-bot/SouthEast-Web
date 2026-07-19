@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { NaturalMedia } from "@/components/pharma/natural-media";
+import { Parallax } from "@/components/pharma/parallax";
 import { cn } from "@/lib/utils";
 
 type FeatureRowProps = {
@@ -21,6 +22,8 @@ type FeatureRowProps = {
   side?: "left" | "right";
   /** Dark ground (for the black-background renders / loops). */
   dark?: boolean;
+  /** A SectionSeam sits directly above — drop the top rule so they don't double. */
+  seamAbove?: boolean;
 };
 
 /**
@@ -42,12 +45,14 @@ export function FeatureRow({
   poster,
   side = "right",
   dark = false,
+  seamAbove = false,
 }: FeatureRowProps) {
   return (
     <section
       id={id}
       className={cn(
-        "scroll-mt-36 border-t py-20 md:py-28",
+        "scroll-mt-36 py-20 md:py-28",
+        !seamAbove && "border-t",
         dark ? "border-white/10 bg-[#05070d]" : "border-border bg-white",
       )}
     >
@@ -61,6 +66,8 @@ export function FeatureRow({
               >
                 {eyebrow}
               </p>
+            </Reveal>
+            <Reveal mask delay={0.06}>
               <h2
                 className={cn(
                   "type-h3 text-balance",
@@ -69,6 +76,8 @@ export function FeatureRow({
               >
                 {title}
               </h2>
+            </Reveal>
+            <Reveal delay={0.16} y={16}>
               <p
                 className={cn(
                   "type-body-lg mt-5 max-w-xl",
@@ -120,30 +129,26 @@ export function FeatureRow({
             </Reveal>
           </div>
 
-          <Reveal
-            delay={0.1}
-            y={0}
-            rotateY={side === "left" ? -12 : 12}
-            duration={0.9}
-            className={cn(side === "left" && "lg:order-1")}
-          >
-            <div
-              className={cn(
-                "overflow-hidden rounded-[1.5rem] border",
-                dark
-                  ? "border-white/10 bg-[#0a0c11]"
-                  : "border-border bg-white shadow-[0_40px_90px_-55px_rgba(21,20,26,0.4)]",
-              )}
-            >
-              <NaturalMedia
-                image={image}
-                video={video}
-                poster={poster}
-                alt={imageAlt}
-                sizes="(min-width: 1024px) 46vw, 92vw"
-              />
-            </div>
-          </Reveal>
+          <Parallax distance={20} className={cn(side === "left" && "lg:order-1")}>
+            <Reveal delay={0.1} y={0} rotateY={side === "left" ? -12 : 12} duration={0.9}>
+              <div
+                className={cn(
+                  "overflow-hidden rounded-[1.5rem] border",
+                  dark
+                    ? "border-white/10 bg-[#0a0c11]"
+                    : "border-border bg-white shadow-[0_40px_90px_-55px_rgba(21,20,26,0.4)]",
+                )}
+              >
+                <NaturalMedia
+                  image={image}
+                  video={video}
+                  poster={poster}
+                  alt={imageAlt}
+                  sizes="(min-width: 1024px) 46vw, 92vw"
+                />
+              </div>
+            </Reveal>
+          </Parallax>
         </div>
       </Container>
     </section>

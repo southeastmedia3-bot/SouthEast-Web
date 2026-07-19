@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
+import { Parallax } from "@/components/pharma/parallax";
 import { TiltCard } from "@/components/pharma/tilt-card";
 import { pharmaBodyTypes } from "@/data/pharma";
 
@@ -20,13 +21,17 @@ export function PharmaInclusive() {
   return (
     <section
       id="inclusive"
-      className="scroll-mt-36 border-t border-border bg-[var(--surface-elevated)] py-20 md:py-28"
+      className="scroll-mt-36 bg-[var(--surface-elevated)] py-20 md:py-28"
     >
       <Container>
         <div className="mb-12 max-w-2xl">
           <Reveal x={-40}>
             <p className="type-label mb-5 text-[color:var(--brand-blue)]">{eyebrow}</p>
+          </Reveal>
+          <Reveal mask delay={0.06}>
             <h2 className="type-h3 text-balance text-foreground">{title}</h2>
+          </Reveal>
+          <Reveal delay={0.16} y={16}>
             <p className="type-body-lg mt-5 text-muted">{body}</p>
           </Reveal>
         </div>
@@ -93,17 +98,19 @@ export function PharmaInclusive() {
         </div>
 
         {/* Orbital & eye — the full source slide, shown whole at a comfortable size. */}
-        <Reveal delay={0.05} y={56} duration={0.85} className="mx-auto mt-12 max-w-3xl md:mt-16">
-          <figure className="group relative aspect-[16/9] w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-black shadow-[0_40px_90px_-60px_rgba(21,20,26,0.6)]">
-            <Image
-              src={orbitalSlide.src}
-              alt={orbitalSlide.alt}
-              fill
-              sizes="(min-width: 768px) 768px, 92vw"
-              className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
-            />
-          </figure>
-        </Reveal>
+        <Parallax distance={28} className="mx-auto mt-12 max-w-3xl md:mt-16">
+          <Reveal y={56} duration={0.85}>
+            <figure className="group relative aspect-[16/9] w-full overflow-hidden rounded-[1.4rem] border border-white/10 bg-black shadow-[0_40px_90px_-60px_rgba(21,20,26,0.6)]">
+              <Image
+                src={orbitalSlide.src}
+                alt={orbitalSlide.alt}
+                fill
+                sizes="(min-width: 768px) 768px, 92vw"
+                className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.02]"
+              />
+            </figure>
+          </Reveal>
+        </Parallax>
       </Container>
     </section>
   );

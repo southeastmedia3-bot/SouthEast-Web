@@ -36,7 +36,11 @@ export function OrganAtlas() {
         <div className="mb-14 max-w-2xl">
           <Reveal x={-40}>
             <p className="type-label mb-5 text-[color:var(--brand-blue)]">{pharmaAtlas.eyebrow}</p>
+          </Reveal>
+          <Reveal mask delay={0.06}>
             <h2 className="type-h2 text-balance text-[#15141a]">{pharmaAtlas.title}</h2>
+          </Reveal>
+          <Reveal delay={0.16} y={16}>
             <p className="type-body-lg mt-5 text-[#55555f]">{pharmaAtlas.body}</p>
           </Reveal>
         </div>

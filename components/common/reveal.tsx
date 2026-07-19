@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -20,6 +21,11 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  *   `blur`  — a focus-pull (starts blurred by N px, resolves sharp)
  *   `clip`  — a curtain wipe from one edge (up/down/left/right)
  *   `rotateY` — a 3D swing-in from N degrees (shadow-safe, unlike `clip`)
+ *   `mask`  — the line rises from behind its own edge (a title unmasking). The
+ *             child is clipped by an `overflow-hidden` wrapper and slid up from
+ *             fully below it, so it arrives like a struck film title rather than
+ *             fading in. Takes precedence over the other flavours and ignores
+ *             `x`/`scale`/`blur`/`clip`/`rotateY` (they don't compose with a mask).
  * All default to off, so every existing caller keeps the plain rise. `body` is
  * `overflow-x: clip`, so a horizontal enter never spills a scrollbar.
  */
@@ -39,6 +45,7 @@ export function Reveal({
   blur,
   clip,
   rotateY,
+  mask,
   amount = 0.25,
   duration = 0.7,
   className,
@@ -51,6 +58,7 @@ export function Reveal({
   blur?: number;
   clip?: "up" | "down" | "left" | "right";
   rotateY?: number;
+  mask?: boolean;
   amount?: number;
   duration?: number;
   className?: string;
@@ -58,6 +66,24 @@ export function Reveal({
   const reducedMotion = useReducedMotion();
 
   if (reducedMotion) return <div className={className}>{children}</div>;
+
+  // A title unmasking from behind its own edge. The wrapper clips, the child
+  // slides up from just past its full height so no sliver shows at rest.
+  if (mask) {
+    return (
+      <span className={cn("block overflow-hidden pb-[0.12em]", className)}>
+        <motion.span
+          className="block will-change-transform"
+          initial={{ y: "115%" }}
+          whileInView={{ y: "0%" }}
+          viewport={{ once: true, amount }}
+          transition={{ duration: Math.max(duration, 0.85), ease: EASE, delay }}
+        >
+          {children}
+        </motion.span>
+      </span>
+    );
+  }
 
   return (
     <motion.div

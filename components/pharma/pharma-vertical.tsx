@@ -9,6 +9,7 @@ import { MolecularSection } from "@/components/pharma/molecular-section";
 import { OrganAtlas } from "@/components/pharma/organ-atlas";
 import { PharmaInclusive } from "@/components/pharma/pharma-inclusive";
 import { PharmaIntro } from "@/components/pharma/pharma-intro";
+import { SectionSeam } from "@/components/pharma/section-seam";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { LinkButton } from "@/components/ui/link-button";
@@ -54,8 +55,14 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
         alt={hero?.alt ?? vertical.title}
       />
 
+      {/* Each section change of key is bridged by a seam rather than a hard cut —
+          the page shifts light↔dark on purpose. Grounds match each section's own. */}
+      <SectionSeam from="var(--background)" to="#1b1710" accent="rgba(54,161,223,0.5)" />
+
       {/* Slide 1 + credibility (4, 6, 7) */}
       <PharmaIntro />
+
+      <SectionSeam from="#1b1710" to="#ffffff" accent="rgba(25,81,168,0.4)" />
 
       {/* Slide 2 — the anatomy library */}
       <FeatureRow
@@ -66,16 +73,23 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
         image={pharmaLibrary.image}
         imageAlt={pharmaLibrary.imageAlt}
         side="right"
+        seamAbove
       />
+
+      <SectionSeam from="#ffffff" to="#000000" accent="rgba(54,161,223,0.5)" />
 
       {/* Slide 3 — the rigged model assembles itself */}
       <AnatomyReveal />
+
+      <SectionSeam from="#000000" to="var(--surface-elevated)" accent="rgba(25,81,168,0.4)" />
 
       {/* Slides 4–8 — inclusive anatomy + head studies */}
       <PharmaInclusive />
 
       {/* Slides 9–22 — the organ atlas */}
       <OrganAtlas />
+
+      <SectionSeam from="#ffffff" to="#05070d" accent="rgba(54,161,223,0.5)" />
 
       {/* Slide 24 — dermatology */}
       <FeatureRow
@@ -87,10 +101,15 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
         poster={pharmaSkin.poster}
         side="left"
         dark
+        seamAbove
       />
+
+      <SectionSeam from="#05070d" to="var(--surface)" accent="rgba(25,81,168,0.4)" />
 
       {/* Slides 23, 25, 26, 27, 28 — molecular & Mechanism of Action */}
       <MolecularSection />
+
+      <SectionSeam from="var(--surface)" to="#000000" accent="rgba(54,161,223,0.5)" />
 
       {/* Slide 29 — closing manifesto */}
       <ClosingManifesto />

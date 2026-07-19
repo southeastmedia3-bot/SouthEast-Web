@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { LoopVideo } from "@/components/pharma/loop-video";
+import { Parallax } from "@/components/pharma/parallax";
 import { pharmaMolecular } from "@/data/pharma";
 import { cn } from "@/lib/utils";
 
@@ -18,19 +19,24 @@ export function MolecularSection() {
   const [lead, ...rest] = items;
 
   return (
-    <section id="molecular" className="scroll-mt-36 border-t border-border bg-[var(--surface)] py-24 md:py-32">
+    <section id="molecular" className="scroll-mt-36 bg-[var(--surface)] py-24 md:py-32">
       <Container size="xl">
         <div className="mb-14 max-w-2xl">
           <Reveal x={-40}>
             <p className="type-label mb-5 text-[color:var(--brand-blue)]">{eyebrow}</p>
+          </Reveal>
+          <Reveal mask delay={0.06}>
             <h2 className="type-h2 text-balance text-foreground">{title}</h2>
+          </Reveal>
+          <Reveal delay={0.16} y={16}>
             <p className="type-body-lg mt-5 text-muted">{body}</p>
           </Reveal>
         </div>
 
         {/* Lead item — full width, media on top. */}
         {lead ? (
-          <Reveal y={56} duration={0.85}>
+          <Parallax distance={16}>
+            <Reveal y={56} duration={0.85}>
             <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
               <div className="relative aspect-[21/9] w-full">
                 {lead.video && lead.poster ? (
@@ -44,7 +50,8 @@ export function MolecularSection() {
                 <p className="type-body mt-3 max-w-3xl text-muted">{lead.body}</p>
               </div>
             </div>
-          </Reveal>
+            </Reveal>
+          </Parallax>
         ) : null}
 
         {/* The rest — a two-up grid of cards. */}

@@ -50,7 +50,7 @@ export function AnatomyReveal() {
   if (reducedMotion) {
     const last = anatomyLayers[N - 1]!;
     return (
-      <section id="anatomy" className="scroll-mt-36 border-t border-white/10 bg-black py-20">
+      <section id="anatomy" className="scroll-mt-36 bg-black py-20">
         <Container>
           <p className="type-label mb-4 text-[color:var(--brand-sky)]">Fully rigged anatomy</p>
           <h2 className="type-h3 mb-8 text-[var(--ink-frame-foreground)]">One model. Every system.</h2>
@@ -63,7 +63,7 @@ export function AnatomyReveal() {
   }
 
   return (
-    <section id="anatomy" className="border-t border-white/10 bg-black">
+    <section id="anatomy" className="bg-black">
       {/* Tall track: its height is what the pinned stage scrubs against. */}
       <div ref={trackRef} style={{ height: `${N * PER_LAYER_VH + 60}vh` }} className="relative">
         <div className="sticky top-0 flex h-dvh flex-col overflow-hidden">

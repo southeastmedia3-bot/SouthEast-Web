@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { NaturalMedia } from "@/components/pharma/natural-media";
+import { Parallax } from "@/components/pharma/parallax";
 import { pharmaIntro } from "@/data/pharma";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
@@ -23,7 +24,7 @@ export function PharmaIntro() {
   return (
     <section
       id="overview"
-      className="scroll-mt-36 border-t border-white/10 bg-[#1b1710] py-16 md:py-20"
+      className="scroll-mt-36 bg-[#1b1710] py-16 md:py-20"
     >
       <Container>
         <Reveal>
@@ -42,24 +43,26 @@ export function PharmaIntro() {
 
         <div className="mt-8 grid items-end gap-8 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-7">
-            <Reveal x={-48} y={24}>
+            <Reveal mask>
               <h2 className="type-h2 text-balance text-white">{pharmaIntro.title}</h2>
             </Reveal>
-            <Reveal delay={0.12} x={-32}>
+            <Reveal delay={0.18} x={-32}>
               <p className="type-body-lg mt-5 max-w-xl text-white/70">{pharmaIntro.body}</p>
             </Reveal>
           </div>
           <div className="lg:col-span-5">
-            <Reveal delay={0.08} y={16} scale={1.08} blur={16} duration={0.9}>
-              <figure className="overflow-hidden rounded-[1.4rem] ring-1 ring-white/10">
-                <NaturalMedia
-                  image={pharmaIntro.image}
-                  alt={pharmaIntro.imageAlt}
-                  priority
-                  sizes="(min-width: 1024px) 40vw, 92vw"
-                />
-              </figure>
-            </Reveal>
+            <Parallax distance={26}>
+              <Reveal delay={0.08} y={16} scale={1.08} blur={16} duration={0.9}>
+                <figure className="overflow-hidden rounded-[1.4rem] ring-1 ring-white/10">
+                  <NaturalMedia
+                    image={pharmaIntro.image}
+                    alt={pharmaIntro.imageAlt}
+                    priority
+                    sizes="(min-width: 1024px) 40vw, 92vw"
+                  />
+                </figure>
+              </Reveal>
+            </Parallax>
           </div>
         </div>
 
