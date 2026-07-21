@@ -878,57 +878,234 @@ export const verticals: Vertical[] = [
           "Proprietary AI video generation run on our own secure servers — Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway — for speed and iteration capacity, never at the cost of data privacy.",
       },
     ],
-    process: STUDIO_PROCESS,
-    // Character animation, logo builds and explainer motion graphics.
-    gallery: [
+    /**
+     * Section order maps to the bespoke page as:
+     *   [0] the named formats · [1] beyond the screen · [2] AI acceleration ·
+     *   [3] where it earns.
+     * `[0].items` is zipped by index with `animationAssets.formatFrames`.
+     */
+    sections: [
       {
-        src: "/media/animation/character-05.jpg",
-        title: "Desk sequence",
-        note: "Character animation",
+        eyebrow: "What we make",
+        heading: "Eight things this page can be commissioned to build.",
+        lead: "Named formats, all off one pipeline — so the launch film and the social cutdown of it are genuinely the same piece of work.",
+        items: [
+          {
+            name: "Explainer film",
+            detail:
+              "The argument, made in motion. Built to survive being watched at 1.5× with the sound off.",
+          },
+          {
+            name: "Character animation",
+            detail:
+              "Rigged characters with a performance in them — modelled, rigged and animated in Maya and 3ds Max, not posed off a shelf.",
+          },
+          {
+            name: "Logo & brand builds",
+            detail:
+              "The mark, assembled. Stings, endboards and title systems a brand keeps using after the campaign ends.",
+          },
+          {
+            name: "Storyboard & animatic",
+            detail:
+              "Every shot drawn and cut to timing before render cost begins. Deliverable on its own if that is all you need.",
+          },
+          {
+            name: "Anamorphic & projection",
+            detail:
+              "Forced-perspective content built to the geometry of the actual screen — corner LED, façade, video wall.",
+          },
+          {
+            name: "Immersive AR & VR",
+            detail:
+              "Unreal Engine and Twinmotion builds: product demonstration, medical training and investor showcases you can walk through.",
+          },
+          {
+            name: "AI-accelerated iteration",
+            detail:
+              "Direction tests explored in hours on our own servers. Never shipped raw — it finishes nothing.",
+          },
+          {
+            name: "Social & cutdowns",
+            detail:
+              "9:16 and 1:1 composed at build stage, not cropped out of widescreen after the fact.",
+          },
+        ],
       },
-      { src: "/media/animation/character-09.jpg", title: "Workshop", note: "Character animation" },
-      { src: "/media/animation/shot-02.jpg", title: "Interior set", note: "Layout & lighting" },
-      { src: "/media/saas/infograph-04.jpg", title: "Data wall", note: "Explainer" },
-      { src: "/media/animation/logo-poster.jpg", title: "Logo build", note: "Brand animation" },
-      { src: "/media/saas/creative-10.jpg", title: "Abstract motion", note: "Motion graphics" },
+      {
+        eyebrow: "Beyond the screen",
+        heading: "Animation that stops being a rectangle.",
+        lead: "Forced-perspective 3D built to the geometry of the surface it plays on — a corner LED, a lobby wall, a building façade.",
+        body: [
+          "A frame composed for a 16:9 player falls apart on a screen that turns a corner. Anamorphic content is built the other way round: the installation is the camera, and the illusion resolves from exactly where the audience stands.",
+          "Same pipeline as everything else on this page — built in Maya, rendered through Octane, cut to the plate the screen actually takes.",
+        ],
+        items: [
+          {
+            name: "Corner & wrap LED",
+            detail:
+              "Content built to the fold, so the image reads as one volume rather than two flat panels meeting at an edge.",
+          },
+          {
+            name: "Projection mapping",
+            detail:
+              "Surfaces surveyed, then animated to their own edges — brand facilities, hospital lobbies, corporate experience centres.",
+          },
+          {
+            name: "Real-time & interactive",
+            detail:
+              "Unreal Engine and Twinmotion, for demonstrations a visitor drives instead of watches.",
+          },
+        ],
+      },
+      {
+        eyebrow: "Speed, honestly accounted for",
+        heading: "The fastest tools available, on hardware we own.",
+        lead: "Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway — every one of them running on our own secure servers.",
+        body: [
+          "Generation runs on our own infrastructure, which guarantees two things a hosted tool cannot: the whole machine is allocated to your job, and nothing about your project is uploaded anywhere to make a mood film faster.",
+          "It compresses the exploratory half of the work — the part where a direction is still being argued about — and it finishes nothing. Every frame that leaves this building is built, corrected and graded by artists on the Maya, Cinema 4D and Octane pipeline.",
+        ],
+      },
+      {
+        eyebrow: "Where it earns",
+        heading: "The moments an animation is the only thing that will do.",
+        items: [
+          {
+            name: "Launch & campaign",
+            detail:
+              "Hero film, cutdowns and social set out of one build, so the whole campaign reads as one thing.",
+          },
+          {
+            name: "Explaining the invisible",
+            detail:
+              "Process, software, mechanism — anything with no photograph to take and no set to shoot.",
+          },
+          {
+            name: "Training & induction",
+            detail:
+              "Procedure and safety content people actually finish, because it moves and it is specific to your floor.",
+          },
+          {
+            name: "Rooms & facilities",
+            detail:
+              "Lobbies, experience centres, booths and video walls — cut to the geometry of the screen, not letterboxed into it.",
+          },
+        ],
+      },
     ],
-    videosLead:
-      "Character work, logo builds and explainer motion, running at full length rather than described.",
-    videos: [
-      // No `bugs-life.mp4` here: it is the signature film at the top of this page.
-      // Listing it again played the same film twice on one screen and pulled it
-      // down twice. `saas/creative.mp4` takes the slot so the wall still reads six.
-      {
-        src: "/media/saas/creative.mp4",
-        poster: "/media/saas/creative-poster.jpg",
-        label: "Abstract motion",
+    contrast: {
+      heading: "What changes when the whole film is made in one building.",
+      without: {
+        label: "The usual",
+        points: [
+          "A chain of vendors — one writes it, one boards it, one animates it, one grades it — and the direction thins out at every hand-off.",
+          "Template motion off a stock library, recognisable as the same asset three other brands bought this quarter.",
+          "Material pushed into third-party cloud tools to hit the date, unreleased product included.",
+          "A second film a year later that plainly did not come from the same place as the first.",
+        ],
       },
-      // All three logo builds run, but the order keeps them apart: at three
-      // columns this puts a different subject beside and above each one.
-      {
-        src: "/media/animation/logo.mp4",
-        poster: "/media/animation/logo-poster.jpg",
-        label: "Logo — build",
+      with: {
+        label: "With Southeast Media",
+        points: [
+          "Script, board, animatic, animation, render and grade under one roof and one art direction.",
+          "Characters and worlds built for you, rigged so the next film reuses the build instead of restarting it.",
+          "AI generation on servers we own and operate on-site — nothing about the project leaves the premises.",
+          "A house style that lives in the assets themselves, so film twelve still matches film one.",
+        ],
       },
+    },
+    process: [
       {
-        src: "/media/animation/character-test.mp4",
-        poster: "/media/animation/character-test-poster.jpg",
-        label: "Character test",
-      },
-      {
-        src: "/media/animation/logo-trail.mp4",
-        poster: "/media/animation/logo-trail-poster.jpg",
-        label: "Logo — trail",
-      },
-      {
-        src: "/media/animation/artwork.mp4",
-        poster: "/media/animation/artwork-poster.jpg",
-        label: "Artwork — reveal",
+        step: "Brief, under NDA",
+        detail:
+          "What the film has to make someone do, agreed first. Server access provisioned and locked to the engagement.",
       },
       {
-        src: "/media/animation/logo-alt.mp4",
-        poster: "/media/animation/logo-alt-poster.jpg",
-        label: "Logo — alternate build",
+        step: "Script & storyboard",
+        detail:
+          "Every shot drawn before anything is built — the cheapest place in the whole project to change your mind.",
+      },
+      {
+        step: "Animatic & previz",
+        detail:
+          "Boards cut to timing, then a moving previz through Reallusion Character Creator and iClone into Unreal. Pace and camera lock here.",
+      },
+      {
+        step: "Design, model & rig",
+        detail:
+          "The look settled on one frame, then built in Autodesk Maya and 3ds Max and rigged to be reused by the next film.",
+      },
+      {
+        step: "Animation",
+        detail:
+          "The performance pass — weight, timing, anticipation and hold. The part of this that cannot be bought off a shelf.",
+      },
+      {
+        step: "Look-dev, FX & render",
+        detail:
+          "X-Particles, EmberGen and LiquiGen where a shot needs simulation; Blender and Cinema 4D through Octane, out to 8K on the 15-server farm we own on-site.",
+      },
+      {
+        step: "Sound, conform & delivery",
+        detail:
+          "Edit, sound design and Digital Intermediate grade in our own suites, mastered to every ratio and length the plan calls for.",
+      },
+    ],
+    // Captions only — the frames resolve through `animationAssets.galleryFrames`
+    // and are zipped to these by index, so changing a picture never changes what
+    // the page says about it.
+    gallery: [
+      { src: "/media/animation/character-09.jpg", title: "Workshop", note: "Character animation" },
+      { src: "/media/animation/shot-02.jpg", title: "Diorama city", note: "Layout & set" },
+      {
+        src: "/media/animation/logo-alt-poster.jpg",
+        title: "Mark, assembling",
+        note: "Brand animation",
+      },
+      { src: "/media/saas/infograph-04.jpg", title: "Orbiting panels", note: "Explainer" },
+      {
+        src: "/media/animation/character-03.jpg",
+        title: "Character study",
+        note: "Look & lighting",
+      },
+      {
+        src: "/media/animation/artwork-poster.jpg",
+        title: "Artwork reveal",
+        note: "Title & reveal",
+      },
+    ],
+    // No `videos` block. Every film this vertical can show runs in the reel
+    // theater at the top of its bespoke page, off `animationAssets.reels` — a
+    // second wall of six simultaneous loops would only play the same files again.
+    faqs: [
+      {
+        q: "How long does an animated film take?",
+        a: "It depends on how much has to be built from nothing. A motion-graphics explainer reusing an established look is fastest; a character film with new modelling, rigging and an 8K render is not. We scope it against milestones in the SOW rather than quote a number we would immediately have to caveat.",
+      },
+      {
+        q: "Do you do 2D as well as 3D?",
+        a: "Both, and most films we deliver use both. The motion-graphics and explainer work runs on the full Adobe Creative Suite with a minimalistic, character-driven design approach; the 3D runs through Maya, 3ds Max, Blender and Cinema 4D, finished in Octane.",
+      },
+      {
+        q: "Can you work from our script, or do you write it?",
+        a: "Either. If the argument is already settled, we start at storyboard. If it is not, we start at script — settling it on paper costs a fraction of settling it in render.",
+      },
+      {
+        q: "What do we actually get at the end?",
+        a: "The master at up to 8K, plus every ratio and length the channel plan calls for, all conformed from one grade. What happens to project files and built assets afterwards is written into the SOW rather than left to assumption.",
+      },
+      {
+        q: "Do you use AI, and does it end up in the film?",
+        a: "We use it, and no. Kling, Veo, Luma, Seedance, Higgsfield and Runway run on our own secure servers for direction tests and iteration speed. Every frame delivered is built, corrected and graded by artists.",
+      },
+      {
+        q: "Can you build for a screen that isn't a rectangle?",
+        a: "Yes — corner LED, video walls, façades and projection mapping, built as forced-perspective content to the geometry of the actual installation. Interactive and walkthrough work is built in Unreal Engine and Twinmotion.",
+      },
+      {
+        q: "Can you keep producing after the first film?",
+        a: "Yes, and it is the model we prefer. Ongoing work runs as a milestone-based SOW against a library that already exists — the rigs, sets and look developed for film one are exactly what make film two quick.",
       },
     ],
     proof: {

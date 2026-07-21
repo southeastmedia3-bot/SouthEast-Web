@@ -924,8 +924,37 @@ export const vfxAssets = {
   ],
 } satisfies Record<string, MediaSlot[]>;
 
-/** Animation — character work and brand builds. */
-export const animationAssets = {
+/**
+ * A film in the animation page's reel theater.
+ *
+ * `note` is the discipline the reel demonstrates — it is what the playlist rail
+ * reads, so it names the craft rather than the client (see the header note).
+ */
+export type ReelSlot = MediaSlot & { video: string; note: string };
+
+/** A stage in the "how a frame gets made" ladder. */
+export type LadderSlot = MediaSlot & { stage: string };
+
+/**
+ * Animation — character work, brand builds, and everything the bespoke page runs.
+ *
+ * THE TWELVE CHARACTER FRAMES ARE NOT A SHOT. They are twelve separate scenes
+ * that share one look: the same soft key, the same matte rounded materials, the
+ * same shallow depth of field. The page's set-piece says exactly that, because
+ * the earlier copy ("twelve frames from one build, same rig, same set") was
+ * describing a sequence these files are not. Consistency across scenes is the
+ * stronger claim anyway — it is what a series or a brand system is bought for.
+ */
+export const animationAssets: {
+  characterFrames: MediaSlot[];
+  brandBuilds: MediaSlot[];
+  reels: ReelSlot[];
+  formatFrames: MediaSlot[];
+  galleryFrames: MediaSlot[];
+  anamorphic: ReelSlot[];
+  aiFrame: MediaSlot;
+  ladder: LadderSlot[];
+} = {
   characterFrames: [
     ...frames(ANIM, "character", 11, SQ, "Character animation frame"),
     {
@@ -935,7 +964,7 @@ export const animationAssets = {
       alt: "Animation set — interior layout and lighting",
     },
   ],
-  /** Brand builds, as posters. The films themselves run in the video wall. */
+  /** Brand builds, as posters. The films themselves run in the reel theater. */
   brandBuilds: [
     {
       key: "animLogo",
@@ -966,7 +995,270 @@ export const animationAssets = {
       label: "Artwork — reveal",
     },
   ],
-} satisfies Record<string, MediaSlot[]>;
+  /**
+   * The reel theater playlist — every moving thing this discipline can show, in
+   * one player rather than a wall of simultaneous loops.
+   *
+   * ORDER IS THE ARGUMENT: character, then explainer, then brand build, then
+   * abstract. A visitor who watches the first three has seen the whole range.
+   * Only one plays at a time, which is the point — a six-tile wall of autoplaying
+   * films is six decoders and no focus.
+   */
+  reels: [
+    {
+      key: "reelCharacterFilm",
+      src: `${ANIM}/bugs-life-poster.jpg`,
+      video: `${ANIM}/bugs-life.mp4`,
+      ...SQ,
+      alt: "Character animation film — a character in a rendered interior",
+      label: "Character film",
+      note: "Character animation",
+    },
+    {
+      key: "reelCharacterTest",
+      src: `${ANIM}/character-test-poster.jpg`,
+      video: `${ANIM}/character-test.mp4`,
+      ...LOOP,
+      alt: "Character animation test — rig and performance pass",
+      label: "Character test",
+      note: "Rig & performance",
+    },
+    {
+      key: "reelExplainer",
+      src: `${SAAS}/hybrid-cloud-poster.jpg`,
+      video: `${SAAS}/hybrid-cloud.mp4`,
+      ...LOOP,
+      alt: "Explainer film — infrastructure sequence in motion graphics",
+      label: "Explainer film",
+      note: "Motion graphics",
+    },
+    {
+      key: "reelLogo",
+      src: `${ANIM}/logo-poster.jpg`,
+      video: `${ANIM}/logo.mp4`,
+      ...LOOP,
+      alt: "Logo build — a mark assembling in motion",
+      label: "Logo build",
+      note: "Brand animation",
+    },
+    {
+      key: "reelLogoTrail",
+      src: `${ANIM}/logo-trail-poster.jpg`,
+      video: `${ANIM}/logo-trail.mp4`,
+      ...LOOP,
+      alt: "Logo trail — a mark drawn by a light trail",
+      label: "Logo — light trail",
+      note: "Brand animation",
+    },
+    {
+      key: "reelArtwork",
+      src: `${ANIM}/artwork-poster.jpg`,
+      video: `${ANIM}/artwork.mp4`,
+      ...LOOP,
+      alt: "Artwork reveal sequence",
+      label: "Artwork reveal",
+      note: "Title & reveal",
+    },
+    {
+      key: "reelAbstract",
+      src: `${SAAS}/creative-poster.jpg`,
+      video: `${SAAS}/creative.mp4`,
+      ...LOOP,
+      alt: "Abstract motion study — light resolving through deep violet",
+      label: "Abstract motion",
+      note: "Motion design",
+    },
+    {
+      key: "reelBrandSystem",
+      src: `${ENT}/minimal-style-poster.jpg`,
+      video: `${ENT}/minimal-style.mp4`,
+      ...LOOP,
+      alt: "Brand film — a minimal motion system",
+      label: "Brand motion system",
+      note: "Brand animation",
+    },
+  ],
+  /**
+   * One frame per named format, in the order of `sections[0].items` on the
+   * animation vertical. Aspects alternate deliberately — including one 3.6:1
+   * strip, which is the shape an anamorphic LED plate actually is.
+   */
+  formatFrames: [
+    {
+      key: "animFormatExplainer",
+      src: `${SAAS}/infograph-02.jpg`,
+      ...FILM,
+      alt: "Explainer frame — figures working against a lit data wall",
+    },
+    {
+      key: "animFormatCharacter",
+      src: `${ANIM}/character-05.jpg`,
+      ...SQ,
+      alt: "Character animation frame — a character on a turntable, soft key light",
+    },
+    {
+      key: "animFormatBrand",
+      src: `${ANIM}/logo-poster.jpg`,
+      ...LOOP,
+      alt: "Logo build frame — a mark mid-assembly",
+    },
+    {
+      key: "animFormatBoard",
+      src: `${SAAS}/storyboard-04.jpg`,
+      ...BOARD,
+      alt: "Hand-drawn storyboard cell from an explainer board",
+    },
+    {
+      key: "animFormatAnamorphic",
+      src: `${SAAS}/creative-band.jpg`,
+      w: 1500,
+      h: 420,
+      alt: "Wide title strip — the shape of an LED plate",
+    },
+    {
+      key: "animFormatImmersive",
+      src: `${G}/interior-06.jpg`,
+      ...FILM_HD,
+      alt: "Interior environment render, built to be walked in real time",
+    },
+    {
+      key: "animFormatAi",
+      src: `${SAAS}/creative-09.jpg`,
+      ...SHOT,
+      alt: "Abstract motion study — a direction test frame",
+    },
+    {
+      key: "animFormatSocial",
+      src: `${ANIM}/character-02.jpg`,
+      ...SQ,
+      alt: "Square character frame — composed for social, not cropped to it",
+    },
+  ],
+  /** Selected work. Zipped by index with `vertical.gallery` for the captions. */
+  galleryFrames: [
+    {
+      key: "animGalleryDesk",
+      src: `${ANIM}/character-09.jpg`,
+      ...SQ,
+      alt: "Character animation frame — workshop scene",
+    },
+    {
+      key: "animGallerySet",
+      src: `${ANIM}/shot-02.jpg`,
+      ...SQ,
+      alt: "Animation set — a diorama city, layout and lighting",
+    },
+    {
+      key: "animGalleryLogoAlt",
+      src: `${ANIM}/logo-alt-poster.jpg`,
+      ...LOOP,
+      alt: "Alternate logo build frame",
+    },
+    {
+      key: "animGalleryExplainer",
+      src: `${SAAS}/infograph-04.jpg`,
+      ...FILM,
+      alt: "Explainer frame — panels and spheres orbiting a lit core",
+    },
+    {
+      key: "animGalleryCharacter",
+      src: `${ANIM}/character-03.jpg`,
+      ...SQ,
+      alt: "Character animation frame",
+    },
+    {
+      key: "animGalleryArtwork",
+      src: `${ANIM}/artwork-poster.jpg`,
+      ...LOOP,
+      alt: "Artwork reveal frame",
+    },
+  ],
+  /**
+   * The two faces of the anamorphic corner. Two different builds on purpose —
+   * a corner screen plays one continuous piece across both planes, and showing
+   * the same file twice would read as a mirror rather than a wrap.
+   */
+  anamorphic: [
+    {
+      key: "animCornerLeft",
+      src: `${ANIM}/logo-poster.jpg`,
+      video: `${ANIM}/logo.mp4`,
+      ...LOOP,
+      alt: "Logo build running on the left plane of a corner screen",
+      label: "Left plane",
+      note: "Logo build",
+    },
+    {
+      key: "animCornerRight",
+      src: `${ANIM}/logo-trail-poster.jpg`,
+      video: `${ANIM}/logo-trail.mp4`,
+      ...LOOP,
+      alt: "Light-trail build running on the right plane of a corner screen",
+      label: "Right plane",
+      note: "Light trail",
+    },
+  ],
+  /**
+   * The AI room's single frame.
+   *
+   * Deliberately a piece of finished animation, not a picture of compute. The
+   * section's claim is that acceleration explores and artists finish, so the
+   * frame beside it has to be something that shipped — a server-rack photograph
+   * or an unrelated product simulation would illustrate the machinery and prove
+   * nothing about the output.
+   */
+  aiFrame: {
+    key: "animAiFrame",
+    src: `${ANIM}/artwork-poster.jpg`,
+    video: `${ANIM}/artwork.mp4`,
+    ...LOOP,
+    alt: "Artwork reveal sequence — a finished animated build",
+    label: "Explored fast. Finished by artists.",
+  },
+  /**
+   * How a frame gets made, as four artifacts rather than four illustrations.
+   *
+   * Same rule as `productionArtifacts`: every file here came off our own
+   * machines. The stock "SCRIPT on a desk" photograph in `/media/process/` is
+   * deliberately not among them — it is not the studio's work, so it is not
+   * evidence of the studio's process.
+   */
+  ladder: [
+    {
+      key: "animLadderBoard",
+      stage: "Board",
+      src: `${SAAS}/storyboard-01.jpg`,
+      ...BOARD,
+      alt: "Hand-drawn storyboard cell — the shot, before it is built",
+      label: "The shot, drawn. Cheapest place to change your mind.",
+    },
+    {
+      key: "animLadderLayout",
+      stage: "Layout & set",
+      src: `${ANIM}/shot-02.jpg`,
+      ...SQ,
+      alt: "Animation set — a diorama city built for a character to move through",
+      label: "The world the character has to move through, built.",
+    },
+    {
+      key: "animLadderLighting",
+      stage: "Look & lighting",
+      src: `${PROC}/lighting.jpg`,
+      w: 1200,
+      h: 1398,
+      alt: "Environment lighting study — a single shaft of light through a cavern",
+      label: "One light, tested on one frame, before it costs anything.",
+    },
+    {
+      key: "animLadderFinal",
+      stage: "Final frame",
+      src: `${ANIM}/character-07.jpg`,
+      ...SQ,
+      alt: "Finished character frame — a character beside a lit desk setup",
+      label: "Rendered, graded, and matching the eleven frames either side of it.",
+    },
+  ],
+};
 
 /**
  * SaaS — the hybrid-cloud project, end to end, plus the full abstract library.
