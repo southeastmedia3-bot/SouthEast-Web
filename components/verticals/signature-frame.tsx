@@ -17,6 +17,11 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
  * it.
  *
  * Scrubbed off the section's natural entry, so it costs no scroll.
+ *
+ * This is the film a visitor judges the studio on — it sits one screen below the
+ * hero and is the first moving image on the page — so it is the one media on a
+ * vertical that loads with priority: buffered ahead and already running by the
+ * time it arrives, rather than holding on a poster while it fetches.
  */
 export function SignatureFrame({
   tone,
@@ -57,6 +62,7 @@ export function SignatureFrame({
             alt={alt}
             className="w-full"
             sizes="(min-width: 1024px) 80vw, 92vw"
+            priority
           />
         </motion.div>
       </div>

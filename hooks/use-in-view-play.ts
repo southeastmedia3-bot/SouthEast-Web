@@ -15,9 +15,14 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
  * Under reduced motion nothing is observed and nothing plays — the poster is the
  * whole experience, which is the correct outcome rather than a degraded one.
  *
+ * `rootMargin` widens the trigger for the one film on a page that must already
+ * be running when it arrives — a signature hero, which a visitor reaches within
+ * a screen of landing and judges the studio on. Everything else keeps the narrow
+ * default, because the margin is exactly what decides how early a file downloads.
+ *
  * Returns a ref to attach to the `<video>`.
  */
-export function useInViewPlay(enabled = true) {
+export function useInViewPlay(enabled = true, rootMargin = "100px") {
   const ref = useRef<HTMLVideoElement | null>(null);
   const reducedMotion = useReducedMotion();
 
@@ -36,12 +41,12 @@ export function useInViewPlay(enabled = true) {
       },
       // A little margin so a loop is already running by the time it is properly
       // in view, without reaching so far that offscreen films start downloading.
-      { threshold: 0.1, rootMargin: "100px" },
+      { threshold: 0.1, rootMargin },
     );
 
     io.observe(video);
     return () => io.disconnect();
-  }, [enabled, reducedMotion]);
+  }, [enabled, reducedMotion, rootMargin]);
 
   return ref;
 }

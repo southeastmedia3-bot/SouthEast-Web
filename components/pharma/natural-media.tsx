@@ -22,7 +22,11 @@ type NaturalMediaProps = {
    * real file can replace a placeholder without touching any component.
    */
   ratio?: number;
-  /** Load immediately rather than lazily. For frames at the top of a page. */
+  /**
+   * Load immediately rather than lazily. For frames at the top of a page — the
+   * still loads eagerly, and a `video` fetches its header up front and starts a
+   * screen early instead of waiting to be scrolled onto.
+   */
   eager?: boolean;
 };
 
@@ -57,7 +61,12 @@ export function NaturalMedia({
       {video ? (
         // Was `autoPlay` + `preload`, which downloaded every loop on the page at
         // mount. Now it loads and plays only once it is actually on screen.
-        <LazyLoopVideo src={video} poster={ratioSrc} className={imgClassName} />
+        <LazyLoopVideo
+          src={video}
+          poster={ratioSrc}
+          className={imgClassName}
+          priority={eager || priority}
+        />
       ) : (
         <Image
           src={image}

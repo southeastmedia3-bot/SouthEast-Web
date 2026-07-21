@@ -142,10 +142,15 @@ export const verticalHeroes: Record<string, MediaAsset> = {
     ratio: "wide",
     alt: "3D mechanism-of-action animation — EGFR protein binding",
   },
+  // The city masterplan film, whole. The cut this used to carry was a 24s
+  // excerpt at 960x400; the hero is the frame a visitor judges the studio on,
+  // so it now runs the master's full 88 seconds with the letterbox cropped off
+  // rather than scaled into. Poster is its own opening frame, so there is no
+  // pop between the still and the first played frame.
   "real-estate": {
-    src: `${G}/exterior-05.jpg`,
+    src: `${G}/exterior-web-poster.jpg`,
     video: `${G}/exterior-web.mp4`,
-    poster: `${G}/exterior-05.jpg`,
+    poster: `${G}/exterior-web-poster.jpg`,
     tone: "sky",
     ratio: "wide",
     alt: "Institutional pre-construction architectural render",

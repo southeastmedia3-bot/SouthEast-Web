@@ -13,6 +13,8 @@ type MediaFrameProps = ComponentPropsWithoutRef<"div"> & {
   poster?: string;
   alt?: string;
   sizes?: string;
+  /** First-paint priority. Applies to the still *and* to a `video`, which then
+   *  buffers ahead and starts a screen early rather than on intersection. */
   priority?: boolean;
 };
 
@@ -60,7 +62,7 @@ export function MediaFrame({
       {video ? (
         // Deliberately not an inline <video autoPlay>. That fetched the file on
         // mount, so every loop on a page downloaded before anyone scrolled to it.
-        <LazyLoopVideo src={video} poster={poster} />
+        <LazyLoopVideo src={video} poster={poster} priority={priority} />
       ) : src ? (
         <Image
           src={src}

@@ -2,6 +2,7 @@ import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
 import { NaturalMedia } from "@/components/pharma/natural-media";
 import type { MediaSlot } from "@/data/media";
+import { cn } from "@/lib/utils";
 
 export type GalleryEntry = {
   slot: MediaSlot;
@@ -23,6 +24,38 @@ export type GalleryEntry = {
  * The curtain opens from alternating edges (Iris/Curtain) rather than fading in —
  * the frames arrive, they do not appear.
  */
+
+/** Caption block plus the rule above it, in the same units as the frame heights. */
+const CAPTION = 0.13;
+
+/**
+ * Deal the frames into two columns so both end at roughly the same line, and say
+ * which column should carry the half-frame drop.
+ *
+ * Alternating by index — the obvious split — is what left a screen of white
+ * under the shorter column, because a run of squares on one side and 16:9s on
+ * the other is exactly what the alternating aspects produce. So each frame goes
+ * to whichever column is currently shorter, measured in column-widths from the
+ * slot's own `w`/`h`. Nothing is cropped to make it fit; the order is preserved.
+ *
+ * The stagger then goes on the column that finished *shorter*, so the offset
+ * absorbs what is left of the imbalance instead of adding to it. Which side it
+ * lands on is immaterial — its whole job is to stop the two columns lining up
+ * into a grid, and it does that from either side.
+ */
+function deal(entries: GalleryEntry[]) {
+  const columns: [GalleryEntry[], GalleryEntry[]] = [[], []];
+  const height: [number, number] = [0, 0];
+
+  for (const entry of entries) {
+    const c = height[1] < height[0] ? 1 : 0;
+    columns[c].push(entry);
+    height[c] += entry.slot.h / entry.slot.w + CAPTION;
+  }
+
+  return { columns, stagger: height[0] <= height[1] ? 0 : 1 };
+}
+
 export function NaturalGallery({
   entries,
   rule,
@@ -34,7 +67,7 @@ export function NaturalGallery({
   eyebrow?: string;
   heading?: string;
 }) {
-  const columns = [entries.filter((_, i) => i % 2 === 0), entries.filter((_, i) => i % 2 === 1)];
+  const { columns, stagger } = deal(entries);
 
   return (
     <section
@@ -51,7 +84,7 @@ export function NaturalGallery({
           {columns.map((column, c) => (
             <div
               key={c}
-              className={c === 1 ? "flex flex-col gap-14 lg:mt-28" : "flex flex-col gap-14"}
+              className={cn("flex flex-col gap-14", c === stagger && "lg:mt-28")}
             >
               {column.map((entry, i) => (
                 <figure key={entry.slot.key}>

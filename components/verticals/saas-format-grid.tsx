@@ -16,6 +16,13 @@ import type { VerticalSection } from "@/data/verticals";
  * Frames take their own shape rather than a shared tile, and the aspects are
  * sequenced in `data/media.ts` so no card sits next to — or above — a card
  * cropped the same way. The curtain opens upward; nothing fades in.
+ *
+ * Columns, not a grid — the same reason `FrameLibrary` uses them. A two-column
+ * grid gives every row the height of its tallest cell, so the moment a square
+ * render sits beside a 16:9 one (which the alternating aspects guarantee), the
+ * shorter card leaves a screen of dead white under its caption. Columns let each
+ * card end where it ends. Reading order becomes down-then-across, which is why
+ * every card carries its own index.
  */
 export function SaasFormatGrid({
   section,
@@ -47,14 +54,21 @@ export function SaasFormatGrid({
           ) : null}
         </div>
 
-        <div className="grid gap-x-8 gap-y-16 lg:grid-cols-2">
+        <div className="lg:columns-2 lg:gap-8">
           {formats.map((format, i) => {
             const slot = saasAssets.formatFrames[i];
             if (!slot) return null;
 
             return (
-              <article key={format.name}>
-                <Reveal clip="up" y={0} duration={0.9} delay={(i % 2) * 0.06}>
+              // `break-inside-avoid` keeps a card from being torn across the
+              // column split; `mb-16` is the vertical gutter (columns ignore
+              // `gap-y`).
+              <article key={format.name} className="mb-16 break-inside-avoid last:mb-0">
+                {/* No index-derived delay any more. Columns lay these out
+                    down-then-across, so `i` no longer tells you which side of
+                    the page a card is on and a stagger keyed to it reads as
+                    random. Each curtain opens on its own arrival instead. */}
+                <Reveal clip="up" y={0} duration={0.9}>
                   <NaturalMedia
                     image={slot.src}
                     video={slot.video}

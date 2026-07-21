@@ -16,8 +16,14 @@ import type { VerticalSection } from "@/data/verticals";
  * what it never does, why it matters. Same claim, opposite rhythm, so the two
  * pages never read as one another's copy.
  *
- * One wide frame sits between the argument and the ledger — the studio's own
- * pipeline, which is the thing the whole section is asserting control over.
+ * One frame carries the argument — the studio's own pipeline, which is the thing
+ * the whole section is asserting control over. It sits *inside* the right-hand
+ * column, under the body copy, rather than running full-bleed underneath both.
+ * Full-bleed was the bug: the asset is square, so at 92vw it rendered close to
+ * 1800px tall on a desktop — two screens of one picture, which read as the page
+ * having simply stopped, and left the sticky heading holding against nothing.
+ * In the column it is a plate beside an argument, and the section is a third
+ * shorter.
  */
 export function EnterpriseGovernance({
   section,
@@ -56,20 +62,22 @@ export function EnterpriseGovernance({
                 <p className="type-body-lg mt-6 max-w-2xl text-foreground first:mt-0">{para}</p>
               </Reveal>
             ))}
+
+            <Reveal clip="right" y={0} duration={1.05} className="mt-10 max-w-2xl">
+              <NaturalMedia
+                image={frame.src}
+                video={frame.video}
+                ratio={frame.w / frame.h}
+                alt={frame.alt}
+                sizes="(min-width: 1024px) 42vw, 92vw"
+                className="rounded-[1.5rem] bg-[#0a0a0d]"
+              />
+            </Reveal>
+            {frame.label ? (
+              <p className="type-caption mt-4 max-w-2xl text-muted">{frame.label}</p>
+            ) : null}
           </div>
         </div>
-
-        <Reveal clip="right" y={0} duration={1.05} className="mt-16">
-          <NaturalMedia
-            image={frame.src}
-            video={frame.video}
-            ratio={frame.w / frame.h}
-            alt={frame.alt}
-            sizes="(min-width: 1024px) 92vw, 92vw"
-            className="rounded-[1.5rem] bg-[#0a0a0d]"
-          />
-        </Reveal>
-        {frame.label ? <p className="type-caption mt-4 text-muted">{frame.label}</p> : null}
 
         {/* The four questions, as rows. A procurement reader scans the left
             column for the one they came to check. */}
