@@ -2,14 +2,9 @@ import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
 import { MediaFrame } from "@/components/common/media-frame";
 import { Container } from "@/components/common/container";
 import { AnimatedCounter } from "@/components/common/animated-counter";
+import { StudioFlow } from "@/components/scenes/studio-flow";
 import { LinkButton } from "@/components/ui/link-button";
-import {
-  aboutClose,
-  aboutHero,
-  aboutMetrics,
-  aboutPrinciples,
-  aboutStory,
-} from "@/data/about";
+import { aboutClose, aboutHero, aboutMetrics, aboutPrinciples, aboutStory } from "@/data/about";
 import { aboutAssets } from "@/data/media";
 import { createMetadata } from "@/lib/seo";
 
@@ -67,6 +62,9 @@ export default function AboutPage() {
           ))}
         </div>
       </Container>
+
+      {/* The org chart and the pipeline chart, published as-is. */}
+      <StudioFlow />
 
       {/* Principles */}
       <section className="border-y border-border bg-surface-elevated/50 py-24 md:py-32">

@@ -49,20 +49,34 @@ export const servicesList = {
     {
       title: "Film & Production",
       href: "/films",
-      media: "/media/generated/exterior-07.jpg",
+      media: "/media/products/serum-poster.jpg",
       pills: ["8K Capture", "DI Grade", "Ad Films", "Podcasts"],
     },
     {
       title: "VFX & Rendering",
       href: "/vfx",
-      media: "/media/generated/interior-08.jpg",
+      media: "/media/products/ribbon-poster.jpg",
       pills: ["Compositing", "X-Particles", "EmberGen", "LiquiGen", "Octane"],
     },
     {
       title: "Motion & Immersive",
       href: "/animation",
-      media: "/media/generated/interior-03.jpg",
+      media: "/media/animation/bugs-life-poster.jpg",
       pills: ["Explainers", "Anamorphic", "AR / VR", "Projection"],
+    },
+    // SaaS and Enterprise were missing here while the wall below claimed seven
+    // disciplines. Both have real libraries now, so both get a frame.
+    {
+      title: "Product & SaaS Film",
+      href: "/saas",
+      media: "/media/saas/creative-poster.jpg",
+      pills: ["Launch Films", "Explainers", "UI in Context", "Systems", "Cutdowns"],
+    },
+    {
+      title: "The Embedded Partner",
+      href: "/enterprise",
+      media: "/media/enterprise/minimal-style-poster.jpg",
+      pills: ["Retainers", "White-Label", "Video Walls", "Governance"],
     },
   ],
 } as const;
@@ -70,17 +84,21 @@ export const servicesList = {
 /**
  * Scene: the pinned production pipeline.
  *
- * Two stages use real process imagery from the client's `ext` set (script,
- * lighting) instead of finished renders — the whole point of this section is to
- * show *how* the work is made, not the output.
+ * Every stage is now a real artifact rather than a finished render standing in
+ * for one — the whole point of the section is to show *how* the work is made.
+ * `script` and `lighting` are the client's own process photographs; the boards,
+ * line pass, grey model, simulation and final frame come from the studio's own
+ * projects.
  *
- * WITHHELD: the set also included an animatic and a modelling still, but both
- * arrived carrying other artists' watermarks ("© Robert Schlunze 2021" and a
- * "Demon Bust W.I.P." credit). Publishing another artist's work on a client's
- * production site is not something to do on a cropped-watermark basis, so those
- * two stay on generated stand-ins until the client confirms they are licensed or
- * supplies the studio's own captures (a real Maya viewport, a real grey-shader
- * pass). `script` and `lighting` carry no such attribution and are used here.
+ * WITHHELD, still: the source set also included an animatic and a modelling
+ * still carrying other artists' watermarks ("© Robert Schlunze 2021" and a
+ * "Demon Bust W.I.P." credit). Publishing another artist's work on a cropped-
+ * watermark basis is not something to do, so they stay out. The stages they
+ * would have filled now use our own equivalents instead of stand-ins.
+ *
+ * NOTE ON CROP: the pinned frame is `aspect-[4/5]` with `object-cover`, so a
+ * wide source loses its edges here. Pick square or portrait frames for this
+ * list — a 2.4:1 diagram would come out as its middle third.
  */
 export const pipeline = {
   eyebrow: "How the work gets made",
@@ -89,7 +107,7 @@ export const pipeline = {
     {
       title: "Brief & Discovery",
       detail: "Scope, stakes and success criteria, agreed under NDA before a pixel moves.",
-      media: "/media/generated/interior-01.jpg",
+      media: "/media/process/storyboard-desk.jpg",
     },
     {
       title: "Script & Storyboard",
@@ -100,12 +118,12 @@ export const pipeline = {
       title: "Previz & Animatic",
       detail:
         "Reallusion Character Creator and iClone into Unreal Engine — real-time previews and structural validation before expensive frames are committed.",
-      media: "/media/generated/interior-10.jpg",
+      media: "/media/products/watch-sketch-02.jpg",
     },
     {
       title: "Modelling & Look-Dev",
       detail: "Autodesk Maya and 3ds Max: modelling, rigging and physically based materials.",
-      media: "/media/generated/interior-07.jpg",
+      media: "/media/products/cell-04.jpg",
     },
     {
       title: "Lighting & Rendering",
@@ -116,12 +134,12 @@ export const pipeline = {
       title: "VFX & Simulation",
       detail:
         "X-Particles, Marvelous Designer, EmberGen and LiquiGen — CG integrated into plates until the seam is gone.",
-      media: "/media/generated/exterior-07.jpg",
+      media: "/media/products/horse-03.jpg",
     },
     {
       title: "Final Delivery",
       detail: "Conformed, Digital Intermediate graded, and mastered to every format you need.",
-      media: "/media/generated/interior-13.jpg",
+      media: "/media/products/watch-06.jpg",
     },
   ],
 } as const;
@@ -130,38 +148,39 @@ export const pipeline = {
  *  the verticals page. */
 export const filmReel = {
   eyebrow: "The reel",
-  // Count kept honest against the array below — it used to read "thirty-six" over
-  // twenty frames. Now it is medical and architectural work interleaved, so the
-  // drum reads as one studio across disciplines rather than one vertical.
+  // Count kept honest against the array below. The drum used to alternate two
+  // libraries — medical and architectural — which made the studio look like two
+  // verticals. It now cycles all seven, and no two adjacent frames come from the
+  // same library, so a turn of the drum is the range argument in one gesture.
   heading: "Twenty-four frames, one drum.",
   intro: "Scroll to turn it. Pick any frame — it opens the work.",
   cta: { label: "Explore all verticals", href: "/verticals" },
   href: "/verticals",
   images: [
     "/media/pharma/heart-poster.jpg",
+    "/media/products/serum-04.jpg",
     "/media/generated/exterior-01.jpg",
+    "/media/saas/creative-09.jpg",
+    "/media/products/watch-05.jpg",
     "/media/pharma/lung-poster.jpg",
     "/media/generated/interior-01.jpg",
+    "/media/animation/character-05.jpg",
+    "/media/products/ribbon-04.jpg",
+    "/media/enterprise/card-reel-poster.jpg",
     "/media/pharma/brain.jpg",
     "/media/generated/exterior-02.jpg",
+    "/media/products/earbuds-key.jpg",
+    "/media/saas/infograph-02.jpg",
+    "/media/products/horse-03.jpg",
     "/media/pharma/skin-poster.jpg",
-    "/media/generated/interior-03.jpg",
-    "/media/pharma/molecular.jpg",
-    "/media/generated/exterior-03.jpg",
-    "/media/pharma/fetus-poster.jpg",
-    "/media/generated/interior-05.jpg",
+    "/media/generated/interior-07.jpg",
+    "/media/enterprise/profile-poster.jpg",
+    "/media/products/fibre-07.jpg",
+    "/media/animation/character-09.jpg",
     "/media/pharma/protein.jpg",
     "/media/generated/exterior-05.jpg",
-    "/media/pharma/heart-cross-poster.jpg",
-    "/media/generated/interior-07.jpg",
-    "/media/pharma/tumor.jpg",
-    "/media/generated/exterior-07.jpg",
-    "/media/generated/interior-09.jpg",
-    "/media/generated/interior-10.jpg",
-    "/media/generated/exterior-04.jpg",
-    "/media/generated/interior-11.jpg",
-    "/media/generated/exterior-06.jpg",
-    "/media/generated/interior-13.jpg",
+    "/media/products/jewellery-poster.jpg",
+    "/media/saas/creative-04.jpg",
   ],
 } as const;
 
@@ -254,7 +273,10 @@ export const disciplineWall = {
       title: "Film & Production",
       sub: "Uncompressed 8K, in-house",
       href: "/films",
-      media: "/media/generated/exterior-07.jpg",
+      media: "/media/products/serum-poster.jpg",
+      // The second and last video on this wall. Seven autoplaying tiles would be
+      // seven concurrent decodes above the fold; two is the budget.
+      video: "/media/products/serum.mp4",
       span: "md:col-span-1 md:row-span-1",
       corner: "3.25rem",
     },
@@ -264,7 +286,7 @@ export const disciplineWall = {
       title: "VFX & Rendering",
       sub: "The zero-imperfection pipeline",
       href: "/vfx",
-      media: "/media/generated/interior-11.jpg",
+      media: "/media/products/ribbon-poster.jpg",
       span: "md:col-span-1 md:row-span-1",
       corner: "3.25rem",
     },
@@ -274,7 +296,18 @@ export const disciplineWall = {
       title: "Motion & Immersive",
       sub: "Explainers, anamorphic, AR / VR",
       href: "/animation",
-      media: "/media/generated/interior-03.jpg",
+      media: "/media/animation/bugs-life-poster.jpg",
+      span: "md:col-span-2 md:row-span-1",
+      corner: "3.25rem",
+    },
+    // The wall promised seven disciplines and showed six — SaaS had no tile.
+    {
+      slug: "saas",
+      kicker: "Product marketing",
+      title: "Product & SaaS Film",
+      sub: "Launch films, explainers, systems",
+      href: "/saas",
+      media: "/media/saas/creative-poster.jpg",
       span: "md:col-span-2 md:row-span-1",
       corner: "3.25rem",
     },
@@ -284,8 +317,9 @@ export const disciplineWall = {
       title: "The Embedded Partner",
       sub: "Your outsourced media division",
       href: "/enterprise",
-      media: "/media/generated/exterior-02.jpg",
-      span: "md:col-span-2 md:row-span-1",
+      media: "/media/enterprise/minimal-style-poster.jpg",
+      // Full width: it is the engagement model the other six are bought through.
+      span: "md:col-span-4 md:row-span-1",
       corner: "3.25rem",
     },
   ],

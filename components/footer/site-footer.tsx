@@ -34,11 +34,29 @@ export function SiteFooter() {
               A premium media system for cinematic launches, motion-led stories, and digital
               experiences that need a sharper sense of presence.
             </p>
+            {/* This used to be a "newsletter placeholder" card. There is no
+                newsletter, so it now carries the thing a visitor actually wants
+                to know at the foot of the page: what the studio owns and runs. */}
             <div className="rounded-[1.35rem] border border-white/12 bg-white/[0.04] p-5 shadow-[inset_0_1px_0_rgba(235,246,255,0.07)] backdrop-blur-xl">
-              <p className="text-sm font-semibold text-[var(--ink-frame-foreground)]">Newsletter placeholder</p>
-              <p className="mt-2 text-sm leading-6 text-[color:var(--brand-ice)]/55">
-                Reserved for curated release notes, production insights, and studio updates.
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-ice)]/45">
+                Built in-house
               </p>
+              <dl className="mt-4 grid grid-cols-3 gap-4">
+                {[
+                  ["15", "server farm"],
+                  ["8K", "render output"],
+                  ["100TB", "RAID array"],
+                ].map(([value, label]) => (
+                  <div key={label}>
+                    <dt className="text-lg font-semibold text-[var(--ink-frame-foreground)]">
+                      {value}
+                    </dt>
+                    <dd className="mt-1 text-xs leading-5 text-[color:var(--brand-ice)]/55">
+                      {label}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

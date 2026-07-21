@@ -4,12 +4,15 @@ import { EnterpriseGovernance } from "@/components/verticals/enterprise-governan
 import { EnterpriseSegmentTabs } from "@/components/verticals/enterprise-segment-tabs";
 import { EnterpriseWorkMarquee } from "@/components/verticals/enterprise-work-marquee";
 import { FaqList } from "@/components/verticals/faq-list";
+import { FrameLibrary } from "@/components/verticals/frame-library";
 import { ItemLedger } from "@/components/verticals/item-ledger";
 import { ProcessRail } from "@/components/verticals/process-rail";
 import { ProofBand } from "@/components/verticals/proof-band";
+import { SignatureFrame } from "@/components/verticals/signature-frame";
 import { StatBand } from "@/components/verticals/stat-band";
 import { VerticalHero } from "@/components/verticals/vertical-hero";
 import { VerticalNav, type NavSection } from "@/components/verticals/vertical-nav";
+import { enterpriseAssets, verticalHeroes } from "@/data/media";
 import type { Vertical } from "@/data/verticals";
 
 const RULE = "var(--brand-gold)";
@@ -22,6 +25,7 @@ const NAV: NavSection[] = [
   { id: "governance", label: "AI governance" },
   { id: "why", label: "Why us" },
   { id: "process", label: "Process" },
+  { id: "library", label: "Library" },
   { id: "faq", label: "FAQ" },
 ];
 
@@ -42,6 +46,7 @@ const NAV: NavSection[] = [
  */
 export function EnterpriseVertical({ vertical }: { vertical: Vertical }) {
   const [infrastructure, segments, governance, engagement] = vertical.sections ?? [];
+  const hero = verticalHeroes[vertical.slug];
 
   return (
     <main id="main-content">
@@ -50,6 +55,16 @@ export function EnterpriseVertical({ vertical }: { vertical: Vertical }) {
         accent="Embedded Media Partner"
         primary={{ href: "/contact", label: "Start a conversation" }}
         secondary={{ href: "#work", label: "See the work" }}
+      />
+
+      {/* The signature film. This page used to be the only vertical without one,
+          which meant its brand work sat entirely in stills. */}
+      <SignatureFrame
+        tone={hero?.tone ?? vertical.tone}
+        src={hero?.src}
+        video={hero?.video}
+        poster={hero?.poster}
+        alt={hero?.alt ?? vertical.title}
       />
 
       {/* The work, before the argument. */}
@@ -91,6 +106,17 @@ export function EnterpriseVertical({ vertical }: { vertical: Vertical }) {
       {vertical.contrast ? <ContrastBlock contrast={vertical.contrast} rule={RULE} /> : null}
 
       {vertical.process?.length ? <ProcessRail steps={vertical.process} rule={RULE} /> : null}
+
+      {/* The breadth claim, evidenced. Every discipline the studio sells, on one
+          sheet — because "one studio instead of five vendors" is only worth
+          saying if a procurement lead can see the range without leaving the page. */}
+      <FrameLibrary
+        id="library"
+        rule={RULE}
+        frames={enterpriseAssets.library}
+        heading="Every discipline, one studio"
+        lead="Brand, product, technical, medical, architectural, character and abstract — all of it produced on the same pipeline, in the same building."
+      />
 
       {vertical.faqs?.length ? <FaqList faqs={vertical.faqs} rule={RULE} /> : null}
 

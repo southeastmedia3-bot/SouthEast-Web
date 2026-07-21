@@ -1,7 +1,10 @@
 import { ContrastBlock } from "@/components/verticals/contrast-block";
 import { FaqList } from "@/components/verticals/faq-list";
+import { FrameLibrary } from "@/components/verticals/frame-library";
+import { FrameStrip } from "@/components/verticals/frame-strip";
 import { ItemLedger } from "@/components/verticals/item-ledger";
 import { NaturalGallery, type GalleryEntry } from "@/components/verticals/natural-gallery";
+import { ProcessArtifacts } from "@/components/verticals/process-artifacts";
 import { ProcessRail } from "@/components/verticals/process-rail";
 import { ProofBand } from "@/components/verticals/proof-band";
 import { SaasFormatGrid } from "@/components/verticals/saas-format-grid";
@@ -12,7 +15,7 @@ import { SaasRoleMarquee } from "@/components/verticals/saas-role-marquee";
 import { VerticalHero } from "@/components/verticals/vertical-hero";
 import { VerticalNav, type NavSection } from "@/components/verticals/vertical-nav";
 import { SectionSeam } from "@/components/pharma/section-seam";
-import { saasAssets } from "@/data/media";
+import { saasAssets, saasLibrary } from "@/data/media";
 import type { Vertical } from "@/data/verticals";
 
 const RULE = "var(--brand-violet)";
@@ -23,7 +26,11 @@ const NAV: NavSection[] = [
   { id: "formats", label: "Formats" },
   { id: "why", label: "Why us" },
   { id: "process", label: "Process" },
+  { id: "artifacts", label: "Artifacts" },
   { id: "work", label: "Work" },
+  { id: "storyboard", label: "Storyboard" },
+  { id: "sequence", label: "Sequence" },
+  { id: "library", label: "Library" },
   { id: "faq", label: "FAQ" },
 ];
 
@@ -109,7 +116,43 @@ export function SaasVertical({ vertical }: { vertical: Vertical }) {
 
       {vertical.process?.length ? <ProcessRail steps={vertical.process} rule={RULE} /> : null}
 
+      {/* The rail above says the six stages. This shows them. */}
+      <ProcessArtifacts rule={RULE} id="artifacts" />
+
       <NaturalGallery entries={gallery} rule={RULE} />
+
+      {/* The hero panel opens with one storyboard cell against the finished film.
+          This is the rest of that board — the whole argument for the page, which
+          is that both ends of the project were made in the same building. Shown
+          as a wall because that is how a board is read: all at once, in order. */}
+      <FrameLibrary
+        id="storyboard"
+        rule={RULE}
+        frames={saasLibrary.storyboard}
+        heading="The storyboard behind the film"
+        lead="Every cell of the hybrid-cloud board, in order — the marker drawings that became the explainer at the top of this page."
+      />
+
+      <FrameStrip
+        id="sequence"
+        rule={RULE}
+        frames={saasLibrary.creativeProgression}
+        heading="Abstract systems, frame by frame"
+        lead="Thirteen frames in cut order. Software has nothing to photograph, so every one of these had to be built."
+        dark
+      />
+
+      <FrameLibrary
+        id="library"
+        rule={RULE}
+        frames={[
+          ...saasLibrary.creativeProgression,
+          ...saasLibrary.explainerFrames,
+          saasLibrary.band,
+        ]}
+        heading="The full software library"
+        lead="Abstract systems, explainer frames and title treatments — everything produced for software teams."
+      />
 
       {provocation ? <SaasProvocation section={provocation} /> : null}
 

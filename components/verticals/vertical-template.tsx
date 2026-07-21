@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/container";
@@ -40,7 +41,25 @@ const toneRule: Record<string, string> = {
  * Sections render only when the data supports them, so the four verticals without
  * deep source material degrade to the short form rather than showing empty frames.
  */
-export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
+export function VerticalTemplate({
+  vertical,
+  extras,
+  extraNav = [],
+}: {
+  vertical: Vertical;
+  /**
+   * Discipline-specific media sections — the frame strips, contact sheets and
+   * libraries that carry the rest of a vertical's work. Rendered after the video
+   * wall, so a page reads: curated work, then motion, then everything else.
+   *
+   * These live on the page rather than in here because they differ per vertical:
+   * VFX has a line-pass/render sheet pair that means nothing on Films, and Films
+   * has a fifteen-frame cut sequence that VFX does not.
+   */
+  extras?: ReactNode;
+  /** Nav entries for whatever `extras` renders. Ids must match the section ids. */
+  extraNav?: NavSection[];
+}) {
   const hero = verticalHeroes[vertical.slug];
   const rule = toneRule[vertical.tone] ?? "var(--brand-sky)";
   // The anatomy-reveal set-piece is built from pharma's own rigged-model layers.
@@ -54,6 +73,7 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
     ...(vertical.process?.length ? [{ id: "process", label: "Process" }] : []),
     ...(vertical.gallery?.length ? [{ id: "work", label: "Work" }] : []),
     ...(vertical.videos?.length ? [{ id: "motion", label: "In motion" }] : []),
+    ...extraNav,
     ...(vertical.faqs?.length ? [{ id: "faq", label: "FAQ" }] : []),
   ];
 
@@ -161,7 +181,18 @@ export function VerticalTemplate({ vertical }: { vertical: Vertical }) {
 
       {vertical.gallery?.length ? <WorkGrid images={vertical.gallery} rule={rule} /> : null}
 
-      {vertical.videos?.length ? <VideoWall videos={vertical.videos} rule={rule} /> : null}
+      {vertical.videos?.length ? (
+        <VideoWall
+          videos={vertical.videos}
+          rule={rule}
+          // Falls back rather than throwing, but every vertical carrying videos
+          // should set its own line — see `videosLead` in `data/verticals.ts`.
+          lead={vertical.videosLead ?? "Not stills — animation, running the way it ships."}
+        />
+      ) : null}
+
+      {/* The rest of this discipline's library. See the `extras` prop. */}
+      {extras}
 
       {/* Mid-page CTA. Every reference site repeats the ask rather than saving it
           all for the foot of a nine-screen page. */}

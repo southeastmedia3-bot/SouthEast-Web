@@ -9,16 +9,27 @@ type WallVideo = { src: string; poster: string; label: string };
 /**
  * The library, in motion.
  *
- * A wall of medical animation loops that play together — the point being that
- * this studio does not just render stills, it animates. Six clips at once is a
- * real decode cost, so an IntersectionObserver only lets a tile play while it is
- * actually on screen and pauses it otherwise; nothing runs in a background tab or
- * far up the page.
+ * A wall of loops that play together — the point being that this studio does not
+ * just render stills, it animates. Six clips at once is a real decode cost, so an
+ * IntersectionObserver only lets a tile play while it is actually on screen and
+ * pauses it otherwise; nothing runs in a background tab or far up the page.
  *
  * Under reduced motion the videos never autoplay — each tile shows its poster and
  * a control the visitor can trigger themselves.
+ *
+ * `lead` is a prop rather than a constant because this wall is no longer
+ * pharma-only: describing anatomy rigs above a wall of product films is how the
+ * section stops being true. Every vertical that renders it passes its own line.
  */
-export function VideoWall({ videos, rule }: { videos: readonly WallVideo[]; rule: string }) {
+export function VideoWall({
+  videos,
+  rule,
+  lead,
+}: {
+  videos: readonly WallVideo[];
+  rule: string;
+  lead: string;
+}) {
   const reducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -55,10 +66,7 @@ export function VideoWall({ videos, rule }: { videos: readonly WallVideo[]; rule
           <span className="block h-[2px] w-10" style={{ background: rule }} aria-hidden="true" />
           <h2 className="type-h3 text-[var(--ink-frame-foreground)]">The library, in motion</h2>
         </div>
-        <p className="type-body mb-12 max-w-2xl text-[color:var(--brand-ice)]/60">
-          Not stills — animation. Rigged anatomy and mechanism-of-action sequences,
-          built in Cinema 4D and Octane and running the way they ship.
-        </p>
+        <p className="type-body mb-12 max-w-2xl text-[color:var(--brand-ice)]/60">{lead}</p>
 
         <div ref={containerRef} className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {videos.map((video) => (

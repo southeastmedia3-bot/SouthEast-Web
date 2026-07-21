@@ -1,5 +1,6 @@
 import { AnatomyReveal } from "@/components/verticals/anatomy-reveal";
 import { FaqList } from "@/components/verticals/faq-list";
+import { FrameLibrary } from "@/components/verticals/frame-library";
 import { SignatureFrame } from "@/components/verticals/signature-frame";
 import { VerticalHero } from "@/components/verticals/vertical-hero";
 import { VerticalNav, type NavSection } from "@/components/verticals/vertical-nav";
@@ -15,13 +16,14 @@ import { Reveal } from "@/components/common/reveal";
 import { LinkButton } from "@/components/ui/link-button";
 import type { Vertical } from "@/data/verticals";
 import { pharmaLibrary, pharmaSkin } from "@/data/pharma";
-import { verticalHeroes } from "@/data/media";
+import { pharmaExtraFrames, verticalHeroes } from "@/data/media";
 
 const NAV: NavSection[] = [
   { id: "overview", label: "Overview" },
   { id: "anatomy", label: "Anatomy" },
   { id: "atlas", label: "Atlas" },
   { id: "molecular", label: "Molecular" },
+  { id: "library", label: "Library" },
   { id: "faq", label: "FAQ" },
 ];
 
@@ -114,13 +116,25 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
       {/* Slide 29 — closing manifesto */}
       <ClosingManifesto />
 
+      {/* The remaining deck cutouts the set-pieces above do not already carry —
+          orbital, musculoskeletal, the lung comparison and the body-type range. */}
+      <FrameLibrary
+        id="library"
+        rule="var(--brand-blue)"
+        frames={pharmaExtraFrames}
+        heading="More from the anatomy library"
+        lead="Orbital, musculoskeletal, disease comparison and the body-type range — all expert-reviewed, all built to be posed and sectioned."
+      />
+
       {/* Conversion tail */}
       {vertical.faqs?.length ? <FaqList faqs={vertical.faqs} rule="var(--brand-blue)" /> : null}
 
       <section className="relative overflow-hidden bg-[#0a0a0d] py-24 md:py-32">
         <Container>
           <Reveal>
-            <p className="type-label mb-6 text-[color:var(--brand-ice)]/60">{vertical.proof.label}</p>
+            <p className="type-label mb-6 text-[color:var(--brand-ice)]/60">
+              {vertical.proof.label}
+            </p>
             <h2 className="type-h2 max-w-3xl text-balance text-[var(--ink-frame-foreground)]">
               {vertical.proof.title}
             </h2>

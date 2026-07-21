@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
 import { MediaFrame } from "@/components/common/media-frame";
+import { HoverVideo } from "@/components/media/hover-video";
 import { Container } from "@/components/common/container";
 import { verticals, verticalsOverview } from "@/data/verticals";
 import { verticalHeroes } from "@/data/media";
@@ -42,13 +43,24 @@ export default function VerticalsPage() {
                 className="group block focus-visible:outline-none"
               >
                 <div className="relative overflow-hidden rounded-[0.5rem] transition-transform duration-500 ease-out group-hover:-translate-y-1">
-                  <MediaFrame
-                    tone={hero?.tone ?? v.tone}
-                    ratio="wide"
-                    src={hero?.src}
-                    alt={hero?.alt ?? v.title}
-                    sizes="(min-width: 768px) 46vw, 92vw"
-                  />
+                  {/* Every vertical has a real film behind it now. It plays on
+                      hover rather than on load — seven concurrent loops on an
+                      index page is a cost with no payoff. */}
+                  {hero?.src ? (
+                    <HoverVideo
+                      src={hero.video}
+                      poster={hero.src}
+                      alt={hero.alt ?? v.title}
+                      className="aspect-[16/9] rounded-[0.35rem]"
+                    />
+                  ) : (
+                    <MediaFrame
+                      tone={hero?.tone ?? v.tone}
+                      ratio="wide"
+                      alt={v.title}
+                      sizes="(min-width: 768px) 46vw, 92vw"
+                    />
+                  )}
                 </div>
                 <div className="mt-5 flex items-start justify-between gap-4">
                   <div>
