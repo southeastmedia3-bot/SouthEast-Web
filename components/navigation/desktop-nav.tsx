@@ -22,7 +22,7 @@ const CLOSE_DELAY = 150;
 /**
  * The primary nav, and the verticals mega-menu.
  *
- * The menu is a two-level panel: a rail of the six verticals on the left, and a
+ * The menu is a two-level panel: a rail of the seven verticals on the left, and a
  * wide detail pane on the right that swaps as you move down the rail. Hovering a
  * rail item previews it; clicking it opens the vertical.
  *
@@ -111,10 +111,7 @@ export function DesktopNav() {
               {item.label}
               {hasMenu ? (
                 <ChevronDown
-                  className={cn(
-                    "size-3.5 transition-transform duration-300",
-                    open && "rotate-180",
-                  )}
+                  className={cn("size-3.5 transition-transform duration-300", open && "rotate-180")}
                   aria-hidden="true"
                 />
               ) : null}
@@ -159,7 +156,7 @@ export function DesktopNav() {
                   translucent card reads as muddy grey there. The page behind is
                   pushed back by the scrim instead. */}
               <div className="mx-auto grid max-w-[76rem] grid-cols-[16rem_1fr] overflow-hidden rounded-[1.75rem] border border-border/70 bg-white shadow-[0_60px_120px_-45px_rgba(21,20,26,0.45)]">
-                {/* The rail — the six verticals. Hover previews, click opens. */}
+                {/* The rail — the seven verticals. Hover previews, click opens. */}
                 <div className="flex flex-col border-r border-border/60 bg-[#f8f6f1]/70 p-3">
                   <p className="type-label px-4 pb-1 pt-3 text-muted">Verticals</p>
                   <ul className="flex flex-col">
@@ -198,7 +195,7 @@ export function DesktopNav() {
                     onClick={closeNow}
                     className="group/all mt-auto flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
                   >
-                    All six disciplines
+                    All seven disciplines
                     <ArrowRight
                       className="size-4 transition-transform duration-300 group-hover/all:translate-x-1"
                       aria-hidden="true"

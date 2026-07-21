@@ -5,9 +5,15 @@ import type { MediaTone } from "@/data/media";
  *
  * SOURCE OF TRUTH: everything here is drawn from the client's own material —
  * the Corporate Capability Deck, the Pharma / Medical 3D portfolio, and the Real
- * Estate 3D-rendering web copy. Pharma and Real Estate are the two verticals with
- * full source material and are written out in depth; the other four carry only
- * what the capability deck actually supports.
+ * Estate 3D-rendering web copy. Pharma, Real Estate, SaaS and Enterprise are
+ * written out in depth; Films, VFX and Animation carry only what the capability
+ * deck actually supports.
+ *
+ * SaaS and Enterprise are positioning pages, not portfolio pages: the studio has
+ * no published client work in either, so every line on them is drawn from the
+ * capability deck (pipeline, infrastructure, AI-on-own-servers, NDA + milestone
+ * SOW governance) and nothing else. The Enterprise page carries forward the deck's
+ * "embedded media partner" model, which used to sit on the retired Graphics page.
  *
  * NOTHING HERE IS INVENTED. The `proof` block used to be a "representative
  * engagement" with fabricated client outcomes ("a tower pre-sold from renders
@@ -18,12 +24,7 @@ import type { MediaTone } from "@/data/media";
  */
 
 export type VerticalSlug =
-  | "pharma"
-  | "real-estate"
-  | "films"
-  | "vfx"
-  | "animation"
-  | "graphics";
+  "pharma" | "real-estate" | "films" | "vfx" | "animation" | "saas" | "enterprise";
 
 /** A long-form block on a vertical page. Every field is optional bar the heading,
  *  so a section can be a paragraph, a list, a pair-grid, or any mix. */
@@ -143,7 +144,7 @@ const STUDIO_PROCESS: Vertical["process"] = [
 
 export const verticalsOverview = {
   eyebrow: "Capabilities",
-  title: "Six disciplines, one pipeline.",
+  title: "Seven disciplines, one pipeline.",
   intro:
     "Every vertical runs through the same in-house pipeline — Maya and 3ds Max for modelling and animation, Blender and Cinema 4D finished through Octane, rendered at 8K on our own farm. Choose the outcome; the craft underneath is constant.",
 };
@@ -324,19 +325,55 @@ export const verticals: Vertical[] = [
       { src: "/media/pharma/lung-poster.jpg", title: "Lung", note: "Disease progression" },
       { src: "/media/pharma/brain.jpg", title: "Brain", note: "Neurological structures" },
       { src: "/media/pharma/skin-poster.jpg", title: "Skin", note: "Cosmetic & dermatology" },
-      { src: "/media/pharma/fetus-poster.jpg", title: "Fetal development", note: "Prenatal stages" },
-      { src: "/media/pharma/protein.jpg", title: "Mechanism of Action", note: "Drug–target binding" },
+      {
+        src: "/media/pharma/fetus-poster.jpg",
+        title: "Fetal development",
+        note: "Prenatal stages",
+      },
+      {
+        src: "/media/pharma/protein.jpg",
+        title: "Mechanism of Action",
+        note: "Drug–target binding",
+      },
     ],
     // The library in motion — these autoplay together lower on the page, beneath
     // the 66s Mechanism-of-Action film that runs as the signature.
     videos: [
-      { src: "/media/pharma/heart.mp4", poster: "/media/pharma/heart-poster.jpg", label: "Anatomical heart" },
-      { src: "/media/pharma/lung.mp4", poster: "/media/pharma/lung-poster.jpg", label: "Lung — disease comparison" },
-      { src: "/media/pharma/skin.mp4", poster: "/media/pharma/skin-poster.jpg", label: "Skin & dermatology" },
-      { src: "/media/pharma/heart-cross.mp4", poster: "/media/pharma/heart-cross-poster.jpg", label: "Heart — cross-section" },
-      { src: "/media/pharma/fetus.mp4", poster: "/media/pharma/fetus-poster.jpg", label: "Fetal development" },
-      { src: "/media/pharma/heartbeat.mp4", poster: "/media/pharma/heartbeat-poster.jpg", label: "Cardiac cycle" },
-      { src: "/media/pharma/moa2.mp4", poster: "/media/pharma/moa2-poster.jpg", label: "Molecular interaction" },
+      {
+        src: "/media/pharma/heart.mp4",
+        poster: "/media/pharma/heart-poster.jpg",
+        label: "Anatomical heart",
+      },
+      {
+        src: "/media/pharma/lung.mp4",
+        poster: "/media/pharma/lung-poster.jpg",
+        label: "Lung — disease comparison",
+      },
+      {
+        src: "/media/pharma/skin.mp4",
+        poster: "/media/pharma/skin-poster.jpg",
+        label: "Skin & dermatology",
+      },
+      {
+        src: "/media/pharma/heart-cross.mp4",
+        poster: "/media/pharma/heart-cross-poster.jpg",
+        label: "Heart — cross-section",
+      },
+      {
+        src: "/media/pharma/fetus.mp4",
+        poster: "/media/pharma/fetus-poster.jpg",
+        label: "Fetal development",
+      },
+      {
+        src: "/media/pharma/heartbeat.mp4",
+        poster: "/media/pharma/heartbeat-poster.jpg",
+        label: "Cardiac cycle",
+      },
+      {
+        src: "/media/pharma/moa2.mp4",
+        poster: "/media/pharma/moa2-poster.jpg",
+        label: "Molecular interaction",
+      },
     ],
     faqs: [
       {
@@ -733,25 +770,341 @@ export const verticals: Vertical[] = [
     },
   },
   {
-    slug: "graphics",
-    label: "Graphics",
-    title: "The Embedded Media Partner Model",
-    eyebrow: "Engagement",
-    tone: "sky",
+    slug: "saas",
+    label: "SaaS",
+    title: "Send the brief. Get the launch film.",
+    eyebrow: "Product marketing",
+    tone: "violet",
     summary:
-      "Not an agency on retainer — your outsourced digital infrastructure partner, with dedicated resource allocation.",
+      "Product video for software teams — explainers, launch films, animated B-roll and paid cutdowns, produced end to end inside one studio.",
     intro:
-      "We replace the traditional, ad-hoc agency model by serving as your fully integrated, outsourced digital infrastructure partner. Our dedicated resource allocation considerably reduces internal headcount and digital overhead while guaranteeing regular, elite engagement.",
+      "Your script, your brand, your product — in. A launch-ready film, mastered to every format the campaign needs — out. Everything in between happens on one pipeline inside one building, and nothing about your product is uploaded anywhere to make it happen. Software is invisible by nature; making it worth watching is the entire job.",
     headline: [
-      { value: "NDA", label: "on every engagement" },
-      { value: "SOW", label: "milestone-based" },
-      { value: "Zoho", label: "tracked, in real time" },
+      { value: "8K", label: "final render output" },
+      { value: "In-house", label: "AI generation servers" },
+      { value: "15", label: "server render farm" },
     ],
     capabilities: [
       {
+        name: "Product Explainers",
+        detail:
+          "The minimalistic, character-driven motion approach applied to software: what the problem costs, what the product does, why the architecture matters — built for clarity and rapid turnover across the full Adobe Creative Suite.",
+      },
+      {
+        name: "Launch & Hero Films",
+        detail:
+          "The high-fidelity film that sits at the top of the site on launch day. Modelled, lit and rendered through Octane at 8K, not assembled from stock.",
+      },
+      {
+        name: "UI in Context",
+        detail:
+          "Your interface composited into rendered environments — device, desk, control room, factory floor — using the same uncompressed 8K plate workflow the VFX pipeline runs for film.",
+      },
+      {
+        name: "Animated B-Roll & Feature Loops",
+        detail:
+          "Short, silent, endlessly reusable loops for feature pages, changelogs, release notes and in-app moments. Built as a set from one look, so the library stays coherent as the product ships.",
+      },
+      {
+        name: "Systems & Architecture Visualization",
+        detail:
+          "Abstract infrastructure made physical — data movement, pipelines, model behaviour, network topology — using X-Particles and simulation tooling rather than another flat diagram.",
+      },
+      {
+        name: "Ad Cutdowns & Paid Variants",
+        detail:
+          "One production, mastered out to every ratio and length the channel plan needs: web hero, app store, YouTube pre-roll, vertical social, conference loop.",
+      },
+      {
+        name: "AI-Accelerated Iteration",
+        detail:
+          "Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway, run on our own secure servers — used to explore direction fast, never shipped raw.",
+      },
+      {
+        name: "Event, Demo & Immersive",
+        detail:
+          "Booth loops, anamorphic screens, and interactive product demonstrations built in Unreal Engine and Twinmotion for conferences and investor showcases.",
+      },
+    ],
+    sections: [
+      {
+        eyebrow: "One studio, every role",
+        heading: "The creative squad you don't have to hire.",
+        lead: "A product film needs eight jobs done. All eight sit in this building.",
+        body: [
+          "The usual way one gets made is a chain: an agency writes it, a freelancer boards it, a 3D shop renders it, an editor cuts it, and a colourist you have never met finishes it. Every link re-learns your product, and every hand-off is a place where the intent thins out.",
+          "We are not a marketplace routing your brief back outward. These are staff roles, working in the same building as the render farm — which is why you explain your product once, and why the person who storyboarded the sequence is still in the room when it is graded.",
+        ],
+        items: [
+          {
+            name: "Concept & research",
+            detail:
+              "Reading the product, the category and the competitive set closely enough to know which claim the film has to carry and which one it can drop.",
+          },
+          {
+            name: "Scriptwriter",
+            detail:
+              "The argument, written down and agreed before anything is drawn. Cheapest place in the process to change your mind.",
+          },
+          {
+            name: "Storyboard & pre-viz",
+            detail:
+              "Frames, then a moving previz in Unreal — timing, camera and blocking locked before render cost is committed.",
+          },
+          {
+            name: "Modeller & rigger",
+            detail:
+              "Product, environment and character assets built in Maya and 3ds Max, rigged so they can be reused for the next release rather than rebuilt.",
+          },
+          {
+            name: "Look-dev & FX artist",
+            detail:
+              "Materials, lighting and simulation through X-Particles, Marvelous Designer, EmberGen and LiquiGen — the pass that decides whether abstract systems read as physical.",
+          },
+          {
+            name: "Motion designer",
+            detail:
+              "Typography, UI motion, diagrams and transitions across the full Adobe Creative Suite, matched to the 3D so the two halves look like one film.",
+          },
+          {
+            name: "Editor",
+            detail:
+              "Pace, structure and sound in our own suites — including the cutdown versions, conformed from the same timeline as the master.",
+          },
+          {
+            name: "Colourist & delivery",
+            detail:
+              "Digital Intermediate grade, then mastering to every ratio and length the channel plan calls for. One look across all of them.",
+          },
+        ],
+      },
+      {
+        eyebrow: "Output formats",
+        heading: "One production, every format the launch needs.",
+        lead: "Named formats, all conformed from a single master — so the campaign cut and the site cut are genuinely the same film.",
+        items: [
+          {
+            name: "Launch film",
+            detail:
+              "The hero at the top of the site that has to carry the whole positioning. Rendered at 8K, so it holds on a 5K display and a stage projector alike.",
+          },
+          {
+            name: "Explainer",
+            detail:
+              "The one that has to survive being watched at 1.5x with the sound off. Motion-graphics led, character-driven where that helps, ruthless about pace.",
+          },
+          {
+            name: "Animated B-roll",
+            detail:
+              "Short silent loops for feature pages, changelogs, release notes and in-app moments — built as a set from one look, so the library stays coherent as the product ships.",
+          },
+          {
+            name: "UI in context",
+            detail:
+              "Your interface composited into rendered environments — device, desk, control room, factory floor — on the same uncompressed 8K plate workflow the VFX pipeline runs for film.",
+          },
+          {
+            name: "Systems & architecture",
+            detail:
+              "Abstract infrastructure made physical: data movement, pipeline behaviour, network topology, model inference — built with simulation tooling rather than another flat diagram.",
+          },
+          {
+            name: "Ad cutdowns",
+            detail:
+              "Paid variants conformed from the same master — pre-roll lengths, app-store cuts, product-page trims — rather than re-edited from scratch by someone else.",
+          },
+          {
+            name: "Social verticals",
+            detail:
+              "9:16 and 1:1 masters framed at the build stage, so the vertical is composed rather than cropped out of a widescreen edit.",
+          },
+          {
+            name: "Demo & event media",
+            detail:
+              "Interactive Unreal and Twinmotion builds for sales floors and conference booths, plus anamorphic and projection-mapped loops cut to the geometry of the screen they play on.",
+          },
+        ],
+      },
+      {
+        eyebrow: "Speed, honestly accounted for",
+        heading: "AI acceleration that stays inside the building.",
+        lead: "The fastest tools available, running on hardware we own, on material that never leaves the premises.",
+        body: [
+          "We run AI video generation — Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway — directly on our own secure server infrastructure. That is a deliberate operational decision, not a preference: it guarantees maximum computational allocation, and it means your unreleased product, your roadmap and your demo data are never uploaded to a third-party cloud to make a mood film faster.",
+          "What AI does here is compress the exploratory half of the work. Direction, motion tests and alternate treatments that used to cost days now cost hours, which means more of the schedule is spent on the version you are actually shipping.",
+          "What AI does not do here is finish anything. Every frame that leaves the studio is built, corrected and graded by artists on the industry-standard pipeline. Generation is a starting point, never a deliverable.",
+        ],
+      },
+      {
+        eyebrow: "Where it earns",
+        heading: "Built for the moments that decide the quarter.",
+        items: [
+          {
+            name: "Launch",
+            detail:
+              "The website hero film, the announcement cut, and the social set — produced together from one look so the launch reads as one thing.",
+          },
+          {
+            name: "Fundraising",
+            detail:
+              "Visualizing an abstract product for a high-stakes investor room, including the parts of the architecture that have no photograph.",
+          },
+          {
+            name: "Sales & onboarding",
+            detail:
+              "Explainers and product walkthroughs that shorten the part of the call where someone draws the system on a whiteboard.",
+          },
+          {
+            name: "Continuous release",
+            detail:
+              "An ongoing stream of feature loops and B-roll under a milestone SOW, so shipping a feature does not mean starting a video project from zero.",
+          },
+        ],
+      },
+      // The page's one provocation, positioned to hand straight off into the
+      // contrast block that answers it.
+      {
+        eyebrow: "The open question",
+        heading: "Video-first is not the decision any more.",
+        lead: "Every serious software company will ship product video this year. The only question left is who makes it — and how far your unreleased product has to travel to get made.",
+        body: [
+          "Ours does not travel. That is the whole argument, and what follows is what it means in practice.",
+        ],
+      },
+    ],
+    contrast: {
+      heading: "What changes when the product is the thing being sold.",
+      without: {
+        label: "The usual",
+        points: [
+          "Prompts, screen recordings and unreleased builds pushed into third-party cloud tools to move faster.",
+          "Template output that looks like every other product video generated the same week.",
+          "A vendor chain where nobody owns the final picture, and the grade is the fifth person's guess.",
+          "A launch film and a paid cutdown that plainly came from two different productions.",
+        ],
+      },
+      with: {
+        label: "With Southeast Media",
+        points: [
+          "AI generation on servers we own and operate on-site — nothing about your product leaves the building.",
+          "Acceleration used for exploration only; every shipped frame is finished by artists on the industry pipeline.",
+          "One studio from script to Digital Intermediate grade, accountable for the final picture.",
+          "Every format mastered from one conform, under NDA and a milestone-based SOW.",
+        ],
+      },
+    },
+    process: [
+      {
+        step: "Brief, under NDA",
+        detail:
+          "Product, audience and the claim the film has to land, agreed before anything is built. Server access is provisioned and locked to the engagement.",
+      },
+      {
+        step: "Script & storyboard",
+        detail:
+          "The argument the video makes, drawn frame by frame — including which parts of the product are shown literally and which are visualized.",
+      },
+      {
+        step: "Previz & direction tests",
+        detail:
+          "Timing, camera and blocking locked in Unreal. This is where in-house AI generation earns its place: alternate treatments explored in hours, on our own servers.",
+      },
+      {
+        step: "Build & look-dev",
+        detail:
+          "Modelling, rigging and motion in Maya and 3ds Max; simulation and materials through X-Particles, Marvelous Designer, EmberGen and LiquiGen.",
+      },
+      {
+        step: "Render",
+        detail:
+          "Blender and Cinema 4D through Octane, out to 8K on the 15-server farm we own and operate on-site.",
+      },
+      {
+        step: "Conform, grade & versioning",
+        detail:
+          "Edit and Digital Intermediate colour grade in-house, then mastered to every ratio and length the launch plan calls for.",
+      },
+    ],
+    // PLACEHOLDER — no SaaS library exists yet. Real studio renders stand in, per
+    // the note on `Vertical.gallery`. `note` carries the output format the slot is
+    // reserved for, so real product-film frames drop into an already-correct
+    // structure; `title` describes the frame actually on screen today. The set is
+    // deliberately different from the one the capability verticals carry so the
+    // pages do not read as the same page.
+    gallery: [
+      { src: "/media/generated/interior-04.jpg", title: "Interior study", note: "Launch film" },
+      { src: "/media/generated/exterior-01.jpg", title: "Exterior massing", note: "Explainer" },
+      { src: "/media/generated/interior-12.jpg", title: "Detail pass", note: "Animated B-roll" },
+      { src: "/media/generated/exterior-06.jpg", title: "Approach", note: "UI in context" },
+      { src: "/media/generated/interior-05.jpg", title: "Volume study", note: "Ad cutdown" },
+      { src: "/media/generated/exterior-04.jpg", title: "Elevation", note: "Social vertical" },
+    ],
+    faqs: [
+      {
+        q: "How fast can you turn a product film around?",
+        a: "It depends entirely on how much has to be built. Explainers and feature loops that reuse an established look are the fastest; a hero film with new modelling, simulation and an 8K render is not. We scope it against milestones in the SOW rather than quoting a number we would have to caveat, and in-house AI generation is what compresses the exploratory phase.",
+      },
+      {
+        q: "What do you need from us to start?",
+        a: "The product itself — a demo account or a build we can look at — plus whatever positioning material exists: brand guidelines, a deck, the launch messaging. If you have UI to feature, design files and screen captures at the highest resolution you can export. If the messaging is not settled yet, we start with script and storyboard so it gets settled on paper rather than in render.",
+      },
+      {
+        q: "Our product is unreleased. How is our material handled?",
+        a: "Every engagement runs under NDA on access-controlled servers, provisioned per project, with a zero-tolerance policy on data breaches. We do not push client material through third-party services — including for AI generation, which runs on our own in-house infrastructure precisely so unreleased product footage never has to be uploaded anywhere.",
+      },
+      {
+        q: "Do you use AI, and does it end up in the final video?",
+        a: "We use it, and no. Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway run on our own servers, and they are used for direction tests, alternate treatments and iteration speed. Everything delivered is built and finished by artists on the Maya, Cinema 4D and Octane pipeline, then graded in our own suite.",
+      },
+      {
+        q: "How do revisions work?",
+        a: "Revisions are agreed at the milestone level in the Statement of Work, and the sequence is designed so the expensive decisions happen cheaply: script, then storyboard, then previz, each signed off before the next begins. By the time anything is rendering, the argument and the timing are already settled.",
+      },
+      {
+        q: "What formats and ratios do you deliver?",
+        a: "Whatever the channel plan needs, mastered from one conform: widescreen web hero, app-store and product-page cuts, YouTube pre-roll lengths, vertical and square social variants, and event or booth loops. Final output is rendered at up to 8K, so downscaled masters stay clean.",
+      },
+      {
+        q: "Can you keep producing after launch?",
+        a: "Yes — that is the model we prefer for software. Ongoing production runs as a milestone-based SOW with dedicated resource allocation, tracked in Zoho Projects, so a new feature becomes another asset in an existing library rather than a new video project.",
+      },
+    ],
+    proof: {
+      label: "The terms",
+      title: "Your unreleased product never leaves our servers.",
+      body: "AI video generation runs directly on our own secure infrastructure, guaranteeing maximum computational allocation and absolute data privacy. Every frame that ships is finished by artists through Maya, Cinema 4D and Octane, rendered at up to 8K on a 15-server farm we own and operate on-site — under NDA, on access-controlled servers, tracked against a milestone-based SOW.",
+      metrics: [
+        { value: "In-house", label: "AI generation infrastructure" },
+        { value: "8K", label: "final render output" },
+        { value: "0", label: "client data leaving our servers" },
+      ],
+    },
+  },
+  {
+    slug: "enterprise",
+    label: "Enterprise",
+    title: "The Embedded Media Partner Model",
+    eyebrow: "Engagement",
+    tone: "gold",
+    summary:
+      "A senior production department without the headcount — one accountable studio, one secured building, milestone-based terms for brands, agencies and product teams.",
+    intro:
+      "Southeast Media is a full-stack visual production studio — CGI, VFX, live action and motion — that operates as the outsourced media division for brands, developers, agencies and product teams. We replace the traditional, ad-hoc agency model with dedicated resource allocation, so an organisation can show a product, a building or a procedure clearly before it is built, photographed or launched, and can keep showing it every quarter without adding a single internal hire.",
+    headline: [
+      { value: "15", label: "server render farm" },
+      { value: "100TB", label: "RAID storage array" },
+      { value: "NDA", label: "on every engagement" },
+    ],
+    capabilities: [
+      {
+        name: "Dedicated Resource Allocation",
+        detail:
+          "Server bandwidth and artist time reserved against your engagement rather than bid for project by project — the operational difference between a vendor and a department.",
+      },
+      {
         name: "For Brand Facilities & Hospitals",
         detail:
-          "Complete physical and digital media management — executive testimonial videos, corporate podcasts, and the design, installation and periodic upgrade of video-wall setups and content on your premises.",
+          "Complete physical and digital media management — executive testimonial videos, corporate podcasts, and the design, installation and periodic upgrade of video-wall setups and the content that runs on them.",
       },
       {
         name: "For Consumer Products",
@@ -759,18 +1112,294 @@ export const verticals: Vertical[] = [
           "End-to-end lifecycle visual support, from the high-fidelity website hero launch film to a continuous stream of premium content for regular social engagement.",
       },
       {
+        name: "For Agencies & White-Label Capacity",
+        detail:
+          "Senior 3D, VFX and render capacity behind your name. The full pipeline — Maya and 3ds Max through Octane at 8K — available as overflow or as the permanent back end.",
+      },
+      {
         name: "For Startups",
         detail:
           "An elite visual incubation suite: visualize abstract ideas for high-stakes investor pitches, conduct visual market research, design product sales explainers, and hold a high-end daily social presence.",
       },
       {
+        name: "In-House Live Action",
+        detail:
+          "Uncompressed 8K capture with high-end lighting and grip, an established network of Directors of Photography, and specialised execution for complex facility shoots — active hospital floors, corporate offices, heavy manufacturing plants.",
+      },
+      {
         name: "Governance & Project Management",
         detail:
-          "Milestone-based Statements of Work with every project lifecycle, progress and deliverable tracked in Zoho Projects — real-time visibility for corporate procurement boards.",
+          "Milestone-based Statements of Work, with every project lifecycle, progress point and deliverable tracked in Zoho Projects — real-time visibility for corporate procurement boards.",
+      },
+      {
+        name: "Data Security by Architecture",
+        detail:
+          "NDA on every engagement, strictly provisioned server access, and AI generation performed only on our own infrastructure. Nothing moves through a service we do not control.",
       },
     ],
-    process: STUDIO_PROCESS,
-    gallery: PLACEHOLDER_GALLERY,
+    sections: [
+      // Trust signal first. This section occupies the position a reference site
+      // gives its client-logo wall — we have no logos to drop, so the proof is
+      // hardware we own. Figures render as the `name` so they read as a stat band.
+      {
+        eyebrow: "Infrastructure",
+        heading: "We prove capacity instead of dropping names.",
+        lead: "Enterprise buyers are buying certainty. This is what ours is made of.",
+        body: [
+          "Southeast Media owns, operates and maintains its production infrastructure on-site. That is the reason a delivery date is a commitment rather than a hope — there is no queue at a third-party farm sitting between us and your deadline, and no external hand-off between the plate and the finished picture.",
+        ],
+        items: [
+          {
+            name: "15 servers",
+            detail:
+              "A dedicated in-house render farm on the latest RTX 5090 and 50-series GPUs, allocated against live engagements.",
+          },
+          {
+            name: "96GB VRAM",
+            detail:
+              "Dual enterprise NVIDIA cards, reserved for the heaviest particle, fluid and simulation work.",
+          },
+          {
+            name: "100TB RAID",
+            detail:
+              "A storage array configured specifically for uncompressed 8K workflows, on-site and access-controlled.",
+          },
+          {
+            name: "8K capture",
+            detail:
+              "Camera systems shooting uncompressed for flawless compositing, with high-end lighting and grip in-house.",
+          },
+          {
+            name: "Full 3D pipeline",
+            detail:
+              "Maya, 3ds Max, Unreal, Blender and Cinema 4D through Octane — every stage on our own machines.",
+          },
+          {
+            name: "In-house finish",
+            detail:
+              "Comprehensive editing suites and Digital Intermediate colour grading under the same roof as the farm.",
+          },
+        ],
+      },
+      {
+        eyebrow: "Who this is built for",
+        heading: "Four ways enterprises use us.",
+        lead: "The common thread is capacity that behaves like an internal team and contracts like a vendor.",
+        items: [
+          {
+            name: "Marketing & brand teams",
+            detail:
+              "A permanent content requirement without a permanent production hire. Launch and hero films, executive and testimonial video, corporate podcasts, campaign cutdowns, social cadence and event media — one SOW instead of five procurement cycles.",
+          },
+          {
+            name: "Agencies & white-label capacity",
+            detail:
+              "Senior 3D, VFX and render capacity behind your name. You keep the client relationship and the creative direction; we supply the pipeline, the farm and the artists. Archviz, product CGI, animation, compositing and 8K finishing, delivered as your studio.",
+          },
+          {
+            name: "Product & industrial teams",
+            detail:
+              "Manufacturing, medical-device and hardware groups who need the inside of a product shown accurately, from CAD and engineering reference: cutaways, exploded assemblies, operating-principle sequences, installation and service walkthroughs, trade-show loops.",
+          },
+          {
+            name: "Brand facilities & hospitals",
+            detail:
+              "Organisations running physical premises as media surfaces. Video walls specified, installed and periodically refreshed, plus the executive, testimonial and patient- or visitor-facing content that plays on them — physical and digital media managed as one contract.",
+          },
+        ],
+      },
+      // AI is broken out of the engagement section deliberately. On the SaaS page
+      // the AI argument is speed; here it is quality and governance, which is what
+      // an enterprise procurement board is actually assessing.
+      {
+        eyebrow: "The AI operating model",
+        heading: "AI-accelerated, artist-finished, and never off our servers.",
+        lead: "The tools are only an advantage if the governance around them survives a procurement review.",
+        body: [
+          "We run AI video generation — Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway — directly on our own secure server infrastructure. That decision costs us hardware and buys you two things: maximum computational allocation, and the certainty that your material is never uploaded to a platform we do not operate.",
+          "The operating model is human-led. Generation is used to widen the field of options before a sign-off gate, so the brief sharpens on evidence rather than on argument, and so a direction can be seen rather than described. Nothing generated is a deliverable. Every frame that leaves the studio is built, corrected and graded by artists on the industry-standard pipeline, which is also what keeps a year of output looking like it came from one place.",
+        ],
+        items: [
+          {
+            name: "Where it runs",
+            detail:
+              "On our own servers, on-site, inside the same access-controlled environment as the render farm and the storage array.",
+          },
+          {
+            name: "What it is used for",
+            detail:
+              "Direction tests, alternate treatments and iteration during pre-visualization — before render cost is committed.",
+          },
+          {
+            name: "What it never does",
+            detail:
+              "Ship. Delivered work is modelled, animated, rendered through Octane and graded by artists, every time.",
+          },
+          {
+            name: "Why it matters to you",
+            detail:
+              "No client material crosses into a third-party cloud at any stage, and consistency stays a function of art direction rather than of a prompt.",
+          },
+        ],
+      },
+      {
+        eyebrow: "How working together works",
+        heading: "The engagement, stated in full.",
+        lead: "Ready to start without hiring, chasing freelancers, or managing a vendor chain? This is what you get instead.",
+        body: [
+          "We operate exclusively via structured corporate retainers and milestone-based Statement of Work allocations. The SOW is what makes the relationship legible to a procurement board: scope, milestones, deliverables and dependencies written down before work starts, and progress tracked against them in Zoho Projects in real time. Both shapes exist — a single defined project, or an ongoing allocation for teams with a continuous requirement — and scope is defined per milestone rather than sold from a rate card.",
+        ],
+        bullets: [
+          "A standing senior team, not a roster assembled per project",
+          "One accountable studio from brief to Digital Intermediate grade",
+          "Milestone-based SOWs, tracked in Zoho Projects and reportable to procurement",
+          "NDA executed and server access provisioned before anything is shared",
+        ],
+        items: [
+          {
+            name: "Scoping",
+            detail:
+              "Requirements, volume and cadence assessed against the pipeline, then written as a Statement of Work with named milestones rather than an open-ended retainer.",
+          },
+          {
+            name: "Allocation",
+            detail:
+              "Dedicated server bandwidth and artist capacity reserved for the engagement, so scheduled work does not compete with the rest of the studio's book.",
+          },
+          {
+            name: "Visibility",
+            detail:
+              "Every lifecycle stage, progress point and deliverable tracked in Zoho Projects — reportable to procurement without a status call.",
+          },
+          {
+            name: "Review cadence",
+            detail:
+              "Sign-off gates at script, pre-visualization and pre-render, so the expensive decisions are made while they are still cheap to change.",
+          },
+        ],
+      },
+    ],
+    contrast: {
+      heading: "What changes when one studio owns the whole thing.",
+      without: {
+        label: "The usual",
+        points: [
+          "A vendor chain — agency, freelancer, render shop, editor — with nobody accountable for the final picture.",
+          "Project assets scattered across freelancer machines, with IP handling nobody has actually read.",
+          "Render capacity rented from a third party, so your deadline sits in someone else's queue.",
+          "A new procurement cycle every time the marketing calendar produces another asset.",
+        ],
+      },
+      with: {
+        label: "With Southeast Media",
+        points: [
+          "One accountable studio from brief to Digital Intermediate grade, on one contract.",
+          "NDA on every engagement, access-controlled servers, and a zero-tolerance policy on data breaches.",
+          "A 15-server farm we own and operate on-site, with capacity allocated to your engagement.",
+          "Milestone-based SOWs tracked in Zoho Projects — visible to procurement without a status call.",
+        ],
+      },
+    },
+    process: [
+      {
+        step: "Requirement & NDA",
+        detail:
+          "Volume, cadence and confidentiality terms agreed first. NDA executed and server access provisioned and locked to the engagement before anything is shared.",
+      },
+      {
+        step: "Scoping & SOW",
+        detail:
+          "The programme written as a milestone-based Statement of Work: scope, deliverables, dependencies and sign-off gates, structured for a procurement board rather than a handshake.",
+      },
+      {
+        step: "Allocation",
+        detail:
+          "Dedicated server bandwidth and artist capacity reserved against the engagement, so scheduled work is not competing with the rest of the studio's book.",
+      },
+      {
+        step: "Production",
+        detail:
+          "The studio's one pipeline — previz in Unreal, build in Maya and 3ds Max, simulation and look-dev, render through Octane at 8K, live action captured in-house where the brief needs it.",
+      },
+      {
+        step: "Review & reporting",
+        detail:
+          "Sign-off gates at script, previz and pre-render, with every lifecycle stage and deliverable tracked in Zoho Projects for real-time procurement visibility.",
+      },
+      {
+        step: "Delivery & continuity",
+        detail:
+          "Conform, Digital Intermediate grade and mastering to every format required — then the next milestone, on the same allocation, without a new procurement cycle.",
+      },
+    ],
+    // PLACEHOLDER — no enterprise-specific library exists yet. Real studio renders
+    // stand in with generic captions, per the note on `Vertical.gallery`.
+    gallery: [
+      {
+        src: "/media/generated/exterior-03.jpg",
+        title: "Exterior elevation",
+        note: "Full massing",
+      },
+      { src: "/media/generated/interior-01.jpg", title: "Interior volume", note: "Daylight study" },
+      { src: "/media/generated/exterior-02.jpg", title: "Dusk approach", note: "Tower elevation" },
+      { src: "/media/generated/interior-10.jpg", title: "Styled space", note: "Material detail" },
+      { src: "/media/generated/exterior-07.jpg", title: "Night elevation", note: "Lighting pass" },
+      { src: "/media/generated/interior-07.jpg", title: "Island & counter", note: "Finish detail" },
+    ],
+    faqs: [
+      {
+        q: "What does an engagement actually look like?",
+        a: "A structured corporate retainer or a milestone-based Statement of Work. The SOW names the scope, the milestones, the deliverables and the sign-off gates before work begins, and progress against it is tracked in Zoho Projects — so procurement can see the state of the programme without asking for a status call.",
+      },
+      {
+        q: "Can you create visuals before the thing is built, photographed or launched?",
+        a: "That is the core of the discipline. Buildings before construction, products before tooling, procedures that cannot be filmed, facilities that cannot be shut down for a shoot — all of it is modelled and rendered rather than captured. Where a real shoot is the right answer, the in-house live-action division handles that too, so the decision is made on merit rather than on what a vendor happens to own.",
+      },
+      {
+        q: "Do you work with early-stage concepts, or only finished designs?",
+        a: "Both. When the design is settled we build to it directly. When it is still moving, we work the way the architectural pipeline does — grey-shader and pre-visualization passes that validate geometry, scale and timing before materials, lighting or render time are committed, so the concept can keep changing while it is still cheap to change.",
+      },
+      {
+        q: "Can you support both marketing and technical stakeholders?",
+        a: "Yes, and they usually need different cuts of the same build. One asset set produces the marketing film and the technically accurate sequence — the same model, lit and paced for two audiences. For regulated and engineering-led work, accuracy sign-off happens at storyboard and again before render, which is the same review discipline the medical vertical runs.",
+      },
+      {
+        q: "What do you need from us to start?",
+        a: "An executed NDA, then the material the work is built from: brand guidelines, CAD or engineering reference, plans and elevations, product photography, existing footage, and any script or messaging already agreed. Common formats are fine — we would rather take your working files than ask you to prepare something. Beyond that, a clear picture of volume and cadence over the coming quarters, because that is what turns a project into an allocation.",
+      },
+      {
+        q: "How quickly can a project start?",
+        a: "It depends on current allocation, and we would rather tell you the real date than a marketing one. Scoping and the SOW can move immediately; production starts when capacity is reserved against the engagement. Because the farm, the gear and the artists are ours rather than subcontracted, that date is something we control instead of something we forward on to you.",
+      },
+      {
+        q: "Can you handle ongoing, multi-asset production?",
+        a: "That is the model. Dedicated resource allocation means server bandwidth and artist capacity are reserved against your engagement rather than bid for each time, which is what makes a continuous content requirement viable without an internal production hire.",
+      },
+      {
+        q: "How do you keep quality consistent across a year of output?",
+        a: "Consistency is an asset-library problem before it is a taste problem. Models, rigs, materials and grade settings are built to be reused and extended rather than remade, so the twelfth asset comes off the same look as the first. One pipeline, one set of artists and one Digital Intermediate suite is what makes that possible; a rotating roster of freelancers is what makes it impossible.",
+      },
+      {
+        q: "How is confidentiality and IP handled?",
+        a: "NDA on every engagement, with server access strictly provisioned per project and an uncompromising zero-tolerance policy on data breaches. Work stays on infrastructure we own and operate on-site; we do not route client material through third-party services at any stage of the pipeline.",
+      },
+      {
+        q: "Do you use AI, and how is it governed?",
+        a: "Yes, and only on our own servers. We run Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway on our own secure infrastructure to guarantee maximum computational allocation and absolute data privacy. It is used to accelerate exploration and iteration; delivered work is built and finished by artists on the industry-standard pipeline.",
+      },
+      {
+        q: "Why not just rent render capacity, or hire freelancers?",
+        a: "Both work until a deadline is real. We own and operate the farm on-site — 15 servers on RTX 5090-class GPUs, dual enterprise NVIDIA 96GB VRAM cards, a 100TB RAID array for uncompressed 8K — so your delivery date does not sit in a third party's queue, and your assets do not live on machines outside the building.",
+      },
+      {
+        q: "How often do we review work in progress?",
+        a: "At named gates rather than continuously: script, pre-visualization, and again before render. The order is deliberate — it puts the decisions that cost the most to reverse at the point where they are still cheap. Between gates, Zoho Projects carries the live status.",
+      },
+      {
+        q: "What do you deliver, and in what formats?",
+        a: "Whatever the programme requires, mastered in-house: 8K stills and film, cinematic sequences, live-action ad films, corporate podcasts, testimonial and interview content, motion graphics, AR and VR builds, and video-wall or anamorphic content cut to the geometry of the surface it plays on. Conform and Digital Intermediate grading are done in our own suites.",
+      },
+    ],
     proof: {
       label: "Governance & security",
       title: "Structured retainers, access-controlled servers, ironclad NDA.",

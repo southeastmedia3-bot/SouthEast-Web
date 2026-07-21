@@ -139,11 +139,22 @@ export const verticalHeroes: Record<string, MediaAsset> = {
     ratio: "wide",
     alt: "Interior motion frame",
   },
-  graphics: {
-    src: `${G}/interior-03.jpg`,
-    tone: "sky",
+  // PLACEHOLDER — replace with real saas assets. No product-film library exists
+  // yet, so these borrow the architectural renders the way the other capability
+  // verticals do. Everything still routes through this manifest, so a real hero
+  // is a one-line swap.
+  saas: {
+    src: `${G}/interior-04.jpg`,
+    tone: "violet",
     ratio: "wide",
-    alt: "Interior design layout",
+    alt: "Product film frame — interior environment study",
+  },
+  // PLACEHOLDER — replace with real enterprise assets.
+  enterprise: {
+    src: `${G}/exterior-01.jpg`,
+    tone: "gold",
+    ratio: "wide",
+    alt: "Corporate facility exterior render",
   },
 };
 
@@ -160,11 +171,27 @@ export const anatomyLayers = [
   { src: `${G_PHARMA}/1-kidney.png`, label: "Renal", detail: "One organ, in isolation." },
   { src: `${G_PHARMA}/2-lungs.png`, label: "Respiratory", detail: "The lungs and airway, added." },
   { src: `${G_PHARMA}/3-digestive.png`, label: "Digestive", detail: "The gut, layered in." },
-  { src: `${G_PHARMA}/4-organs.png`, label: "Viscera", detail: "The organs, assembled in the torso." },
-  { src: `${G_PHARMA}/5-nervous.png`, label: "Nervous", detail: "The full neural network, head to foot." },
-  { src: `${G_PHARMA}/6-circulatory.png`, label: "Circulatory", detail: "Arteries and veins throughout." },
+  {
+    src: `${G_PHARMA}/4-organs.png`,
+    label: "Viscera",
+    detail: "The organs, assembled in the torso.",
+  },
+  {
+    src: `${G_PHARMA}/5-nervous.png`,
+    label: "Nervous",
+    detail: "The full neural network, head to foot.",
+  },
+  {
+    src: `${G_PHARMA}/6-circulatory.png`,
+    label: "Circulatory",
+    detail: "Arteries and veins throughout.",
+  },
   { src: `${G_PHARMA}/7-skeleton.png`, label: "Skeletal", detail: "The frame it all hangs on." },
-  { src: `${G_PHARMA}/8-skeletomuscular.png`, label: "Musculoskeletal", detail: "Muscle laid over bone." },
+  {
+    src: `${G_PHARMA}/8-skeletomuscular.png`,
+    label: "Musculoskeletal",
+    detail: "Muscle laid over bone.",
+  },
   { src: `${G_PHARMA}/9-muscular.png`, label: "Muscular", detail: "Every muscle group." },
   { src: `${G_PHARMA}/10-full.png`, label: "Complete", detail: "The whole body — fully rigged." },
 ] as const;

@@ -7,7 +7,8 @@ export const projectTypes = [
   "Animation",
   "Startup / Incubator",
   "Product & E-Commerce",
-  "Design & Graphics",
+  "SaaS & Product",
+  "Enterprise / Retainer",
   "Something else",
 ] as const;
 

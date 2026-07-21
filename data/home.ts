@@ -109,8 +109,7 @@ export const pipeline = {
     },
     {
       title: "Lighting & Rendering",
-      detail:
-        "Blender and Cinema 4D through Octane — 8K on a 15-server farm with 96GB VRAM nodes.",
+      detail: "Blender and Cinema 4D through Octane — 8K on a 15-server farm with 96GB VRAM nodes.",
       media: "/media/process/lighting.jpg",
     },
     {
@@ -182,7 +181,8 @@ export const disciplineTags = [
   "Startup / Incubator",
   "Product & E-Commerce",
   "Animation Systems",
-  "Design & Graphics",
+  "SaaS & Product",
+  "Enterprise / Retainer",
 ];
 
 export const mandate = {
@@ -222,7 +222,7 @@ export const mandate = {
  */
 export const disciplineWall = {
   eyebrow: "05 — Every discipline",
-  heading: "One studio. Six disciplines.",
+  heading: "One studio. Seven disciplines.",
   intro:
     "Point at any frame. Each one opens the vertical behind it — the people, the pipeline, and the work.",
   tiles: [
@@ -279,11 +279,11 @@ export const disciplineWall = {
       corner: "3.25rem",
     },
     {
-      slug: "graphics",
+      slug: "enterprise",
       kicker: "Engagement",
       title: "The Embedded Partner",
       sub: "Your outsourced media division",
-      href: "/graphics",
+      href: "/enterprise",
       media: "/media/generated/exterior-02.jpg",
       span: "md:col-span-2 md:row-span-1",
       corner: "3.25rem",
