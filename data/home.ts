@@ -148,39 +148,57 @@ export const pipeline = {
  *  the verticals page. */
 export const filmReel = {
   eyebrow: "The reel",
-  // Count kept honest against the array below. The drum used to alternate two
-  // libraries — medical and architectural — which made the studio look like two
-  // verticals. It now cycles all seven, and no two adjacent frames come from the
-  // same library, so a turn of the drum is the range argument in one gesture.
-  heading: "Twenty-four frames, one drum.",
+  // One frame per cell — the drum has 3 rings x 12 slots, so this array is
+  // exactly 36 long and nothing repeats on it. A frame seen twice reads as a
+  // thin library, which is the opposite of the point. The order cycles the six
+  // work libraries (pharma, products, generated, saas, animation, enterprise)
+  // and each ring starts two libraries further along, so no two frames are from
+  // the same library side by side or stacked — a turn of the drum is the range
+  // argument in one gesture. Count in the heading kept honest against the array.
+  heading: "Thirty-six frames, one drum.",
   intro: "Scroll to turn it. Pick any frame — it opens the work.",
   cta: { label: "Explore all verticals", href: "/verticals" },
   href: "/verticals",
   images: [
+    // ring 1
     "/media/pharma/heart-poster.jpg",
     "/media/products/serum-04.jpg",
     "/media/generated/exterior-01.jpg",
     "/media/saas/creative-09.jpg",
-    "/media/products/watch-05.jpg",
-    "/media/pharma/lung-poster.jpg",
-    "/media/generated/interior-01.jpg",
     "/media/animation/character-05.jpg",
-    "/media/products/ribbon-04.jpg",
     "/media/enterprise/card-reel-poster.jpg",
-    "/media/pharma/brain.jpg",
-    "/media/generated/exterior-02.jpg",
-    "/media/products/earbuds-key.jpg",
+    "/media/pharma/lung-poster.jpg",
+    "/media/products/watch-05.jpg",
+    "/media/generated/interior-01.jpg",
     "/media/saas/infograph-02.jpg",
-    "/media/products/horse-03.jpg",
-    "/media/pharma/skin-poster.jpg",
-    "/media/generated/interior-07.jpg",
-    "/media/enterprise/profile-poster.jpg",
-    "/media/products/fibre-07.jpg",
     "/media/animation/character-09.jpg",
-    "/media/pharma/protein.jpg",
-    "/media/generated/exterior-05.jpg",
-    "/media/products/jewellery-poster.jpg",
+    "/media/enterprise/profile-poster.jpg",
+    // ring 2
+    "/media/generated/exterior-02.jpg",
     "/media/saas/creative-04.jpg",
+    "/media/animation/character-02.jpg",
+    "/media/enterprise/minimal-style-poster.jpg",
+    "/media/pharma/brain.jpg",
+    "/media/products/earbuds-key.jpg",
+    "/media/generated/interior-07.jpg",
+    "/media/saas/storyboard-05.jpg",
+    "/media/animation/character-11.jpg",
+    "/media/enterprise/pharma-brand-poster.jpg",
+    "/media/pharma/skin-poster.jpg",
+    "/media/products/ribbon-04.jpg",
+    // ring 3
+    "/media/animation/artwork-poster.jpg",
+    "/media/enterprise/profile-social-poster.jpg",
+    "/media/pharma/protein.jpg",
+    "/media/products/horse-03.jpg",
+    "/media/generated/exterior-05.jpg",
+    "/media/saas/infograph-05.jpg",
+    "/media/animation/shot-02.jpg",
+    "/media/enterprise/minimal-style-comp-poster.jpg",
+    "/media/pharma/molecular.jpg",
+    "/media/products/jewellery-poster.jpg",
+    "/media/generated/interior-11.jpg",
+    "/media/saas/creative-12.jpg",
   ],
 } as const;
 

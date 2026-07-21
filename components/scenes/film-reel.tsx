@@ -22,6 +22,15 @@ const TWIST = 15; // degrees each ring is offset -> the strip spirals
 
 type Cell = { src: string; ring: number; slot: number };
 
+/* One frame per cell, no wrap-around. The images list is authored to be exactly
+   RINGS * PER_RING long — a modulo here would quietly repeat frames the moment
+   the list and the geometry drift apart, which is what the drum must never do. */
+if (process.env.NODE_ENV !== "production" && filmReel.images.length !== RINGS * PER_RING) {
+  console.warn(
+    `film-reel: ${filmReel.images.length} images for ${RINGS * PER_RING} cells — frames will repeat.`,
+  );
+}
+
 const CELLS: Cell[] = Array.from({ length: RINGS * PER_RING }, (_, i) => ({
   src: filmReel.images[i % filmReel.images.length]!,
   ring: Math.floor(i / PER_RING),
