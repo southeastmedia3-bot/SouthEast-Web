@@ -64,20 +64,19 @@ export function SaasFormatGrid({
               // column split; `mb-16` is the vertical gutter (columns ignore
               // `gap-y`).
               <article key={format.name} className="mb-16 break-inside-avoid last:mb-0">
-                {/* No index-derived delay any more. Columns lay these out
-                    down-then-across, so `i` no longer tells you which side of
-                    the page a card is on and a stagger keyed to it reads as
-                    random. Each curtain opens on its own arrival instead. */}
-                <Reveal clip="up" y={0} duration={0.9}>
-                  <NaturalMedia
-                    image={slot.src}
-                    video={slot.video}
-                    ratio={slot.w / slot.h}
-                    alt={slot.alt}
-                    sizes="(min-width: 1024px) 45vw, 92vw"
-                    className="rounded-[1.25rem] bg-[#0a0a0d]"
-                  />
-                </Reveal>
+                {/* The curtain is held inside the frame, so the plate is on the
+                    page from the moment the box has its shape and only the
+                    picture wipes up. Wrapped around the outside it took the
+                    plate with it and left white. */}
+                <NaturalMedia
+                  image={slot.src}
+                  video={slot.video}
+                  ratio={slot.w / slot.h}
+                  alt={slot.alt}
+                  sizes="(min-width: 1024px) 45vw, 92vw"
+                  className="rounded-[1.25rem] bg-[#0a0a0d]"
+                  reveal="up"
+                />
 
                 <div className="mt-6 flex items-start gap-5">
                   <span className="type-index mt-1.5 shrink-0 text-muted">

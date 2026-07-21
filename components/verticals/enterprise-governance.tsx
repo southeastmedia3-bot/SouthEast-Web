@@ -63,7 +63,7 @@ export function EnterpriseGovernance({
               </Reveal>
             ))}
 
-            <Reveal clip="right" y={0} duration={1.05} className="mt-10 max-w-2xl">
+            <div className="mt-10 max-w-2xl">
               <NaturalMedia
                 image={frame.src}
                 video={frame.video}
@@ -71,8 +71,9 @@ export function EnterpriseGovernance({
                 alt={frame.alt}
                 sizes="(min-width: 1024px) 42vw, 92vw"
                 className="rounded-[1.5rem] bg-[#0a0a0d]"
+                reveal="right"
               />
-            </Reveal>
+            </div>
             {frame.label ? (
               <p className="type-caption mt-4 max-w-2xl text-muted">{frame.label}</p>
             ) : null}

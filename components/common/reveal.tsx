@@ -77,6 +77,29 @@ export function Reveal({
     );
   }
 
+  // The curtain wipe drives from `useInView` + `animate` rather than
+  // `whileInView`, for the same reason `MaskReveal` does — but the stakes are
+  // higher here. `whileInView` is fire-and-forget: it hands the browser one
+  // animation and keeps no rendered record of the result, so an element whose
+  // `initial` is `opacity: 0` has no state to fall back to if that animation is
+  // never delivered. On a curtain that is a whole frame of white page, which is
+  // exactly what was being reported on the SaaS formats and work grids. Driving
+  // `animate` from observed state means the resting value is a prop React keeps
+  // re-applying, so the frame always ends up open whatever happened in between.
+  if (clip) {
+    return (
+      <ClipReveal
+        clip={clip}
+        delay={delay}
+        duration={duration}
+        amount={amount}
+        className={className}
+      >
+        {children}
+      </ClipReveal>
+    );
+  }
+
   return (
     <motion.div
       className={className}
@@ -104,6 +127,58 @@ export function Reveal({
     >
       {children}
     </motion.div>
+  );
+}
+
+/**
+ * The curtain wipe, observed from a wrapper that is never itself clipped.
+ *
+ * THIS IS THE WHOLE POINT OF THE COMPONENT, so do not collapse the two elements
+ * back into one. A `clip-path` shrinks the intersection rectangle the browser
+ * computes for the element that carries it, and `inset(100% 0 0 0)` shrinks it
+ * to nothing. Observe that same element and it can never report as intersecting,
+ * so the curtain never opens, so it stays clipped — a deadlock that leaves the
+ * frame invisible for the life of the page. That is what was showing up as blank
+ * space on the SaaS formats and work grids. It reads as intermittent because
+ * whether the browser has applied the self-clip by the time the observer first
+ * runs depends on paint timing, which is why it bit one machine and not another.
+ *
+ * So: the outer div holds the layout box and is what gets observed; the inner
+ * one holds the clip. `once: true` keeps the promise the house reveal makes —
+ * one motion, once, never again on the way back up. Driving `animate` from
+ * observed state rather than `whileInView` also means the open position is a
+ * prop React keeps re-applying, so an interrupted animation still settles.
+ */
+function ClipReveal({
+  children,
+  clip,
+  delay,
+  duration,
+  amount,
+  className,
+}: {
+  children: ReactNode;
+  clip: "up" | "down" | "left" | "right";
+  delay: number;
+  duration: number;
+  amount: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(ref, { once: true, amount });
+  const [shut, open] = CLIP[clip];
+
+  return (
+    <div ref={ref} className={className}>
+      <motion.div
+        className="h-full w-full"
+        initial={{ opacity: 0, clipPath: shut }}
+        animate={inView ? { opacity: 1, clipPath: open } : { opacity: 0, clipPath: shut }}
+        transition={{ duration, ease: EASE, delay }}
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 }
 

@@ -1,5 +1,4 @@
 import { Container } from "@/components/common/container";
-import { Reveal } from "@/components/common/reveal";
 import { NaturalMedia } from "@/components/pharma/natural-media";
 import type { MediaSlot } from "@/data/media";
 import { cn } from "@/lib/utils";
@@ -86,18 +85,21 @@ export function NaturalGallery({
               key={c}
               className={cn("flex flex-col gap-14", c === stagger && "lg:mt-28")}
             >
-              {column.map((entry, i) => (
+              {column.map((entry) => (
                 <figure key={entry.slot.key}>
-                  <Reveal clip={c === 0 ? "right" : "left"} y={0} duration={0.95} delay={i * 0.04}>
-                    <NaturalMedia
-                      image={entry.slot.src}
-                      video={entry.slot.video}
-                      ratio={entry.slot.w / entry.slot.h}
-                      alt={entry.slot.alt}
-                      sizes="(min-width: 1024px) 45vw, 92vw"
-                      className="bg-[#0a0a0d]"
-                    />
-                  </Reveal>
+                  {/* Curtain held inside the frame — see `NaturalMedia`'s
+                      `reveal`. Around the outside it hid the frame's own ground
+                      as well as the picture, which is what read as blank space
+                      down this column. */}
+                  <NaturalMedia
+                    image={entry.slot.src}
+                    video={entry.slot.video}
+                    ratio={entry.slot.w / entry.slot.h}
+                    alt={entry.slot.alt}
+                    sizes="(min-width: 1024px) 45vw, 92vw"
+                    className="bg-[#0a0a0d]"
+                    reveal={c === 0 ? "right" : "left"}
+                  />
                   <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-border pt-4">
                     <span className="type-h4 text-[1.05rem] text-foreground">{entry.title}</span>
                     {entry.note ? (
