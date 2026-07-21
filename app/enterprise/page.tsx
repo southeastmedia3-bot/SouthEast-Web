@@ -1,4 +1,4 @@
-import { VerticalTemplate } from "@/components/verticals/vertical-template";
+import { EnterpriseVertical } from "@/components/verticals/enterprise-vertical";
 import { getVertical } from "@/data/verticals";
 import { createMetadata } from "@/lib/seo";
 
@@ -11,5 +11,5 @@ export const metadata = createMetadata({
 });
 
 export default function EnterprisePage() {
-  return <VerticalTemplate vertical={vertical} />;
+  return <EnterpriseVertical vertical={vertical} />;
 }

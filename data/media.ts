@@ -196,6 +196,373 @@ export const anatomyLayers = [
   { src: `${G_PHARMA}/10-full.png`, label: "Complete", detail: "The whole body — fully rigged." },
 ] as const;
 
+/* ---------------------------------------------------------------------------
+   SaaS & Enterprise — borrowed placeholders.
+
+   Neither page has a real asset library yet, so every slot below is filled from
+   the libraries that DO exist (`public/media/generated/` architectural renders,
+   plus the pharma loops where the subject is contextually honest). The slot keys
+   describe the *purpose* of the frame, not what happens to be in it today.
+
+   THE SWAP CONTRACT: when the real footage lands, drop the files into
+   `public/media/saas/` or `public/media/enterprise/` and edit `src`, `video`,
+   `w`, `h`, `alt` and `label` here. Nothing in `components/verticals/` needs to
+   change — the layouts size themselves from `w`/`h` and caption themselves from
+   `label`. `docs/MEDIA_SWAP_LIST.md` is the shot list keyed to these entries.
+   --------------------------------------------------------------------------- */
+
+/**
+ * One media slot on a bespoke vertical page.
+ *
+ * `w`/`h` are the file's true pixel dimensions, measured — not guessed. They are
+ * what lets a frame take the image's own shape before it loads, so the full image
+ * fills its box corner to corner with no crop, no letterbox and no layout shift.
+ * Replacing an asset means replacing these two numbers with the new file's.
+ */
+export type MediaSlot = {
+  /** Stable identifier for the slot. Used in `docs/MEDIA_SWAP_LIST.md`. */
+  key: string;
+  /** Still under /public. Doubles as the poster when `video` is set. */
+  src: string;
+  /** Intrinsic pixel width of `src`. */
+  w: number;
+  /** Intrinsic pixel height of `src`. */
+  h: number;
+  alt: string;
+  /** Optional muted loop under /public. */
+  video?: string;
+  /** Caption describing the frame actually on screen. */
+  label?: string;
+};
+
+// The two shapes the borrowed library comes in. Alternating them is what keeps
+// adjacent frames from sharing a crop (Media Philosophy, §9).
+const WIDE = { w: 1920, h: 798 } as const; // exteriors — 2.41:1
+const FILM = { w: 1920, h: 1080 } as const; // interiors — 16:9
+
+/**
+ * SaaS page slots. Ordered groups match the order of the content they sit
+ * beside in `data/verticals.ts`, so a card grid can zip the two together.
+ */
+export const saasAssets: {
+  heroInputProduct: MediaSlot;
+  heroOutputFrame: MediaSlot;
+  aiPrivacyFrame: MediaSlot;
+  formatFrames: MediaSlot[];
+  galleryFrames: MediaSlot[];
+} = {
+  /** Hero demonstration panel — the "product frame" input chip. */
+  // PLACEHOLDER — replace with real saas asset.
+  heroInputProduct: {
+    key: "heroInputProduct",
+    src: `${G}/interior-08.jpg`,
+    ...FILM,
+    alt: "Product frame supplied to the studio",
+    label: "Product frame",
+  },
+  /** Hero demonstration panel — the large "output" film frame. */
+  // PLACEHOLDER — replace with real saas asset.
+  heroOutputFrame: {
+    key: "heroOutputFrame",
+    src: `${G}/villa-poster.jpg`,
+    video: `${G}/villa-night.mp4`,
+    ...FILM,
+    alt: "Finished film frame rendered by the studio",
+    label: "Master — 8K conform",
+  },
+  /**
+   * The AI-privacy scene — the page's one deliberate dark room.
+   *
+   * Deliberately NOT one of the pharma loops: several of those carry slide text
+   * burned into the frame ("Mutant EGFR"), which reads as another client's deck
+   * on a page about software. A night elevation is dark enough for the ground and
+   * says the literal thing the section says — it stays inside the building.
+   */
+  // PLACEHOLDER — replace with real saas asset.
+  aiPrivacyFrame: {
+    key: "aiPrivacyFrame",
+    src: `${G}/exterior-07.jpg`,
+    ...WIDE,
+    alt: "The studio at night — generation running on hardware we own",
+    label: "On our own infrastructure",
+  },
+  /**
+   * The eight named formats, in the order of `sections[1].items` on the SaaS
+   * vertical — one frame per format card. Aspects alternate deliberately so no
+   * two adjacent cards share a crop.
+   */
+  // PLACEHOLDER — replace with real saas assets.
+  formatFrames: [
+    {
+      key: "formatLaunchFilm",
+      src: `${G}/exterior-05.jpg`,
+      ...WIDE,
+      alt: "Wide establishing frame standing in for a launch film",
+    },
+    {
+      key: "formatExplainer",
+      src: `${G}/interior-03.jpg`,
+      ...FILM,
+      alt: "Interior study standing in for an explainer frame",
+    },
+    {
+      key: "formatAnimatedBRoll",
+      src: `${G}/interior-12.jpg`,
+      ...FILM,
+      alt: "Detail pass standing in for an animated B-roll loop",
+    },
+    {
+      key: "formatUiInContext",
+      src: `${G}/exterior-06.jpg`,
+      ...WIDE,
+      alt: "Approach frame standing in for UI composited in context",
+    },
+    {
+      key: "formatSystemsArchitecture",
+      src: `${G}/exterior-04.jpg`,
+      ...WIDE,
+      alt: "Elevation standing in for a systems visualization",
+    },
+    {
+      key: "formatAdCutdowns",
+      src: `${G}/interior-05.jpg`,
+      ...FILM,
+      alt: "Volume study standing in for a paid cutdown",
+    },
+    {
+      key: "formatSocialVerticals",
+      src: `${G}/interior-09.jpg`,
+      ...FILM,
+      alt: "Interior frame standing in for a social vertical master",
+    },
+    {
+      key: "formatDemoEvent",
+      src: `${G}/exterior-02.jpg`,
+      ...WIDE,
+      alt: "Dusk approach standing in for an event or booth loop",
+    },
+  ],
+  /**
+   * Selected work. Zipped by index with `vertical.gallery` on the SaaS page,
+   * which supplies the caption and the format the slot is reserved for.
+   *
+   * The order is not arbitrary: the gallery splits this run into two columns by
+   * even/odd index, so the aspects are sequenced F-W-W-F-F-W to make each column
+   * alternate down its own length. Keep that pattern when real frames land.
+   */
+  // PLACEHOLDER — replace with real saas assets.
+  galleryFrames: [
+    {
+      key: "galleryLaunchFilm",
+      src: `${G}/interior-04.jpg`,
+      ...FILM,
+      alt: "Interior study",
+    },
+    {
+      key: "galleryExplainer",
+      src: `${G}/exterior-01.jpg`,
+      ...WIDE,
+      alt: "Exterior massing",
+    },
+    {
+      key: "galleryAnimatedBRoll",
+      src: `${G}/exterior-07.jpg`,
+      ...WIDE,
+      alt: "Night elevation",
+    },
+    {
+      key: "galleryUiInContext",
+      src: `${G}/interior-13.jpg`,
+      ...FILM,
+      alt: "Suite, evening grade",
+    },
+    {
+      key: "galleryAdCutdown",
+      src: `${G}/interior-06.jpg`,
+      ...FILM,
+      alt: "Interior study",
+    },
+    {
+      key: "gallerySocialVertical",
+      src: `${G}/exterior-03.jpg`,
+      ...WIDE,
+      alt: "Exterior elevation",
+    },
+  ],
+};
+
+/** Enterprise page slots. */
+export const enterpriseAssets: {
+  marqueeRowA: MediaSlot[];
+  marqueeRowB: MediaSlot[];
+  segmentFrames: MediaSlot[][];
+  governanceFrame: MediaSlot;
+} = {
+  /**
+   * The two-row work marquee under the hero. Row A drifts left, row B drifts
+   * right; the two rows carry different aspects on purpose so the wall never
+   * reads as a uniform tile grid.
+   */
+  // PLACEHOLDER — replace with real enterprise assets.
+  marqueeRowA: [
+    {
+      key: "marqueeA1",
+      src: `${G}/exterior-05.jpg`,
+      ...WIDE,
+      alt: "Architectural exterior render",
+      label: "Massing — full exterior",
+    },
+    {
+      key: "marqueeA2",
+      src: `${G}/interior-03.jpg`,
+      ...FILM,
+      alt: "Interior render, living space in daylight",
+      label: "Living volume — daylight",
+    },
+    {
+      key: "marqueeA3",
+      src: `${G}/exterior-07.jpg`,
+      ...WIDE,
+      alt: "Exterior render at night",
+      label: "Night elevation",
+    },
+    {
+      key: "marqueeA4",
+      src: `${G}/interior-11.jpg`,
+      ...FILM,
+      alt: "Interior render, staircase and light well",
+      label: "Stair & light well",
+    },
+    {
+      key: "marqueeA5",
+      src: `${G}/exterior-02.jpg`,
+      ...WIDE,
+      alt: "Tower render at dusk",
+      label: "Dusk approach — tower",
+    },
+  ],
+  // PLACEHOLDER — replace with real enterprise assets.
+  marqueeRowB: [
+    {
+      key: "marqueeB1",
+      src: `${G}/interior-07.jpg`,
+      ...FILM,
+      alt: "Kitchen interior render",
+      label: "Island & counter — finish",
+    },
+    {
+      key: "marqueeB2",
+      src: `${G}/exterior-03.jpg`,
+      ...WIDE,
+      alt: "Exterior architectural render",
+      label: "Exterior elevation",
+    },
+    {
+      key: "marqueeB3",
+      src: `${G}/interior-01.jpg`,
+      ...FILM,
+      alt: "Interior volume render",
+      label: "Interior volume",
+    },
+    {
+      key: "marqueeB4",
+      src: `${G}/exterior-06.jpg`,
+      ...WIDE,
+      alt: "Exterior approach render",
+      label: "Approach",
+    },
+    {
+      key: "marqueeB5",
+      src: `${G}/interior-10.jpg`,
+      ...FILM,
+      alt: "Styled interior render",
+      label: "Styled space — material",
+    },
+  ],
+  /**
+   * The buyer-segment tabs. Keys match the order of `sections[1].items` on the
+   * Enterprise vertical — two frames revealed per segment.
+   */
+  // PLACEHOLDER — replace with real enterprise assets.
+  segmentFrames: [
+    [
+      {
+        key: "segmentMarketingA",
+        src: `${G}/interior-02.jpg`,
+        ...FILM,
+        alt: "Interior render detail",
+        label: "Brand film frame",
+      },
+      {
+        key: "segmentMarketingB",
+        src: `${G}/exterior-01.jpg`,
+        ...WIDE,
+        alt: "Corporate facility exterior render",
+        label: "Campaign master",
+      },
+    ],
+    [
+      {
+        key: "segmentAgenciesA",
+        src: `${G}/exterior-04.jpg`,
+        ...WIDE,
+        alt: "Architectural elevation render",
+        label: "White-label archviz",
+      },
+      {
+        key: "segmentAgenciesB",
+        src: `${G}/interior-05.jpg`,
+        ...FILM,
+        alt: "Interior volume study render",
+        label: "Overflow render capacity",
+      },
+    ],
+    [
+      {
+        key: "segmentProductA",
+        src: `/media/pharma/deck/cell.jpg`,
+        w: 1600,
+        h: 1535,
+        alt: "Technical cutaway render",
+        label: "Cutaway — technical",
+      },
+      {
+        key: "segmentProductB",
+        src: `${G}/interior-09.jpg`,
+        ...FILM,
+        alt: "Interior compositing frame",
+        label: "Operating-principle sequence",
+      },
+    ],
+    [
+      {
+        key: "segmentFacilitiesA",
+        src: `${G}/exterior-02.jpg`,
+        ...WIDE,
+        alt: "Facility exterior render at dusk",
+        label: "Facility exterior",
+      },
+      {
+        key: "segmentFacilitiesB",
+        src: `${G}/interior-13.jpg`,
+        ...FILM,
+        alt: "Interior suite render",
+        label: "Video-wall content plate",
+      },
+    ],
+  ],
+  /** The AI-governance section's single wide frame. */
+  // PLACEHOLDER — replace with real enterprise asset.
+  governanceFrame: {
+    key: "governanceFrame",
+    src: `${G}/exterior-05.jpg`,
+    video: `${G}/exterior-web.mp4`,
+    ...WIDE,
+    alt: "Work in progress on the studio's own pipeline",
+    label: "Rendered in-house, start to finish",
+  },
+};
+
 /** Atmospheric stills used on the About / Who We Are page. */
 export const aboutAssets: MediaAsset[] = [
   {

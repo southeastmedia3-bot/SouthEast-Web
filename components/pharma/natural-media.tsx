@@ -14,6 +14,15 @@ type NaturalMediaProps = {
   className?: string;
   /** object-fit for the media; cover fills exactly (box already matches ratio). */
   imgClassName?: string;
+  /**
+   * Explicit aspect ratio (w/h), for assets whose dimensions travel with the
+   * asset itself rather than living in `lib/pharma-media-dims.ts` — the SaaS and
+   * Enterprise slots in `data/media.ts` carry their own measured `w`/`h` so a
+   * real file can replace a placeholder without touching any component.
+   */
+  ratio?: number;
+  /** Load immediately rather than lazily. For frames at the top of a page. */
+  eager?: boolean;
 };
 
 /**
@@ -33,9 +42,11 @@ export function NaturalMedia({
   priority = false,
   className,
   imgClassName,
+  ratio: explicitRatio,
+  eager = false,
 }: NaturalMediaProps) {
   const ratioSrc = poster ?? image;
-  const ratio = ratioOf(ratioSrc);
+  const ratio = explicitRatio ?? ratioOf(ratioSrc);
 
   return (
     <div
@@ -49,7 +60,7 @@ export function NaturalMedia({
           muted
           loop
           playsInline
-          preload="metadata"
+          preload={eager ? "auto" : "metadata"}
           poster={ratioSrc}
         >
           <source src={video} type="video/mp4" />
@@ -60,6 +71,7 @@ export function NaturalMedia({
           alt={alt}
           fill
           priority={priority}
+          {...(eager && !priority ? { loading: "eager" as const } : {})}
           sizes={sizes}
           className={cn("object-cover", imgClassName)}
         />

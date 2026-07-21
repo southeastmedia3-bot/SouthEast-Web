@@ -7,6 +7,7 @@ import { Container } from "@/components/common/container";
 import { LinkButton } from "@/components/ui/link-button";
 import type { Vertical } from "@/data/verticals";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { cn } from "@/lib/utils";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -23,7 +24,22 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * headline. The padding is pulled back out with a negative margin so the line
  * spacing is untouched.
  */
-export function VerticalHero({ vertical }: { vertical: Vertical }) {
+export type VerticalHeroProps = {
+  vertical: Vertical;
+  /**
+   * A phrase inside `vertical.title` to set in the studio's quiet aside —
+   * Instrument Serif, italic. Must match the title exactly, and is deliberately
+   * spent once per page: it is a signature, not a decoration. Omit it and the
+   * whole title stays in the sans voice, which is what every other vertical does.
+   */
+  accent?: string;
+  /** Override the primary CTA. Defaults to "Start a project" → /contact. */
+  primary?: { href: string; label: string };
+  /** Override the secondary CTA. Defaults to "All verticals" → /verticals. */
+  secondary?: { href: string; label: string };
+};
+
+export function VerticalHero({ vertical, accent, primary, secondary }: VerticalHeroProps) {
   const reducedMotion = useReducedMotion();
   const ref = useRef<HTMLElement | null>(null);
 
@@ -36,6 +52,16 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
 
   const words = vertical.title.split(" ");
+
+  // Locate the accent phrase as a contiguous run of whole words. An accent that
+  // doesn't match the title exactly (punctuation included) is simply ignored
+  // rather than half-applied — a stray italic word is worse than none.
+  const accentWords = accent?.trim().split(" ") ?? [];
+  const accentStart = accentWords.length
+    ? words.findIndex((_, i) => words.slice(i, i + accentWords.length).join(" ") === accent?.trim())
+    : -1;
+  const isAccent = (i: number) =>
+    accentStart >= 0 && i >= accentStart && i < accentStart + accentWords.length;
 
   return (
     <section
@@ -68,7 +94,11 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
             {words.map((word, i) => (
               <span
                 key={`${word}-${i}`}
-                className="inline-block overflow-hidden pb-[0.18em] pt-[0.06em] -mb-[0.18em] -mt-[0.06em]"
+                className={cn(
+                  "inline-block overflow-hidden pb-[0.18em] pt-[0.06em] -mb-[0.18em] -mt-[0.06em]",
+                  // The italic's tail overhangs the box it is clipped by.
+                  isAccent(i) && "pr-[0.07em] -mr-[0.07em]",
+                )}
               >
                 <motion.span
                   className="inline-block"
@@ -76,7 +106,7 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
                   animate={{ y: "0%" }}
                   transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1], delay: 0.08 + i * 0.05 }}
                 >
-                  {word}
+                  {isAccent(i) ? <span className="voice-quiet">{word}</span> : word}
                 </motion.span>
                 {i < words.length - 1 ? <span>&nbsp;</span> : null}
               </span>
@@ -98,16 +128,16 @@ export function VerticalHero({ vertical }: { vertical: Vertical }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.5 }}
           >
-            <LinkButton href="/contact" variant="primary" size="lg">
-              Start a project
+            <LinkButton href={primary?.href ?? "/contact"} variant="primary" size="lg">
+              {primary?.label ?? "Start a project"}
             </LinkButton>
             <LinkButton
-              href="/verticals"
+              href={secondary?.href ?? "/verticals"}
               variant="outline"
               size="lg"
               className="border-white/25 text-[var(--ink-frame-foreground)] hover:border-white/60 hover:text-[var(--ink-frame-foreground)]"
             >
-              All verticals
+              {secondary?.label ?? "All verticals"}
             </LinkButton>
           </motion.div>
 

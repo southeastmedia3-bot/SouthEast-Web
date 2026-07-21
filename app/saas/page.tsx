@@ -1,4 +1,4 @@
-import { VerticalTemplate } from "@/components/verticals/vertical-template";
+import { SaasVertical } from "@/components/verticals/saas-vertical";
 import { getVertical } from "@/data/verticals";
 import { createMetadata } from "@/lib/seo";
 
@@ -11,5 +11,5 @@ export const metadata = createMetadata({
 });
 
 export default function SaasPage() {
-  return <VerticalTemplate vertical={vertical} />;
+  return <SaasVertical vertical={vertical} />;
 }
