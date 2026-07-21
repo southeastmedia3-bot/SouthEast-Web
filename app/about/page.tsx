@@ -6,6 +6,7 @@ import { StudioFlow } from "@/components/scenes/studio-flow";
 import { LinkButton } from "@/components/ui/link-button";
 import { aboutClose, aboutHero, aboutMetrics, aboutPrinciples, aboutStory } from "@/data/about";
 import { aboutAssets } from "@/data/media";
+import { PageWrapper } from "@/components/layout/page-wrapper";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -16,7 +17,9 @@ export const metadata = createMetadata({
 
 export default function AboutPage() {
   return (
-    <div>
+    // PageWrapper renders <main id="main-content"> — the skip link's target and
+    // the landmark this page's content belongs inside.
+    <PageWrapper>
       {/* Hero */}
       <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-[#05070d] pb-16 pt-40">
         <CinematicBackdrop tone="blue" scan />
@@ -35,7 +38,7 @@ export default function AboutPage() {
       <Container className="py-24 md:py-32">
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
           <div>
-            <p className="type-label mb-6 text-accent">{aboutStory.eyebrow}</p>
+            <p className="type-label mb-6 text-accent-ink">{aboutStory.eyebrow}</p>
             <h2 className="type-h2 text-balance text-foreground">{aboutStory.title}</h2>
           </div>
           <div className="space-y-6">
@@ -75,7 +78,7 @@ export default function AboutPage() {
           <div className="grid gap-x-12 gap-y-12 md:grid-cols-2">
             {aboutPrinciples.map((principle, i) => (
               <div key={principle.label} className="flex gap-6 border-t border-border pt-6">
-                <span className="type-index text-accent">{String(i + 1).padStart(2, "0")}</span>
+                <span className="type-index text-accent-ink">{String(i + 1).padStart(2, "0")}</span>
                 <div>
                   <h3 className="type-h4 text-foreground">{principle.label}</h3>
                   <p className="type-body mt-2 text-muted">{principle.detail}</p>
@@ -118,6 +121,6 @@ export default function AboutPage() {
           </div>
         </Container>
       </section>
-    </div>
+    </PageWrapper>
   );
 }

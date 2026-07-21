@@ -43,6 +43,17 @@ export function FrameStrip({
   const railRef = useRef<HTMLDivElement | null>(null);
   const count = frames.length;
 
+  /**
+   * Which frames are mounted on the stage.
+   *
+   * Every frame used to be mounted at once so they could cross-fade. Because
+   * they stack in the same box, "lazy" meant nothing — the whole run entered the
+   * viewport together and a fifteen-frame strip pulled fifteen full-size images.
+   * Only the neighbours are mounted now: enough for the fade, and one image of
+   * cost per step instead of the entire sequence up front.
+   */
+  const mounted = new Set([(active - 1 + count) % count, active, (active + 1) % count]);
+
   const go = useCallback((next: number) => setActive(((next % count) + count) % count), [count]);
 
   // Keep the selected thumbnail in view when the arrows move past the fold.
@@ -112,23 +123,23 @@ export function FrameStrip({
               className="relative w-full overflow-hidden bg-[#0a0a0d]"
               style={{ aspectRatio: String(current.w / current.h) }}
             >
-              {frames.map((frame, i) => (
-                // Every frame stays mounted and cross-fades. Swapping `src` on one
-                // <Image> would flash the empty box on each step.
-                <Image
-                  key={frame.key}
-                  src={frame.src}
-                  alt={frame.alt}
-                  fill
-                  sizes="(min-width: 1024px) 88vw, 94vw"
-                  loading={i === 0 ? "eager" : "lazy"}
-                  className={cn(
-                    "object-cover transition-opacity duration-500",
-                    i === active ? "opacity-100" : "opacity-0",
-                  )}
-                  aria-hidden={i === active ? undefined : "true"}
-                />
-              ))}
+              {frames.map((frame, i) =>
+                mounted.has(i) ? (
+                  <Image
+                    key={frame.key}
+                    src={frame.src}
+                    alt={frame.alt}
+                    fill
+                    sizes="(min-width: 1024px) 88vw, 94vw"
+                    loading="lazy"
+                    className={cn(
+                      "object-cover transition-opacity duration-500",
+                      i === active ? "opacity-100" : "opacity-0",
+                    )}
+                    aria-hidden={i === active ? undefined : "true"}
+                  />
+                ) : null,
+              )}
             </div>
 
             {[
@@ -165,7 +176,15 @@ export function FrameStrip({
             >
               {current.label ?? current.alt}
             </span>
-            <span className="type-index shrink-0" style={{ color: rule }}>
+            {/* Counter is not tinted with `rule` — see the note in FrameLibrary.
+                The rule colour stays on the heading bar and the active thumbnail
+                outline, where it is a graphic rather than something to read. */}
+            <span
+              className={cn(
+                "type-index shrink-0",
+                dark ? "text-[color:var(--brand-ice)]/70" : "text-muted",
+              )}
+            >
               {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
             </span>
           </div>

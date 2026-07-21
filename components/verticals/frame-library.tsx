@@ -55,7 +55,12 @@ export function FrameLibrary({
             >
               {heading}
             </h2>
-            <span className="type-index" style={{ color: rule }}>
+            {/* Not tinted with `rule`. The brand hues are ~2.4:1 as small text on
+                the light ground, so the rule stays on the bar where it is a
+                graphic, and the count reads in a colour you can actually read. */}
+            <span
+              className={cn("type-index", dark ? "text-[color:var(--brand-ice)]/70" : "text-muted")}
+            >
               {frames.length} frames
             </span>
           </div>

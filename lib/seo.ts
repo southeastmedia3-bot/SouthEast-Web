@@ -23,12 +23,24 @@ export function createMetadata({
   noIndex,
 }: MetadataInput = {}): Metadata {
   const canonical = absoluteUrl(path);
+
+  /**
+   * The full title, for share cards only.
+   *
+   * `title` below is deliberately the bare page name. The root layout declares
+   * `title.template = "%s | Southeast Media"`, so returning the suffixed string
+   * here produced "VFX | Southeast Media | Southeast Media" on every subpage.
+   * The template owns the suffix; this function owns the page name.
+   *
+   * Open Graph and Twitter do not run through the template, so they take the
+   * resolved string — a share card with a bare "VFX" on it says nothing.
+   */
   const resolvedTitle = title
     ? `${title} | ${siteConfig.name}`
     : `${siteConfig.name} | ${siteConfig.projectName}`;
 
   return {
-    title: resolvedTitle,
+    title: title ?? { absolute: resolvedTitle },
     description,
     alternates: { canonical },
     openGraph: {

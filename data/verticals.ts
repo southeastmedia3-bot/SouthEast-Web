@@ -895,10 +895,13 @@ export const verticals: Vertical[] = [
     videosLead:
       "Character work, logo builds and explainer motion, running at full length rather than described.",
     videos: [
+      // No `bugs-life.mp4` here: it is the signature film at the top of this page.
+      // Listing it again played the same film twice on one screen and pulled it
+      // down twice. `saas/creative.mp4` takes the slot so the wall still reads six.
       {
-        src: "/media/animation/bugs-life.mp4",
-        poster: "/media/animation/bugs-life-poster.jpg",
-        label: "Character animation",
+        src: "/media/saas/creative.mp4",
+        poster: "/media/saas/creative-poster.jpg",
+        label: "Abstract motion",
       },
       // All three logo builds run, but the order keeps them apart: at three
       // columns this puts a different subject beside and above each one.

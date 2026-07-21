@@ -43,7 +43,10 @@ export function LoopVideo({
       muted
       loop
       playsInline
-      preload="metadata"
+      // `none`: the pharma page carries a lot of loops, and a metadata fetch per
+      // film is a request for something a visitor may never reach. The observer
+      // above calls play(), which is what starts the download.
+      preload="none"
       poster={poster}
       controls={reducedMotion}
     >

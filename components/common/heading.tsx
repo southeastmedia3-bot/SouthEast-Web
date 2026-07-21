@@ -9,7 +9,7 @@ type HeadingProps = ComponentPropsWithoutRef<"h2"> & {
 export function Heading({ as: Comp = "h2", eyebrow, className, children, ...props }: HeadingProps) {
   return (
     <div className="max-w-4xl">
-      {eyebrow ? <p className="type-label mb-6 text-accent">{eyebrow}</p> : null}
+      {eyebrow ? <p className="type-label mb-6 text-accent-ink">{eyebrow}</p> : null}
       <Comp className={cn("type-h2 text-balance text-foreground", className)} {...props}>
         {children}
       </Comp>

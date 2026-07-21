@@ -51,7 +51,10 @@ export const pharmaBodyTypes = {
   title: "Every patient the campaign has to reach.",
   body: "A growing range of anatomical variants representing different body types and ethnic backgrounds — inclusive, diverse and realistic. High-precision anatomy, built for better patient and doctor engagement.",
   images: [
-    { src: `${DECK}/bodytypes-a.jpg`, alt: "Four realistic body-type and ethnicity variants, standing" },
+    {
+      src: `${DECK}/bodytypes-a.jpg`,
+      alt: "Four realistic body-type and ethnicity variants, standing",
+    },
     { src: `${DECK}/bodytypes-b.jpg`, alt: "A second set of diverse full-body anatomy variants" },
   ],
   studies: [
@@ -115,12 +118,42 @@ export const pharmaAtlas: {
     title: "The atlas in motion",
     body: "The same models, animated — the loops that play the moment they reach the screen.",
     squares: [
-      { slug: "heart-cycle", name: "Heart", note: "Real cardiac dynamics, looped.", video: `${PH}/heart.mp4`, poster: `${PH}/heart-poster.jpg` },
-      { slug: "heart-cross", name: "Heart — cross-section", note: "Four chambers, valves and flow.", video: `${PH}/heart-cross.mp4`, poster: `${PH}/heart-cross-poster.jpg` },
-      { slug: "cardiac", name: "Cardiac cycle", note: "A single beat, held in loop.", video: `${PH}/heartbeat.mp4`, poster: `${PH}/heartbeat-poster.jpg` },
-      { slug: "fetal", name: "Fetal development", note: "Prenatal stages, in sequence.", video: `${PH}/fetus.mp4`, poster: `${PH}/fetus-poster.jpg` },
+      {
+        slug: "heart-cycle",
+        name: "Heart",
+        note: "Real cardiac dynamics, looped.",
+        video: `${PH}/heart.mp4`,
+        poster: `${PH}/heart-poster.jpg`,
+      },
+      {
+        slug: "heart-cross",
+        name: "Heart — cross-section",
+        note: "Four chambers, valves and flow.",
+        video: `${PH}/heart-cross.mp4`,
+        poster: `${PH}/heart-cross-poster.jpg`,
+      },
+      {
+        slug: "cardiac",
+        name: "Cardiac cycle",
+        note: "A single beat, held in loop.",
+        video: `${PH}/heartbeat.mp4`,
+        poster: `${PH}/heartbeat-poster.jpg`,
+      },
+      {
+        slug: "fetal",
+        name: "Fetal development",
+        note: "Prenatal stages, in sequence.",
+        video: `${PH}/fetus.mp4`,
+        poster: `${PH}/fetus-poster.jpg`,
+      },
     ],
-    wide: { slug: "lung", name: "Lung — health to disease", note: "Healthy, smoker's, COVID-affected and tuberculosis-affected, side by side.", video: `${PH}/lung.mp4`, poster: `${PH}/lung-poster.jpg` },
+    wide: {
+      slug: "lung",
+      name: "Lung — health to disease",
+      note: "Healthy, smoker's, COVID-affected and tuberculosis-affected, side by side.",
+      video: `${PH}/lung.mp4`,
+      poster: `${PH}/lung-poster.jpg`,
+    },
   },
   plates: [
     { slug: "heart", name: "Heart anatomy", image: `${SLIDES}/heart.jpg` },
@@ -129,28 +162,35 @@ export const pharmaAtlas: {
       name: "Brain anatomy",
       image: `${SLIDES}/brain-crop.jpg`,
       title: "Brain anatomy, visualized with scientific precision",
-      blurb: "3D brain illustrations that present complex neurological structures with clarity, accuracy and visual impact — helping brands, hospitals and clinicians communicate more effectively.",
+      blurb:
+        "3D brain illustrations that present complex neurological structures with clarity, accuracy and visual impact — helping brands, hospitals and clinicians communicate more effectively.",
     },
     {
       slug: "lung",
       name: "Lung — health to disease",
       image: `${SLIDES}/lung-crop.jpg`,
       title: "Lung health, damage, infection & disease progression",
-      blurb: "Healthy, smoker's, corona-affected and tuberculosis-affected lungs, side by side — disease progression rendered with clinical clarity.",
+      blurb:
+        "Healthy, smoker's, corona-affected and tuberculosis-affected lungs, side by side — disease progression rendered with clinical clarity.",
     },
     {
       slug: "liver",
       name: "Liver health",
       image: `${SLIDES}/liver.jpg`,
       title: "Visualizing liver health",
-      blurb: "3D liver visuals that simplify disease progression — from a healthy liver to fatty liver and cancer-affected liver.",
+      blurb:
+        "3D liver visuals that simplify disease progression — from a healthy liver to fatty liver and cancer-affected liver.",
     },
     { slug: "stomach", name: "Stomach cancer", image: `${SLIDES}/stomach.jpg` },
     { slug: "kidney", name: "Kidney & pancreas", image: `${SLIDES}/kidney.jpg` },
     { slug: "bronchial", name: "Bronchial inflammation", image: `${SLIDES}/bronchial.jpg` },
     { slug: "fetal", name: "Fetal development", image: `${SLIDES}/fetal.jpg` },
     { slug: "orofacial", name: "Orofacial anatomy", image: `${SLIDES}/orofacial.jpg` },
-    { slug: "musculoskeletal", name: "Musculoskeletal — spine & knee", image: `${SLIDES}/musculoskeletal.jpg` },
+    {
+      slug: "musculoskeletal",
+      name: "Musculoskeletal — spine & knee",
+      image: `${SLIDES}/musculoskeletal.jpg`,
+    },
     { slug: "hand", name: "Hand muscle anatomy", image: `${SLIDES}/hand.jpg` },
     { slug: "cell", name: "Cellular & mitochondrial anatomy", image: `${SLIDES}/cell.jpg` },
     { slug: "thyroid", name: "Thyroid — healthy to cancer", image: `${SLIDES}/thyroid.jpg` },
@@ -213,8 +253,11 @@ export const pharmaMolecular = {
       slug: "interaction",
       title: "Molecular interaction",
       body: "Drug-target binding, receptor activity, protein interactions, enzyme mechanisms and cellular pathway responses — invisible biological processes made clear and engaging.",
-      video: `${PH}/moa.mp4`,
-      poster: `${PH}/moa-poster.jpg`,
+      // Deliberately no video. This carried `moa.mp4`, which is already the
+      // signature film at the top of the page — the same 5MB film played twice on
+      // one screen and downloaded twice. Every other pharma loop is spoken for,
+      // so this runs as a still, which also puts `deck/interaction.jpg` on screen
+      // instead of leaving it as a field the video branch never read.
       image: `${DECK}/interaction.jpg`,
     },
   ],

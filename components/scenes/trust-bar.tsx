@@ -24,7 +24,7 @@ export function TrustBar() {
       <Container>
         <div className="mx-auto max-w-3xl text-center">
           <motion.p
-            className="type-label mb-6 text-accent"
+            className="type-label mb-6 text-accent-ink"
             initial={reducedMotion ? undefined : { opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.6 }}

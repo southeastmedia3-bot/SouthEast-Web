@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from "react";
 import Image from "next/image";
+import { LazyLoopVideo } from "@/components/media/lazy-loop-video";
 import { cn } from "@/lib/utils";
 
 type MediaFrameProps = ComponentPropsWithoutRef<"div"> & {
@@ -57,17 +58,9 @@ export function MediaFrame({
       {...props}
     >
       {video ? (
-        <video
-          className="absolute inset-0 h-full w-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          poster={poster}
-        >
-          <source src={video} type="video/mp4" />
-        </video>
+        // Deliberately not an inline <video autoPlay>. That fetched the file on
+        // mount, so every loop on a page downloaded before anyone scrolled to it.
+        <LazyLoopVideo src={video} poster={poster} />
       ) : src ? (
         <Image
           src={src}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
@@ -32,44 +32,72 @@ export function HoverVideo({
   sizes?: string;
   className?: string;
 }) {
+  const hostRef = useRef<HTMLDivElement | null>(null);
   const ref = useRef<HTMLVideoElement | null>(null);
   const reducedMotion = useReducedMotion();
   const playable = Boolean(src) && !reducedMotion;
 
-  const play = () => {
-    const v = ref.current;
-    if (!v) return;
-    v.play().catch(() => {});
-  };
-  const stop = () => {
-    const v = ref.current;
-    if (!v) return;
-    v.pause();
-    v.currentTime = 0;
-  };
+  // Visibility is React state, not a CSS attribute selector and not a classList
+  // mutation. An earlier version used `[&:not([paused])]` — `paused` is a DOM
+  // property and never a rendered attribute, so that selector always matched and
+  // the video sat permanently opaque over the poster.
+  const [showing, setShowing] = useState(false);
+
+  /**
+   * Native listeners, not React's `onPointerEnter`.
+   *
+   * `pointerenter` does not bubble, so React synthesises it from bubbling
+   * pointer events — and on these cards it never fired: hovering played nothing
+   * while a direct `play()` on the same element worked immediately. Binding the
+   * real events removes the guesswork. `focusin`/`focusout` are used rather than
+   * focus/blur for the same reason: they bubble, so tabbing to the link inside
+   * this container reaches us.
+   */
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || !playable) return;
+
+    const play = () => ref.current?.play().catch(() => {});
+    const stop = () => {
+      const v = ref.current;
+      if (!v) return;
+      v.pause();
+      v.currentTime = 0;
+      setShowing(false);
+    };
+
+    host.addEventListener("pointerenter", play);
+    host.addEventListener("pointerleave", stop);
+    host.addEventListener("focusin", play);
+    host.addEventListener("focusout", stop);
+    return () => {
+      host.removeEventListener("pointerenter", play);
+      host.removeEventListener("pointerleave", stop);
+      host.removeEventListener("focusin", play);
+      host.removeEventListener("focusout", stop);
+    };
+  }, [playable]);
 
   return (
-    <div
-      className={cn("relative overflow-hidden", className)}
-      onPointerEnter={playable ? play : undefined}
-      onPointerLeave={playable ? stop : undefined}
-      // Keyboard users get the same behaviour: the card is inside a link, so
-      // focus lands here on tab and the film starts.
-      onFocus={playable ? play : undefined}
-      onBlur={playable ? stop : undefined}
-    >
+    <div ref={hostRef} className={cn("relative overflow-hidden", className)}>
       <Image src={poster} alt={alt} fill sizes={sizes} className="object-cover" />
       {playable ? (
         <video
           ref={ref}
-          className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 [&:not([paused])]:opacity-100"
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover transition-opacity duration-500",
+            showing ? "opacity-100" : "opacity-0",
+          )}
           muted
           loop
           playsInline
+          // Nothing is fetched until a visitor points at the card. Seven films on
+          // an index page would otherwise be seven downloads nobody asked for.
           preload="none"
           aria-hidden="true"
-          onPlaying={(e) => e.currentTarget.classList.add("opacity-100")}
-          onPause={(e) => e.currentTarget.classList.remove("opacity-100")}
+          // Only reveal once frames are actually decoding, so the card never
+          // cuts to an empty box while the file is still opening.
+          onPlaying={() => setShowing(true)}
         >
           <source src={src} type="video/mp4" />
         </video>

@@ -79,7 +79,10 @@ export function VideoWall({
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                // `none`, not `metadata`: six tiles × a metadata fetch each is six
+                // requests for films a visitor may never scroll to. The observer
+                // below calls play(), which is what starts the actual download.
+                preload="none"
                 poster={video.poster}
                 controls={reducedMotion}
               >

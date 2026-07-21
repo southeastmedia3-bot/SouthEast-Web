@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { LazyLoopVideo } from "@/components/media/lazy-loop-video";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@/components/common/container";
@@ -64,17 +65,11 @@ export function DisciplineWall() {
                     falls back to the still as its poster. */}
                 <div className="brand-shape-morph relative h-full w-full overflow-hidden bg-[#0a0a0d]">
                   {"video" in tile && tile.video ? (
-                    <video
-                      className="absolute inset-0 h-full w-full object-cover transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0 group-focus-visible:opacity-0"
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      preload="metadata"
+                    <LazyLoopVideo
+                      src={tile.video}
                       poster={tile.media}
-                    >
-                      <source src={tile.video} type="video/mp4" />
-                    </video>
+                      className="transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0 group-focus-visible:opacity-0"
+                    />
                   ) : (
                     <Image
                       src={tile.media}

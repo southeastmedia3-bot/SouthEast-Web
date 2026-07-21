@@ -38,7 +38,7 @@ export function SiteFooter() {
                 newsletter, so it now carries the thing a visitor actually wants
                 to know at the foot of the page: what the studio owns and runs. */}
             <div className="rounded-[1.35rem] border border-white/12 bg-white/[0.04] p-5 shadow-[inset_0_1px_0_rgba(235,246,255,0.07)] backdrop-blur-xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-ice)]/45">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-ice)]/60">
                 Built in-house
               </p>
               <dl className="mt-4 grid grid-cols-3 gap-4">
@@ -62,7 +62,7 @@ export function SiteFooter() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {columns.map(([title, links]) => (
               <div key={title}>
-                <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-ice)]/45">
+                <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-[color:var(--brand-ice)]/60">
                   {title}
                 </h2>
                 <ul className="mt-5 grid gap-3">

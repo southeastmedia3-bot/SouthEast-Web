@@ -59,7 +59,7 @@ export function Pipeline() {
     return (
       <section aria-label={pipeline.heading} className="bg-[#f8f6f1] py-28">
         <Container>
-          <p className="type-label mb-5 text-accent">{pipeline.eyebrow}</p>
+          <p className="type-label mb-5 text-accent-ink">{pipeline.eyebrow}</p>
           <h2 className="type-h2 mb-14 text-foreground">{pipeline.heading}</h2>
           <ol className="flex flex-col gap-16">
             {STEPS.map((step, i) => (
@@ -96,7 +96,7 @@ export function Pipeline() {
           className="relative flex h-dvh w-full items-center overflow-hidden bg-[#f8f6f1]"
         >
           <Container size="xl">
-            <p className="type-label absolute left-6 top-10 text-accent sm:left-10 lg:left-16">
+            <p className="type-label absolute left-6 top-10 text-accent-ink sm:left-10 lg:left-16">
               {pipeline.eyebrow}
             </p>
 

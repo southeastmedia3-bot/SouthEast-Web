@@ -215,7 +215,7 @@ export function DesktopNav() {
                     >
                       <div className="flex items-start justify-between gap-10 border-b border-border/60 pb-6">
                         <div>
-                          <p className="type-label text-accent">{active.eyebrow}</p>
+                          <p className="type-label text-accent-ink">{active.eyebrow}</p>
                           <h3 className="type-h4 mt-2.5 text-foreground">{active.title}</h3>
                           <p className="type-body mt-2 max-w-xl text-muted">{active.summary}</p>
                         </div>

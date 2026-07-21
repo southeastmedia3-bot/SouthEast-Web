@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { LazyLoopVideo } from "@/components/media/lazy-loop-video";
 import { ratioOf } from "@/lib/pharma-media-dims";
 import { cn } from "@/lib/utils";
 
@@ -54,17 +55,9 @@ export function NaturalMedia({
       style={{ aspectRatio: String(ratio) }}
     >
       {video ? (
-        <video
-          className={cn("absolute inset-0 h-full w-full object-cover", imgClassName)}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload={eager ? "auto" : "metadata"}
-          poster={ratioSrc}
-        >
-          <source src={video} type="video/mp4" />
-        </video>
+        // Was `autoPlay` + `preload`, which downloaded every loop on the page at
+        // mount. Now it loads and plays only once it is actually on screen.
+        <LazyLoopVideo src={video} poster={ratioSrc} className={imgClassName} />
       ) : (
         <Image
           src={image}

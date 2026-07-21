@@ -86,7 +86,7 @@ export function ServicesList() {
     >
       <Container>
         <div className="mx-auto mb-16 max-w-2xl text-center">
-          <p className="type-label mb-5 text-accent">{servicesList.eyebrow}</p>
+          <p className="type-label mb-5 text-accent-ink">{servicesList.eyebrow}</p>
           <h2 className="type-h2 text-balance text-foreground">{servicesList.heading}</h2>
         </div>
       </Container>

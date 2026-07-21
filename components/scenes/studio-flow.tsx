@@ -29,7 +29,7 @@ export function StudioFlow() {
       <Container size="xl">
         <div className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
           <Reveal>
-            <p className="type-label mb-4 text-accent">How the studio is wired</p>
+            <p className="type-label mb-4 text-accent-ink">How the studio is wired</p>
             <h2 className="type-h3 max-w-2xl text-balance text-foreground">
               The two charts we actually run jobs against.
             </h2>

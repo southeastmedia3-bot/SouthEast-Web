@@ -6,6 +6,7 @@ import { HoverVideo } from "@/components/media/hover-video";
 import { Container } from "@/components/common/container";
 import { verticals, verticalsOverview } from "@/data/verticals";
 import { verticalHeroes } from "@/data/media";
+import { PageWrapper } from "@/components/layout/page-wrapper";
 import { createMetadata } from "@/lib/seo";
 
 export const metadata = createMetadata({
@@ -16,7 +17,10 @@ export const metadata = createMetadata({
 
 export default function VerticalsPage() {
   return (
-    <div>
+    // PageWrapper, not a bare <div>: it renders <main id="main-content">, which
+    // is both the skip link's target and the landmark this page's content needs
+    // to sit inside. Without it the skip link pointed at nothing.
+    <PageWrapper>
       <section className="relative flex min-h-[62vh] items-end overflow-hidden bg-[#05070d] pb-16 pt-40">
         <CinematicBackdrop tone="mixed" scan />
         <Container>
@@ -80,6 +84,6 @@ export default function VerticalsPage() {
           })}
         </div>
       </Container>
-    </div>
+    </PageWrapper>
   );
 }
