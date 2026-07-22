@@ -31,21 +31,27 @@ Husky + lint-staged format and lint staged files on commit.
 Copy `.env.example` to `.env.local`, and set the same keys in the hosting
 provider for production.
 
-| Variable                              | Required           | Purpose                                                                                                                               |
-| ------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`                | production         | Public origin behind every canonical URL, OG image, and sitemap entry. Falls back to `VERCEL_PROJECT_PRODUCTION_URL`, then localhost. |
-| `RESEND_API_KEY` + `CONTACT_TO_EMAIL` | one transport, yes | Emails each enquiry. `CONTACT_FROM_EMAIL` must sit on a Resend-verified domain.                                                       |
-| `CONTACT_WEBHOOK_URL`                 | one transport, yes | POSTs each enquiry as JSON; Slack/Teams-compatible.                                                                                   |
+| Variable                              | Required           | Purpose                                                                                                                                                    |
+| ------------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                | production         | Public origin behind every canonical URL, OG image, and sitemap entry. Must be **build-time** available — pages are prerendered. Set in `apphosting.yaml`. |
+| `RESEND_API_KEY` + `CONTACT_TO_EMAIL` | one transport, yes | Emails each enquiry. `CONTACT_FROM_EMAIL` must sit on a Resend-verified domain.                                                                            |
+| `CONTACT_WEBHOOK_URL`                 | one transport, yes | POSTs each enquiry as JSON; Slack/Teams-compatible.                                                                                                        |
 
 With no transport configured the form still works, but enquiries land only in
 the runtime logs — see [lib/contact-delivery.ts](lib/contact-delivery.ts).
 
 ## Deployment
 
-Zero-config on Vercel: build `npm run build`, no `vercel.json` needed. The one
-thing that must not be skipped is setting `NEXT_PUBLIC_SITE_URL` and a contact
-transport before pointing the domain at it. [DEPLOYMENT.md](DEPLOYMENT.md)
-carries the full pre-flight list.
+**Firebase App Hosting**, domain `southeastmedia.in`. Configuration lives in
+[apphosting.yaml](apphosting.yaml); pushes to `main` build and roll out
+automatically.
+
+App Hosting rather than classic Firebase Hosting: the latter is static-only,
+which would require `output: "export"` and drop the `/api/contact` route along
+with `next/image` optimization.
+
+[DEPLOYMENT.md](DEPLOYMENT.md) carries the full sequence, the GoDaddy DNS step,
+and the post-launch checklist.
 
 Media is served from `public/media` with a one-day cache and a week of
 stale-while-revalidate. Filenames are stable and get overwritten in place, so

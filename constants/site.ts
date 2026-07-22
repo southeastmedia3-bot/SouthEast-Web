@@ -8,10 +8,14 @@
  * exactly that failure to production.
  *
  * Order of trust:
- *   1. NEXT_PUBLIC_SITE_URL   — the real domain. Set this in production.
+ *   1. NEXT_PUBLIC_SITE_URL   — the real domain. Set this in production. On
+ *      Firebase App Hosting it comes from apphosting.yaml, where it must be
+ *      declared `availability: [BUILD, RUNTIME]`. BUILD is the one that counts:
+ *      every page here is prerendered, so canonicals and the sitemap are frozen
+ *      at build time and a runtime-only value arrives too late to affect them.
  *   2. VERCEL_PROJECT_PRODUCTION_URL — the stable production hostname Vercel
- *      injects at build time. Correct on preview builds too (it points at
- *      production, so previews don't advertise themselves as canonical).
+ *      injects at build time. Retained so a Vercel preview still resolves
+ *      correctly; unset on Firebase.
  *   3. localhost              — development only.
  *
  * Note `NEXT_PUBLIC_` is required on (1): the value is read in client bundles
@@ -24,6 +28,21 @@ function resolveSiteUrl(): string {
 
   const vercel = process.env.VERCEL_PROJECT_PRODUCTION_URL;
   if (vercel) return `https://${vercel.replace(/\/$/, "")}`;
+
+  /**
+   * Reaching here during a production build means the deployment is about to
+   * bake `http://localhost:3000` into every canonical tag, share card and
+   * sitemap entry — a silent, site-wide SEO failure that looks completely
+   * normal in the browser. Fail loudly in the build log instead.
+   */
+  if (process.env.NODE_ENV === "production") {
+    console.warn(
+      "\n[site] NEXT_PUBLIC_SITE_URL is not set for this production build.\n" +
+        "       Canonical URLs, Open Graph images and the sitemap will all point\n" +
+        "       at http://localhost:3000. On Firebase App Hosting, set it in\n" +
+        "       apphosting.yaml with availability: [BUILD, RUNTIME].\n",
+    );
+  }
 
   return "http://localhost:3000";
 }

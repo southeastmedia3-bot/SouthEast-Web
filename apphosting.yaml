@@ -1,0 +1,49 @@
+# Firebase App Hosting configuration.
+# Reference: https://firebase.google.com/docs/app-hosting/configure
+
+runConfig:
+  # Every page except /api/contact is statically prerendered and served from
+  # App Hosting's CDN, so the container is only woken for enquiry POSTs and
+  # cache misses. Zero idle instances is the right default at this traffic.
+  # Raise to 1 if a cold start on the first uncached hit is unacceptable.
+  minInstances: 0
+  maxInstances: 10
+  concurrency: 80
+  cpu: 1
+  memoryMiB: 512
+
+env:
+  # MUST be available at BUILD, not just RUNTIME.
+  #
+  # All 17 pages are prerendered during `next build`, which is when canonical
+  # tags, Open Graph image URLs and every sitemap entry are baked into the HTML.
+  # A runtime-only value arrives far too late to change any of them: the site
+  # would ship canonicals reading `http://localhost:3000` — the fallback in
+  # constants/site.ts — and Google would index that.
+  - variable: NEXT_PUBLIC_SITE_URL
+    value: https://southeastmedia.in
+    availability:
+      - BUILD
+      - RUNTIME
+
+  # ─── Contact form delivery — add when the Resend account is ready ──────────
+  #
+  # Until one of these is set the enquiry form still accepts submissions, but
+  # they reach only the Cloud Logging stream. See lib/contact-delivery.ts.
+  #
+  # Plain values go here as `value:`. The API key must NOT: put it in Secret
+  # Manager (`firebase apphosting:secrets:set RESEND_API_KEY`) and reference it
+  # with `secret:` so it never enters the repository.
+  #
+  # - variable: RESEND_API_KEY
+  #   secret: RESEND_API_KEY
+  #   availability:
+  #     - RUNTIME
+  # - variable: CONTACT_TO_EMAIL
+  #   value: studio@southeastmedia.in
+  #   availability:
+  #     - RUNTIME
+  # - variable: CONTACT_FROM_EMAIL
+  #   value: Southeast Media <enquiries@southeastmedia.in>
+  #   availability:
+  #     - RUNTIME
