@@ -30,14 +30,27 @@ function resolveSiteUrl(): string {
   if (vercel) return `https://${vercel.replace(/\/$/, "")}`;
 
   /**
-   * Reaching here during a production build means the deployment is about to
-   * bake `http://localhost:3000` into every canonical tag, share card and
-   * sitemap entry — a silent, site-wide SEO failure that looks completely
-   * normal in the browser. Fail loudly in the build log instead.
+   * Reaching here on a *deployed* build means it is about to bake
+   * `http://localhost:3000` into every canonical tag, share card and sitemap
+   * entry — a silent, site-wide SEO failure that looks completely normal in a
+   * browser. Shout about it in the build log.
+   *
+   * Gated on CI/cloud rather than on NODE_ENV alone, because `next build` and
+   * `next start` both set NODE_ENV=production locally. Warning there would fire
+   * every time someone previews a production build on their own machine, where
+   * localhost is the correct answer — and a warning that cries wolf on the
+   * common path is one nobody reads on the path that matters.
    */
-  if (process.env.NODE_ENV === "production") {
+  const isDeployed = Boolean(
+    process.env.CI ||
+    process.env.K_SERVICE || // Cloud Run — App Hosting's runtime
+    process.env.GOOGLE_CLOUD_PROJECT || // Cloud Build — App Hosting's builder
+    process.env.VERCEL,
+  );
+
+  if (isDeployed) {
     console.warn(
-      "\n[site] NEXT_PUBLIC_SITE_URL is not set for this production build.\n" +
+      "\n[site] NEXT_PUBLIC_SITE_URL is not set for this deployment.\n" +
         "       Canonical URLs, Open Graph images and the sitemap will all point\n" +
         "       at http://localhost:3000. On Firebase App Hosting, set it in\n" +
         "       apphosting.yaml with availability: [BUILD, RUNTIME].\n",
