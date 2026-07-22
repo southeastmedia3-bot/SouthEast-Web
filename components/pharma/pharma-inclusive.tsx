@@ -19,10 +19,7 @@ export function PharmaInclusive() {
   const { eyebrow, title, body, images, studies, orbitalSlide } = pharmaBodyTypes;
 
   return (
-    <section
-      id="inclusive"
-      className="scroll-mt-36 bg-[var(--surface-elevated)] py-20 md:py-28"
-    >
+    <section id="inclusive" className="scroll-mt-36 bg-[var(--surface-elevated)] py-20 md:py-28">
       <Container>
         <div className="mb-12 max-w-2xl">
           <Reveal x={-40}>

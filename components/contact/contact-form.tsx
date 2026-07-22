@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/constants/site";
 import { contactSchema, projectTypes, type ContactValues } from "@/data/contact";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ const fieldBase =
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -25,16 +27,33 @@ export function ContactForm() {
 
   async function onSubmit(values: ContactValues) {
     setStatus("idle");
+    setErrorMessage(null);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
-      if (!res.ok) throw new Error("Request failed");
+
+      if (!res.ok) {
+        // A rate-limited visitor is not a failed one — they have already sent
+        // a brief. Saying "something went wrong" would send them to email for
+        // a message we have.
+        throw new Error(
+          res.status === 429
+            ? "You've sent several enquiries just now. Please give it a few minutes."
+            : `Something went wrong sending your enquiry. Please try again, or email ${siteConfig.contactEmail}.`,
+        );
+      }
+
       setStatus("success");
       reset();
-    } catch {
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error && error.message
+          ? error.message
+          : `Something went wrong sending your enquiry. Please try again, or email ${siteConfig.contactEmail}.`,
+      );
       setStatus("error");
     }
   }
@@ -49,7 +68,7 @@ export function ContactForm() {
         <h3 className="type-h4 text-foreground">Your enquiry is secured.</h3>
         <p className="type-body text-muted">
           Thank you — we&apos;ve received your brief and will respond within two business days,
-          under NDA. For anything time-critical, email studio@southeastmedia.com.
+          under NDA. For anything time-critical, email {siteConfig.contactEmail}.
         </p>
         <Button variant="outline" onClick={() => setStatus("idle")}>
           Send another
@@ -91,7 +110,11 @@ export function ContactForm() {
           />
         </Field>
         <Field label="Project type" error={errors.projectType?.message} htmlFor="projectType">
-          <select id="projectType" className={cn(fieldBase, "appearance-none")} {...register("projectType")}>
+          <select
+            id="projectType"
+            className={cn(fieldBase, "appearance-none")}
+            {...register("projectType")}
+          >
             {projectTypes.map((t) => (
               <option key={t} value={t}>
                 {t}
@@ -120,10 +143,9 @@ export function ContactForm() {
         />
       </Field>
 
-      {status === "error" ? (
+      {status === "error" && errorMessage ? (
         <p className="type-small text-[color:var(--danger)]" role="alert">
-          Something went wrong sending your enquiry. Please try again or email
-          studio@southeastmedia.com.
+          {errorMessage}
         </p>
       ) : null}
 

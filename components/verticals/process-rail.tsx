@@ -57,9 +57,7 @@ export function ProcessRail({
           />
           <motion.span
             className="absolute left-[7px] top-2 h-[calc(100%-1rem)] w-px origin-top md:left-[11px]"
-            style={
-              reducedMotion ? { background: rule } : { background: rule, scaleY }
-            }
+            style={reducedMotion ? { background: rule } : { background: rule, scaleY }}
             aria-hidden="true"
           />
 

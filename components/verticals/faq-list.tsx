@@ -22,13 +22,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * cannot be animated at all. Under reduced motion it collapses to an instant
  * show/hide.
  */
-export function FaqList({
-  faqs,
-  rule,
-}: {
-  faqs: { q: string; a: string }[];
-  rule: string;
-}) {
+export function FaqList({ faqs, rule }: { faqs: { q: string; a: string }[]; rule: string }) {
   const reducedMotion = useReducedMotion();
   const [open, setOpen] = useState<number | null>(0);
 

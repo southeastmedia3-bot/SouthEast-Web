@@ -22,10 +22,7 @@ export function PharmaIntro() {
   const reducedMotion = useReducedMotion();
 
   return (
-    <section
-      id="overview"
-      className="scroll-mt-36 bg-[#1b1710] py-16 md:py-20"
-    >
+    <section id="overview" className="scroll-mt-36 bg-[#1b1710] py-16 md:py-20">
       <Container>
         <Reveal>
           <div className="flex items-center gap-4">
@@ -76,7 +73,10 @@ export function PharmaIntro() {
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.6, ease: EASE, delay: (i % 4) * 0.08 }}
             >
-              <span className="mb-5 block h-[3px] w-9 bg-[color:var(--brand-blue)]" aria-hidden="true" />
+              <span
+                className="mb-5 block h-[3px] w-9 bg-[color:var(--brand-blue)]"
+                aria-hidden="true"
+              />
               <dt className="type-h3 text-balance text-white">{stat.value}</dt>
               <dd className="type-caption mt-2 uppercase tracking-[0.1em] text-white/55">
                 {stat.label}

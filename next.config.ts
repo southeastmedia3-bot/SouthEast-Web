@@ -1,5 +1,35 @@
 import type { NextConfig } from "next";
 
+/**
+ * Baseline security headers, applied to every route.
+ *
+ * No Content-Security-Policy here on purpose. GSAP, Lenis and Framer Motion all
+ * write inline styles, and Next injects inline bootstrap scripts, so a correct
+ * CSP for this site needs nonce plumbing through middleware — worth doing, but
+ * it is a change that breaks the page silently if it is wrong, and it should
+ * not ride along with a first deploy. The headers below carry no such risk.
+ */
+const securityHeaders = [
+  // Stop MIME sniffing turning an upload into an executable script.
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  // Clickjacking: nothing here is meant to be framed by another origin.
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  // Send the origin cross-site, the full path same-site. Keeps referrer
+  // analytics useful without leaking deep URLs to third parties.
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  // The site asks for none of these; deny them up front.
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  },
+  // Two years of HTTPS-only, including subdomains. Vercel terminates TLS and
+  // redirects http→https already; this closes the first-request window.
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains; preload",
+  },
+];
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -13,8 +43,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+      {
         /**
-         * Everything under /public/media — ~68MB of film and several hundred
+         * Everything under /public/media — ~127MB of film and several hundred
          * stills.
          *
          * Next serves `public/` with `Cache-Control: public, max-age=0` by

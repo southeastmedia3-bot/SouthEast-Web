@@ -147,7 +147,10 @@ export function ScrollVideo({
       {primaryCta || secondaryCta ? (
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           {primaryCta ? (
-            <Link href={primaryCta.href} className={cn(buttonVariants({ variant: "primary", size: "lg" }))}>
+            <Link
+              href={primaryCta.href}
+              className={cn(buttonVariants({ variant: "primary", size: "lg" }))}
+            >
               {primaryCta.label}
             </Link>
           ) : null}

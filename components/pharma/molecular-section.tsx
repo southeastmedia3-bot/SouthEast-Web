@@ -37,19 +37,25 @@ export function MolecularSection() {
         {lead ? (
           <Parallax distance={16}>
             <Reveal y={56} duration={0.85}>
-            <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
-              <div className="relative aspect-[21/9] w-full">
-                {lead.video && lead.poster ? (
-                  <LoopVideo src={lead.video} poster={lead.poster} />
-                ) : (
-                  <Image src={lead.image} alt={lead.title} fill sizes="90vw" className="object-cover" />
-                )}
+              <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
+                <div className="relative aspect-[21/9] w-full">
+                  {lead.video && lead.poster ? (
+                    <LoopVideo src={lead.video} poster={lead.poster} />
+                  ) : (
+                    <Image
+                      src={lead.image}
+                      alt={lead.title}
+                      fill
+                      sizes="90vw"
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+                <div className="bg-white p-7 md:p-9">
+                  <h3 className="type-h4 text-foreground">{lead.title}</h3>
+                  <p className="type-body mt-3 max-w-3xl text-muted">{lead.body}</p>
+                </div>
               </div>
-              <div className="bg-white p-7 md:p-9">
-                <h3 className="type-h4 text-foreground">{lead.title}</h3>
-                <p className="type-body mt-3 max-w-3xl text-muted">{lead.body}</p>
-              </div>
-            </div>
             </Reveal>
           </Parallax>
         ) : null}

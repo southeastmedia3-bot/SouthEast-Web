@@ -76,6 +76,20 @@ export function createBreadcrumbSchema(items: Array<{ name: string; path: string
 }
 
 export function createRobots(): MetadataRoute.Robots {
+  /**
+   * Preview and development deployments must never be crawled. Left open they
+   * get indexed under their *.vercel.app hostname and compete with the real
+   * domain for the same copy — duplicate content the studio then has to ask
+   * Google to remove.
+   */
+  const isProduction = process.env.VERCEL_ENV
+    ? process.env.VERCEL_ENV === "production"
+    : process.env.NODE_ENV === "production";
+
+  if (!isProduction) {
+    return { rules: { userAgent: "*", disallow: "/" } };
+  }
+
   return {
     rules: { userAgent: "*", allow: "/" },
     sitemap: absoluteUrl("/sitemap.xml"),

@@ -214,10 +214,9 @@ export function PhysicsBlocks({
         }
       };
 
-      const io = new IntersectionObserver(
-        ([entry]) => (entry?.isIntersecting ? start() : stop()),
-        { threshold: 0.05 },
-      );
+      const io = new IntersectionObserver(([entry]) => (entry?.isIntersecting ? start() : stop()), {
+        threshold: 0.05,
+      });
       io.observe(scene);
 
       const ro = new ResizeObserver(() => {

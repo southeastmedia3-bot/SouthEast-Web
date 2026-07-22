@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { siteConfig } from "@/constants/site";
 
 export const projectTypes = [
   "Medical & Pharma",
@@ -12,9 +13,18 @@ export const projectTypes = [
   "Something else",
 ] as const;
 
-/** Shared schema — validated on the client (react-hook-form) and re-validated
- *  server-side in the route handler. `company` is a honeypot: real users leave
- *  it blank; bots fill it. */
+/**
+ * Shared schema — validated on the client (react-hook-form) and re-validated
+ * server-side in the route handler.
+ *
+ * `company` is a honeypot: real users never see the field, bots fill it. It is
+ * deliberately permissive here rather than `.max(0)`. Constraining it made the
+ * schema reject bots with a 422 whose `issues` payload named `company` as the
+ * offending field — which both bypassed the route's silent-drop branch (dead
+ * code, since validation ran first) and handed a bot the one hint it needs to
+ * get past the trap. Unconstrained, a filled honeypot reaches the route and is
+ * answered with an ordinary 200 that reveals nothing.
+ */
 export const contactSchema = z.object({
   name: z.string().min(2, "Please enter your name."),
   email: z.string().email("Please enter a valid email address."),
@@ -22,7 +32,7 @@ export const contactSchema = z.object({
   projectType: z.enum(projectTypes),
   budget: z.string().optional(),
   message: z.string().min(20, "A little more detail helps us route you (20+ characters)."),
-  company: z.string().max(0).optional(),
+  company: z.string().optional(),
 });
 
 export type ContactValues = z.infer<typeof contactSchema>;
@@ -40,7 +50,7 @@ export const contactContent = {
     ],
   },
   details: [
-    { label: "Enquiries", value: "studio@southeastmedia.com" },
+    { label: "Enquiries", value: siteConfig.contactEmail },
     { label: "Response", value: "Within 2 business days" },
     { label: "Engagement", value: "NDA-bound, milestone-tracked" },
   ],

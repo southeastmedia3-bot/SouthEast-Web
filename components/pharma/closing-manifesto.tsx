@@ -27,7 +27,13 @@ export function ClosingManifesto() {
         style={reducedMotion ? undefined : { y, scale }}
         aria-hidden="true"
       >
-        <Image src={pharmaClosing.image} alt="" fill sizes="100vw" className="object-cover opacity-40" />
+        <Image
+          src={pharmaClosing.image}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-40"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black" />
       </motion.div>
 

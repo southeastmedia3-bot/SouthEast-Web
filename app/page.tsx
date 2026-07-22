@@ -8,6 +8,14 @@ import { Mandate } from "@/components/scenes/mandate";
 import { DisciplineWall } from "@/components/scenes/discipline-wall";
 import { Invitation } from "@/components/scenes/invitation";
 import { PageWrapper } from "@/components/layout/page-wrapper";
+import { createMetadata } from "@/lib/seo";
+
+/**
+ * The home page inherits its title and description from the root layout, but
+ * not a canonical URL — without one, the root is reachable and indexable at
+ * several addresses (www, trailing slash, query strings) as separate pages.
+ */
+export const metadata = createMetadata({ path: "/" });
 
 /**
  * The page breathes light -> dark -> light. It opens bright and spare, then

@@ -47,13 +47,7 @@ export function OrganAtlas() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:gap-7">
           {keptPlates.map((plate, i) => (
-            <Reveal
-              key={plate.slug}
-              delay={(i % 2) * 0.08}
-              y={0}
-              scale={0.9}
-              className="h-full"
-            >
+            <Reveal key={plate.slug} delay={(i % 2) * 0.08} y={0} scale={0.9} className="h-full">
               <Plate plate={plate} priority={i < 2} />
             </Reveal>
           ))}
@@ -96,13 +90,7 @@ export function OrganAtlas() {
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {motion.squares.map((clip, i) => (
-              <Reveal
-                key={clip.slug}
-                delay={(i % 4) * 0.07}
-                y={0}
-                scale={0.9}
-                className="h-full"
-              >
+              <Reveal key={clip.slug} delay={(i % 4) * 0.07} y={0} scale={0.9} className="h-full">
                 <MotionClipCard clip={clip} ratio={1} />
               </Reveal>
             ))}

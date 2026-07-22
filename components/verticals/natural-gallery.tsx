@@ -81,10 +81,7 @@ export function NaturalGallery({
 
         <div className="grid gap-x-8 gap-y-14 lg:grid-cols-2">
           {columns.map((column, c) => (
-            <div
-              key={c}
-              className={cn("flex flex-col gap-14", c === stagger && "lg:mt-28")}
-            >
+            <div key={c} className={cn("flex flex-col gap-14", c === stagger && "lg:mt-28")}>
               {column.map((entry) => (
                 <figure key={entry.slot.key}>
                   {/* Curtain held inside the frame — see `NaturalMedia`'s

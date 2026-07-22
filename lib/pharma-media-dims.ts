@@ -10,13 +10,13 @@
 export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   // Full source slides (uniform 16:9) — shown whole, self-contained (title + copy baked in)
   "/media/pharma/slides/orbital-eye.jpg": { w: 2400, h: 1350 },
-  // Full-width organs, cropped to the render (baked slide text removed)
+  // Full-width organs, cropped to the render (baked slide text removed).
+  // The uncropped brain.jpg/lung.jpg they replaced are gone from disk; their
+  // entries were removed with them, along with a leg.jpg that no longer ships.
   "/media/pharma/slides/brain-crop.jpg": { w: 2400, h: 820 },
   "/media/pharma/slides/lung-crop.jpg": { w: 2400, h: 790 },
-  "/media/pharma/slides/brain.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/heart.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/liver.jpg": { w: 2400, h: 1350 },
-  "/media/pharma/slides/lung.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/bronchial.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/stomach.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/kidney.jpg": { w: 2400, h: 1350 },
@@ -24,7 +24,6 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   "/media/pharma/slides/orofacial.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/musculoskeletal.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/hand.jpg": { w: 2400, h: 1350 },
-  "/media/pharma/slides/leg.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/cell.jpg": { w: 2400, h: 1350 },
   "/media/pharma/slides/thyroid.jpg": { w: 2400, h: 1350 },
 

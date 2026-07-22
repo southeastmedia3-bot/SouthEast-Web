@@ -53,9 +53,17 @@ export function AnatomyReveal() {
       <section id="anatomy" className="scroll-mt-36 bg-black py-20">
         <Container>
           <p className="type-label mb-4 text-[color:var(--brand-sky)]">Fully rigged anatomy</p>
-          <h2 className="type-h3 mb-8 text-[var(--ink-frame-foreground)]">One model. Every system.</h2>
+          <h2 className="type-h3 mb-8 text-[var(--ink-frame-foreground)]">
+            One model. Every system.
+          </h2>
           <div className="relative mx-auto aspect-[7/8] w-full max-w-sm">
-            <Image src={last.src} alt="Fully rigged human anatomy model" fill className="object-contain" sizes="24rem" />
+            <Image
+              src={last.src}
+              alt="Fully rigged human anatomy model"
+              fill
+              className="object-contain"
+              sizes="24rem"
+            />
           </div>
         </Container>
       </section>
@@ -114,7 +122,10 @@ export function AnatomyReveal() {
             <div className="flex items-baseline gap-4">
               <span className="type-index tabular-nums text-[color:var(--brand-ice)]/40">
                 {String(active + 1).padStart(2, "0")}
-                <span className="text-[color:var(--brand-ice)]/20"> / {String(N).padStart(2, "0")}</span>
+                <span className="text-[color:var(--brand-ice)]/20">
+                  {" "}
+                  / {String(N).padStart(2, "0")}
+                </span>
               </span>
               <div>
                 <p className="type-h4 text-[1.15rem] text-[var(--ink-frame-foreground)]">

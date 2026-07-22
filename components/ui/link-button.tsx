@@ -4,8 +4,7 @@ import type { VariantProps } from "class-variance-authority";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-type LinkButtonProps = ComponentPropsWithoutRef<typeof Link> &
-  VariantProps<typeof buttonVariants>;
+type LinkButtonProps = ComponentPropsWithoutRef<typeof Link> & VariantProps<typeof buttonVariants>;
 
 /**
  * A `next/link` styled as a button. Use for navigation CTAs (the `Button`
