@@ -95,7 +95,7 @@ export function MobileNav() {
                         >
                           {item.label}
                         </Link>
-                        {item.children ? (
+                        {item.categories ? (
                           <button
                             type="button"
                             aria-label={`Toggle ${item.label} submenu`}
@@ -110,23 +110,31 @@ export function MobileNav() {
                         ) : null}
                       </div>
                       <AnimatePresence initial={false}>
-                        {item.children && isExpanded ? (
+                        {item.categories && isExpanded ? (
                           <motion.div
                             initial={{ height: 0, opacity: 0 }}
                             animate={{ height: "auto", opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             className="overflow-hidden"
                           >
-                            <div className="flex flex-col pb-3 pl-1">
-                              {item.children.map((child) => (
-                                <Link
-                                  key={child.href}
-                                  href={child.href}
-                                  onClick={closeMenu}
-                                  className="py-2.5 text-base text-muted transition hover:text-foreground"
-                                >
-                                  {child.label}
-                                </Link>
+                            {/* Grouped rather than flat: 28 services in one
+                                undifferentiated column tells a phone visitor
+                                nothing about how the work is organised. */}
+                            <div className="flex flex-col gap-5 pb-4 pl-1">
+                              {item.categories.map((category) => (
+                                <div key={category.label} className="flex flex-col">
+                                  <p className="type-label pb-1 text-muted">{category.label}</p>
+                                  {category.items.map((service) => (
+                                    <Link
+                                      key={service.label}
+                                      href={service.href}
+                                      onClick={closeMenu}
+                                      className="py-2 text-base text-muted transition hover:text-foreground"
+                                    >
+                                      {service.label}
+                                    </Link>
+                                  ))}
+                                </div>
                               ))}
                             </div>
                           </motion.div>

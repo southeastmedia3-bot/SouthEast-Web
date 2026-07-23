@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ArrowUpRight, ChevronDown, ChevronRight } from "lucide-react";
-import { primaryNavigation } from "@/config/navigation";
-import { verticals } from "@/data/verticals";
+import { ArrowRight, ChevronDown, ChevronRight } from "lucide-react";
+import { primaryNavigation, serviceMenu, serviceRoutes } from "@/config/navigation";
 import { cn } from "@/lib/utils";
 import { getAriaCurrent } from "@/utils/accessibility";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
@@ -20,11 +19,12 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const CLOSE_DELAY = 150;
 
 /**
- * The primary nav, and the verticals mega-menu.
+ * The primary nav, and the services mega-menu.
  *
- * The menu is a two-level panel: a rail of the seven verticals on the left, and a
- * wide detail pane on the right that swaps as you move down the rail. Hovering a
- * rail item previews it; clicking it opens the vertical.
+ * The menu is a two-level panel: a rail of the five service categories on the
+ * left, and a wide detail pane on the right that swaps as you move down the rail.
+ * Hovering a rail item previews its services; clicking any of them opens the page
+ * that carries that work.
  *
  * Open/close is on state rather than `:hover`, because CSS hover can't bridge the
  * gap between the trigger and the panel (the pointer crosses bare header and the
@@ -38,7 +38,7 @@ export function DesktopNav() {
   const pathname = usePathname();
   const reducedMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
-  const [activeSlug, setActiveSlug] = useState(verticals[0]!.slug);
+  const [activeCategory, setActiveCategory] = useState(serviceMenu[0]!.label);
   const closeTimer = useRef<number | null>(null);
 
   const cancelClose = () => {
@@ -71,7 +71,7 @@ export function DesktopNav() {
 
   useEffect(() => cancelClose, []);
 
-  const active = verticals.find((v) => v.slug === activeSlug) ?? verticals[0]!;
+  const active = serviceMenu.find((c) => c.label === activeCategory) ?? serviceMenu[0]!;
 
   return (
     <nav
@@ -84,9 +84,9 @@ export function DesktopNav() {
       }}
     >
       {primaryNavigation.map((item) => {
-        const hasMenu = Boolean(item.children?.length);
+        const hasMenu = Boolean(item.categories?.length);
         const isActive = hasMenu
-          ? pathname === item.href || verticals.some((v) => pathname.startsWith(`/${v.slug}`))
+          ? pathname === item.href || serviceRoutes.some((route) => pathname.startsWith(route))
           : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
         return (
@@ -156,18 +156,19 @@ export function DesktopNav() {
                   translucent card reads as muddy grey there. The page behind is
                   pushed back by the scrim instead. */}
               <div className="mx-auto grid max-w-[76rem] grid-cols-[16rem_1fr] overflow-hidden rounded-[1.75rem] border border-border/70 bg-white shadow-[0_60px_120px_-45px_rgba(21,20,26,0.45)]">
-                {/* The rail — the seven verticals. Hover previews, click opens. */}
+                {/* The rail — the five categories. Hover previews, click opens the
+                    page the category's work lives on. */}
                 <div className="flex flex-col border-r border-border/60 bg-[#f8f6f1]/70 p-3">
-                  <p className="type-label px-4 pb-1 pt-3 text-muted">Verticals</p>
+                  <p className="type-label px-4 pb-1 pt-3 text-muted">Categories</p>
                   <ul className="flex flex-col">
-                    {verticals.map((vertical) => {
-                      const selected = vertical.slug === activeSlug;
+                    {serviceMenu.map((category) => {
+                      const selected = category.label === active.label;
                       return (
-                        <li key={vertical.slug}>
+                        <li key={category.label}>
                           <Link
-                            href={`/${vertical.slug}`}
-                            onPointerEnter={() => setActiveSlug(vertical.slug)}
-                            onFocus={() => setActiveSlug(vertical.slug)}
+                            href={category.href}
+                            onPointerEnter={() => setActiveCategory(category.label)}
+                            onFocus={() => setActiveCategory(category.label)}
                             onClick={closeNow}
                             className={cn(
                               "flex items-center justify-between gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition",
@@ -176,7 +177,7 @@ export function DesktopNav() {
                                 : "text-muted-foreground hover:text-foreground",
                             )}
                           >
-                            <span>{vertical.label}</span>
+                            <span>{category.label}</span>
                             <ChevronRight
                               className={cn(
                                 "size-4 shrink-0 text-accent transition-all duration-200",
@@ -195,7 +196,7 @@ export function DesktopNav() {
                     onClick={closeNow}
                     className="group/all mt-auto flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-muted-foreground transition hover:text-foreground"
                   >
-                    All seven disciplines
+                    Every discipline
                     <ArrowRight
                       className="size-4 transition-transform duration-300 group-hover/all:translate-x-1"
                       aria-hidden="true"
@@ -207,46 +208,28 @@ export function DesktopNav() {
                 <div className="p-8">
                   <AnimatePresence mode="wait">
                     <motion.div
-                      key={active.slug}
+                      key={active.label}
                       initial={reducedMotion ? false : { opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.18, ease: EASE }}
                     >
-                      <div className="flex items-start justify-between gap-10 border-b border-border/60 pb-6">
-                        <div>
-                          <p className="type-label text-accent-ink">{active.eyebrow}</p>
-                          <h3 className="type-h4 mt-2.5 text-foreground">{active.title}</h3>
-                          <p className="type-body mt-2 max-w-xl text-muted">{active.summary}</p>
-                        </div>
-                        <Link
-                          href={`/${active.slug}`}
-                          onClick={closeNow}
-                          className="group/open mt-1 inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-medium text-foreground transition hover:border-accent hover:text-accent"
-                        >
-                          Open vertical
-                          <ArrowUpRight
-                            className="size-4 transition-transform duration-300 group-hover/open:-translate-y-0.5 group-hover/open:translate-x-0.5"
-                            aria-hidden="true"
-                          />
-                        </Link>
-                      </div>
+                      <p className="type-label text-accent-ink">{active.label}</p>
 
-                      {/* Capped: a vertical may carry eight capabilities (pharma
-                          does) and rendering them all would stretch the panel far
-                          past the height it is designed for. The page has the rest. */}
-                      <ul className="mt-6 grid grid-cols-2 gap-x-8 gap-y-1">
-                        {active.capabilities.slice(0, 4).map((capability) => (
-                          <li key={capability.name}>
+                      {/* Three across, as the category sheets are laid out. Every
+                          item links to the page that actually carries that work. */}
+                      <ul className="mt-5 grid grid-cols-3 gap-x-8 gap-y-1">
+                        {active.items.map((service) => (
+                          <li key={service.label}>
                             <Link
-                              href={`/${active.slug}`}
+                              href={service.href}
                               onClick={closeNow}
                               className="-mx-3 block rounded-xl px-3 py-3 transition hover:bg-black/[0.035]"
                             >
                               <p className="text-sm font-semibold text-foreground">
-                                {capability.name}
+                                {service.label}
                               </p>
-                              <p className="type-caption mt-1 text-muted">{capability.detail}</p>
+                              <p className="type-caption mt-1 text-muted">{service.description}</p>
                             </Link>
                           </li>
                         ))}
