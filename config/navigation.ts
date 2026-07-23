@@ -24,8 +24,29 @@ export type ServiceCategory = {
  * lives — every item below points at the page that actually carries it — but a
  * buyer browses by what they want made, not by how the studio is organised.
  *
- * As with `footerNavigation`, every href must resolve to a real route: Next
- * prefetches these on hover, so a link to an unbuilt page fires a 404.
+ * THIS MENU ADDS NO ARCHITECTURE. It is a second way into the pages that already
+ * exist; not one route, section or id below was invented for it.
+ *
+ * Two rules hold every href here, and both are checkable:
+ *
+ *  1. The route exists. As with `footerNavigation`, Next prefetches these on
+ *     hover, so a link to an unbuilt page fires a 404 on every page view. Only
+ *     /animation, /films, /vfx and /real-estate appear below.
+ *  2. The fragment exists, on that page. Each `#id` is a section the page really
+ *     renders — the same ids the in-page `VerticalNav` jumps to. Checked against:
+ *       /animation      #capabilities #formats #beyond #craft
+ *       /films          #capabilities
+ *       /vfx            #capabilities #line-to-render #motion
+ *       /real-estate    #capabilities #work #motion #library
+ *     A fragment that stopped existing would land the visitor at the top of the
+ *     right page rather than breaking, but it would be a lie — so if you rename a
+ *     section id, fix it here too.
+ *
+ * Seven services are named here that the site has no dedicated writing for —
+ * Whiteboard and Stopmotion animation, Photogrammetry, Metaverse, Game Design,
+ * Matchmoving and Rotoscoping. They point at the nearest section that genuinely
+ * covers the discipline. Giving them their own pages would be new architecture,
+ * which is a separate decision from renaming the menu.
  */
 export const serviceMenu: ServiceCategory[] = [
   {
@@ -33,34 +54,38 @@ export const serviceMenu: ServiceCategory[] = [
     href: "/animation",
     items: [
       {
+        // The named formats on the animation page open with "Explainer film".
         label: "Explainer Videos",
-        href: "/animation",
+        href: "/animation#formats",
         description:
           "Simplify complex ideas with engaging animated visuals that captivate your audience.",
       },
       {
+        // Films capabilities: ad films, promotional reels, corporate podcasts.
         label: "Commercial Videos",
-        href: "/films",
+        href: "/films#capabilities",
         description: "High-impact brand stories crafted for the global market.",
       },
       {
         label: "Corporate Videos",
-        href: "/films",
+        href: "/films#capabilities",
         description: "Professional communication for industry leaders and enterprises.",
       },
       {
         label: "Educational Videos",
-        href: "/animation",
+        href: "/animation#formats",
         description: "Transform learning with visually rich educational content.",
       },
       {
+        // The one exact match on the site: the "beyond the screen" set-piece is
+        // forced-perspective anamorphic work.
         label: "Anamorphic Videos",
-        href: "/animation",
+        href: "/animation#beyond",
         description: "Widescreen cinematic depth with stunning anamorphic flare.",
       },
       {
         label: "CGI Videos",
-        href: "/vfx",
+        href: "/vfx#capabilities",
         description: "Photorealistic CGI that blurs the line between real and digital.",
       },
     ],
@@ -70,38 +95,44 @@ export const serviceMenu: ServiceCategory[] = [
     href: "/animation",
     items: [
       {
+        // Animation capabilities open on 2D/3D motion graphics across the Adobe suite.
         label: "2D Animation",
-        href: "/animation",
+        href: "/animation#capabilities",
         description: "Stylized motion graphics and storytelling with hand-crafted 2D art.",
       },
       {
         label: "3D Animation",
-        href: "/animation",
+        href: "/animation#capabilities",
         description: "Dynamic characters and fluid 3D motion for immersive experiences.",
       },
       {
+        // The gear: 8K capture, DoPs, lighting and grip.
         label: "Live Action",
-        href: "/films",
+        href: "/films#capabilities",
         description: "Raw human emotion captured on high-end cinematic optics.",
       },
       {
         label: "Motion Graphics",
-        href: "/animation",
+        href: "/animation#capabilities",
         description: "Dynamic visual elements that bring data and ideas to life.",
       },
       {
+        // Nearest real content: logo, brand builds, endboards and title systems.
         label: "Typography",
-        href: "/animation",
+        href: "/animation#formats",
         description: "Kinetic typography that makes words dance and communicate powerfully.",
       },
       {
+        // No dedicated whiteboard content — the explainer format is the nearest.
         label: "Whiteboard Animation",
-        href: "/animation",
+        href: "/animation#formats",
         description: "Hand-drawn storytelling that simplifies and engages.",
       },
       {
+        // No dedicated stopmotion content — the craft ladder is the frame-by-frame
+        // evidence, which is the closest thing the page actually shows.
         label: "Stopmotion Animation",
-        href: "/animation",
+        href: "/animation#craft",
         description: "Tactile, frame-by-frame artistry with a unique charm.",
       },
     ],
@@ -111,33 +142,40 @@ export const serviceMenu: ServiceCategory[] = [
     href: "/vfx",
     items: [
       {
+        // Exact: the line-pass/render sheet pair is a modelled product set, shown
+        // as geometry first and materials second.
         label: "3D Product Modelling",
-        href: "/vfx",
+        href: "/vfx#line-to-render",
         description: "Precise digital twins for any product or industry.",
       },
       {
+        // No photogrammetry writing on the site; the core Maya / 3ds Max modelling
+        // capability is the honest nearest.
         label: "Photogrammetry",
-        href: "/vfx",
+        href: "/vfx#capabilities",
         description: "Capture real-world objects as high-fidelity 3D models.",
       },
       {
+        // "Beyond the screen" carries the Unreal / Twinmotion real-time and
+        // interactive work these three actually describe.
         label: "Augmented Reality",
-        href: "/animation",
+        href: "/animation#beyond",
         description: "Overlay digital content onto the real world seamlessly.",
       },
       {
         label: "Virtual Reality",
-        href: "/animation",
+        href: "/animation#beyond",
         description: "Build immersive VR environments from the ground up.",
       },
       {
         label: "Metaverse",
-        href: "/animation",
+        href: "/animation#beyond",
         description: "Design and build experiences for the next digital frontier.",
       },
       {
+        // No games writing on the site; asset creation sits in the VFX pipeline.
         label: "Game Design",
-        href: "/vfx",
+        href: "/vfx#capabilities",
         description: "Create stunning 3D assets and environments for games.",
       },
     ],
@@ -147,28 +185,33 @@ export const serviceMenu: ServiceCategory[] = [
     href: "/real-estate",
     items: [
       {
+        // Selected work — the interior studies are half that grid.
         label: "3D Interiors",
-        href: "/real-estate",
+        href: "/real-estate#work",
         description: "Photorealistic interior visualizations for architects and designers.",
       },
       {
+        // Capabilities: 3D exterior rendering, materials, elevations, context.
         label: "3D Architecture",
-        href: "/real-estate",
+        href: "/real-estate#capabilities",
         description: "Immersive architectural walkthroughs and structural visualization.",
       },
       {
+        // The motion wall on that page is the walkthrough and lighting-pass films.
         label: "3D Walkthroughs",
-        href: "/real-estate",
+        href: "/real-estate#motion",
         description: "Virtual tours that bring unbuilt spaces to life.",
       },
       {
+        // Capabilities: interactive VR, real-time custom flat design.
         label: "Virtual Reality",
-        href: "/real-estate",
+        href: "/real-estate#capabilities",
         description: "VR-ready renders for immersive spatial experiences.",
       },
       {
+        // The full render library — the whole archive, not the shortlist.
         label: "3D Rendering",
-        href: "/real-estate",
+        href: "/real-estate#library",
         description: "High-fidelity rendering for products, spaces, and concepts.",
       },
     ],
@@ -178,23 +221,27 @@ export const serviceMenu: ServiceCategory[] = [
     href: "/vfx",
     items: [
       {
+        // Capabilities: simulation, look-dev and the Octane finish.
         label: "Visual Effects",
-        href: "/vfx",
+        href: "/vfx#capabilities",
         description: "Seamless VFX integration for film, ads, and digital media.",
       },
       {
+        // The motion wall carries the composited product work by name.
         label: "Compositing",
-        href: "/vfx",
+        href: "/vfx#motion",
         description: "Layer and blend elements into a cohesive final frame.",
       },
       {
+        // No matchmove or roto writing on the site; both are post stages of the
+        // pipeline the capabilities section describes.
         label: "Matchmoving",
-        href: "/vfx",
+        href: "/vfx#capabilities",
         description: "Track and integrate CG elements into live-action footage.",
       },
       {
         label: "Rotoscoping",
-        href: "/vfx",
+        href: "/vfx#capabilities",
         description: "Frame-by-frame masking for precise post-production control.",
       },
     ],
