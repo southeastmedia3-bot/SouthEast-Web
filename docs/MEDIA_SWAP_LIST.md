@@ -22,11 +22,11 @@ A visitor arrives on one service page and never sees the others, so no page show
 curated six and hides the rest. Each vertical ends with the complete run of its own
 library, via three reusable components:
 
-| Component      | What it is for                                                                                                         |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| `FrameStrip`   | A run of consecutive frames from one film, scrubbable — arrows, thumbnail rail, left/right keys. Order is the content. |
-| `FrameLibrary` | The contact sheet. CSS multi-column so mixed aspects keep their own shape; hover shows each frame's caption.           |
-| `SheetPair`    | Two or three complete documents in sequence, e.g. a line pass against the finished renders.                            |
+| Component      | What it is for                                                                                                                                                          |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `FrameStrip`   | A run of consecutive frames from one film, scrubbable — arrows, thumbnail rail, left/right keys. Order is the content.                                                  |
+| `FrameLibrary` | The contact sheet. CSS multi-column so mixed aspects keep their own shape; hover shows each frame's caption.                                                            |
+| `SheetPair`    | Two complete documents in sequence, e.g. a line pass against the finished renders. Each sheet is a `SheetSlot` — its own frames, gridded live, never a baked sheet JPG. |
 
 Where each library lives in `data/media.ts`: `filmsAssets`, `vfxAssets`,
 `animationAssets`, `saasLibrary`, `enterpriseAssets.library`, `realEstateLibrary`,

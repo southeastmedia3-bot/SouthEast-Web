@@ -275,6 +275,28 @@ export type MediaSlot = {
   label?: string;
 };
 
+/**
+ * A contact sheet, assembled from its own frames at render time.
+ *
+ * NOT a baked sheet JPG. Those were exported on a fixed grid, so a nine-frame
+ * set on a four-column canvas shipped three empty cells and a black band as
+ * part of the image — dead space no layout could remove, at print resolution.
+ * The frames are held individually here and laid out live instead.
+ *
+ * `cols` is chosen so `frames.length` divides evenly by it at both breakpoints:
+ * a contact sheet with holes in the last row reads as a broken grid, not as a
+ * document. Change one and check the other.
+ */
+export type SheetSlot = {
+  /** Stable identifier for the sheet. Used in `docs/MEDIA_SWAP_LIST.md`. */
+  key: string;
+  /** Caption naming what the sheet documents. */
+  label: string;
+  frames: MediaSlot[];
+  /** Columns at desktop. Must divide `frames.length` exactly. */
+  cols: 3 | 4 | 5;
+};
+
 // The shapes the film posters come in. Alternating these against the SHOT / SQ
 // stills is what keeps adjacent frames from sharing a crop (Media Philosophy, §9).
 const LOOP = { w: 1440, h: 810 } as const; // 16:9 poster frames
@@ -862,8 +884,18 @@ export const filmsAssets = {
   ],
 };
 
+/* The wearable project, held once and referenced twice: the line pass feeds both
+   the simulation library and the sheet, and the renders feed both the sheet and
+   the sequence strip. One list per document means the two can never drift. */
+const wearableLinePass = frames(PROD, "watch-sketch", 9, SQ, "Wearable line pass — pencil frame");
+const wearableRenders = frames(PROD, "watch", 10, SQ, "Wearable render — display treatment");
+
 /** VFX — the simulation library. Every sim frame the studio can show. */
-export const vfxAssets = {
+export const vfxAssets: {
+  library: MediaSlot[];
+  wearableRenders: MediaSlot[];
+  wearableSheets: SheetSlot[];
+} = {
   library: [
     ...frames(PROD, "ribbon", 6, SHOT, "Cloth and particle simulation — ribbon"),
     ...frames(PROD, "cell", 7, SQ, "Technical sequence — laboratory instrument"),
@@ -878,7 +910,7 @@ export const vfxAssets = {
     },
     // The wearable line pass belongs in the library too: it is the same argument
     // the page's process makes, that geometry is settled before it is beautified.
-    ...frames(PROD, "watch-sketch", 9, SQ, "Wearable line pass — pencil frame"),
+    ...wearableLinePass,
     {
       key: "vfxWatchKey",
       src: `${PROD}/watch-key.jpg`,
@@ -888,41 +920,33 @@ export const vfxAssets = {
     },
   ],
   /** The wearable project's ten finished display treatments, in sequence. */
-  wearableRenders: frames(PROD, "watch", 10, SQ, "Wearable render — display treatment"),
+  wearableRenders,
   /**
    * The line pass and the finished renders, as complete sheets.
    *
    * NOT presented as matched pairs. The pencil files carry arbitrary numeric
    * suffixes, so sketch N is not render N, and a compare slider would be
    * asserting a correspondence that does not exist. Whole documents, in sequence.
+   *
+   * Two sheets, not three. The old third sheet was a second export of the line
+   * pass carrying the "final renders" caption, so the section claimed a
+   * before/after while showing the same pencil frames twice.
    */
   wearableSheets: [
     {
-      key: "wearableLinePass",
-      src: `${PROD}/watch-sketch-sheet.jpg`,
-      w: 2400,
-      h: 1804,
-      alt: "Contact sheet — nine pencil line-pass frames of a wearable product",
+      key: "wearableLinePassSheet",
       label: "Line pass — geometry and framing, before materials",
+      frames: wearableLinePass,
+      cols: 3, // 9 frames: 3 × 3, and 3 × 3 again at the mobile column count.
     },
     {
-      key: "wearableFinal",
-      src: `${PROD}/watch-sheet.jpg`,
-      w: 2400,
-      h: 1644,
-      alt: "Contact sheet — the finished wearable renders",
+      key: "wearableFinalSheet",
       label: "Final renders — the same set, lit and graded",
-    },
-    {
-      key: "wearableAlt",
-      src: `${PROD}/watch-sheet-02.jpg`,
-      w: 2400,
-      h: 1799,
-      alt: "Contact sheet — alternate finished wearable renders",
-      label: "Alternate set — second lighting direction",
+      frames: wearableRenders,
+      cols: 5, // 10 frames: 2 × 5 here, 5 × 2 on mobile. No short row either way.
     },
   ],
-} satisfies Record<string, MediaSlot[]>;
+};
 
 /**
  * A film in the animation page's reel theater.
