@@ -348,3 +348,51 @@ export const enterpriseClose = {
   headline: "Secure your production slot before capacity closes.",
   cta: "Initiate Vendor Protocol",
 };
+
+/**
+ * A card on the team rail.
+ *
+ * Every field is empty until the real roster lands. A member with no `name`
+ * renders as a *pending* card — silhouette portrait, two blank rules where the
+ * name and role will sit — so the rail can be built, scrolled and reviewed
+ * before a single headshot exists. Filling `name`, `role` and dropping a
+ * portrait into `/public/media/team/` turns one live; no component edits.
+ *
+ * Portraits are shot (or cropped) 3:4 and rendered in black and white, so the
+ * rail reads as one wall of faces rather than fourteen different lighting
+ * setups. Feed it the colour original — the greyscale is applied in CSS.
+ */
+export type TeamMember = {
+  name: string;
+  role: string;
+  /** Path under /public. Empty string = portrait still to come. */
+  photo: string;
+};
+
+/** Scene: the team rail — a dragged / arrowed carousel of the people. */
+export const team: {
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  members: TeamMember[];
+} = {
+  eyebrow: "The people",
+  heading: "Our team of specialists.",
+  intro:
+    "Artists, animators and engineers who have spent their careers on frames that had to be right the first time.",
+  // Twelve blanks. Add or remove rows freely — the rail counts them itself.
+  members: [
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+    { name: "", role: "", photo: "" },
+  ],
+};

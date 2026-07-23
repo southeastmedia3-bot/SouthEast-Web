@@ -6,6 +6,7 @@ import { ServicesList } from "@/components/scenes/services-list";
 import { Pipeline } from "@/components/scenes/pipeline";
 import { Mandate } from "@/components/scenes/mandate";
 import { DisciplineWall } from "@/components/scenes/discipline-wall";
+import { TeamRail } from "@/components/scenes/team-rail";
 import { Invitation } from "@/components/scenes/invitation";
 import { PageWrapper } from "@/components/layout/page-wrapper";
 import { createMetadata } from "@/lib/seo";
@@ -33,6 +34,9 @@ export default function Home() {
       <Pipeline /> {/* cream */}
       <Mandate /> {/* light */}
       <DisciplineWall /> {/* white — frames that morph into the mark */}
+      {/* cream — the faces, last thing before the door. The close stays the
+          close: the team rail sits above it, not after it. */}
+      <TeamRail />
       <Invitation /> {/* dark close */}
     </PageWrapper>
   );
