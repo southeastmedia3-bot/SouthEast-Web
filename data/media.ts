@@ -838,8 +838,110 @@ function frames(
   });
 }
 
-/** Films — the cinematic product work. */
-export const filmsAssets = {
+/**
+ * Films — the finished commercial work, and everything the bespoke page runs.
+ *
+ * `programme` is the screening room's playlist; `serumProgression` is the cut the
+ * gate scrubs; `galleryFrames` are zipped by index with `vertical.gallery` for
+ * their captions; `library` is the contact sheet at the foot of the page.
+ *
+ * THE FORMATS SECTION DELIBERATELY CARRIES NO FRAMES. Eight named formats — ad
+ * film, podcast, interview, facility shoot — and the finished work that exists to
+ * show is commercial product and brand films. Zipping a frame to every card the
+ * way the SaaS and Animation pages do would have put a jewellery still under
+ * "corporate podcast", which claims a piece of work that is not there. The wall
+ * is built out of slates instead (`films-format-wall.tsx`), and the media budget
+ * is spent where the films are real.
+ */
+export const filmsAssets: {
+  programme: ReelSlot[];
+  galleryFrames: MediaSlot[];
+  serumProgression: MediaSlot[];
+  library: MediaSlot[];
+} = {
+  /**
+   * The screening room's programme — every finished film this division can show,
+   * in one player rather than a wall of simultaneous loops.
+   *
+   * ORDER IS THE ARGUMENT: the beauty ad first (the most cinematic piece the
+   * studio has), then a brand system, then the range. A visitor who watches the
+   * first three has seen what the division is for.
+   */
+  programme: [
+    {
+      key: "filmSerum",
+      src: `${PROD}/serum-poster.jpg`,
+      video: `${PROD}/serum.mp4`,
+      w: 1440,
+      h: 808,
+      alt: "Beauty film — serum bottle behind falling sheer fabric",
+      label: "Beauty — serum film",
+      note: "Ad film",
+    },
+    {
+      key: "filmBrandSystem",
+      src: `${ENT}/minimal-style-comp-poster.jpg`,
+      video: `${ENT}/minimal-style-comp.mp4`,
+      ...LOOP,
+      alt: "Brand film — a minimal motion system, composited",
+      label: "Minimal style — brand system",
+      note: "Brand film",
+    },
+    {
+      key: "filmCardReel",
+      src: `${ENT}/card-reel-poster.jpg`,
+      video: `${ENT}/card-reel.mp4`,
+      ...LOOP,
+      alt: "Product film — a payment card turning in raking light",
+      label: "Fintech — card reel",
+      note: "Product film",
+    },
+    {
+      key: "filmJewellery",
+      src: `${PROD}/jewellery-poster.jpg`,
+      video: `${PROD}/jewellery.mp4`,
+      ...LOOP,
+      alt: "Product film — jewellery under studio light",
+      label: "Jewellery",
+      note: "Tabletop",
+    },
+    {
+      key: "filmEyewear",
+      src: `${PROD}/eyewear-poster.jpg`,
+      video: `${PROD}/eyewear.mp4`,
+      ...LOOP,
+      alt: "Product film — eyewear, frame detail",
+      label: "Eyewear",
+      note: "Product film",
+    },
+    {
+      key: "filmEarbuds",
+      src: `${PROD}/earbuds-poster.jpg`,
+      video: `${PROD}/earbuds.mp4`,
+      ...LOOP,
+      alt: "Product film — audio hardware on a mineral surface",
+      label: "Audio hardware",
+      note: "Product film",
+    },
+    {
+      key: "filmPharmaBrand",
+      src: `${ENT}/pharma-brand-poster.jpg`,
+      video: `${ENT}/pharma-brand.mp4`,
+      ...LOOP,
+      alt: "Brand film for a clinical setting",
+      label: "Clinical — brand film",
+      note: "Brand film",
+    },
+    {
+      key: "filmProfile",
+      src: `${ENT}/profile-poster.jpg`,
+      video: `${ENT}/profile.mp4`,
+      ...LOOP,
+      alt: "Social sequence — profile film",
+      label: "Social — profile sequence",
+      note: "Social cut",
+    },
+  ],
   /** Fifteen consecutive frames from the beauty film, in cut order. */
   serumProgression: frames(
     PROD,
@@ -848,38 +950,133 @@ export const filmsAssets = {
     SHOT_B,
     "Beauty film — serum, caustics and sheer fabric",
   ),
+  /**
+   * Selected work. Zipped by index with `vertical.gallery`, which supplies the
+   * caption. Two of the six carry their film, so the column moves without the
+   * page mounting six decoders.
+   *
+   * All 16:9 on purpose — this is the one gallery on the site where a single
+   * ratio is the point rather than a monotony to break up. These are film frames.
+   */
+  galleryFrames: [
+    {
+      key: "filmsGallerySerum",
+      src: `${PROD}/serum-04.jpg`,
+      ...SHOT_B,
+      alt: "Beauty film frame — serum bottle behind falling sheer fabric",
+    },
+    {
+      key: "filmsGalleryCaustics",
+      src: `${PROD}/serum-12.jpg`,
+      ...SHOT_B,
+      alt: "Beauty film frame — caustics thrown through glass",
+    },
+    {
+      key: "filmsGalleryJewellery",
+      src: `${PROD}/jewellery-poster.jpg`,
+      video: `${PROD}/jewellery.mp4`,
+      ...LOOP,
+      alt: "Product film — jewellery under studio light",
+    },
+    {
+      key: "filmsGalleryCard",
+      src: `${ENT}/card-reel-poster.jpg`,
+      video: `${ENT}/card-reel.mp4`,
+      ...LOOP,
+      alt: "Product film — a payment card turning in raking light",
+    },
+    {
+      key: "filmsGalleryEyewear",
+      src: `${PROD}/eyewear-poster.jpg`,
+      ...LOOP,
+      alt: "Product film frame — eyewear detail",
+    },
+    {
+      key: "filmsGalleryChain",
+      src: `${PROD}/chain-poster.jpg`,
+      ...LOOP,
+      alt: "Product film frame — chain, metal and light",
+    },
+  ],
   /** Every finished film frame the vertical can show, as one sheet. */
   library: [
     ...frames(PROD, "serum", 15, SHOT_B, "Beauty film — serum"),
     {
-      key: "filmJewellery",
+      key: "filmLibJewellery",
       src: `${PROD}/jewellery-poster.jpg`,
       ...LOOP,
       alt: "Jewellery product film — studio light on metal",
+      label: "Jewellery",
     },
     {
-      key: "filmEyewear",
+      key: "filmLibEyewear",
       src: `${PROD}/eyewear-poster.jpg`,
       ...LOOP,
       alt: "Eyewear product film — frame detail",
+      label: "Eyewear",
     },
     {
-      key: "filmChain",
+      key: "filmLibChain",
       src: `${PROD}/chain-poster.jpg`,
       ...LOOP,
       alt: "Chain product film — metal and light",
+      label: "Metal & light",
     },
     {
-      key: "filmCard",
+      key: "filmLibCard",
       src: `${ENT}/card-reel-poster.jpg`,
       ...LOOP,
       alt: "Payment card film — raking light on a metal card",
+      label: "Fintech reel",
     },
     {
-      key: "filmProfile",
+      key: "filmLibEarbudsKey",
+      src: `${PROD}/earbuds-key.jpg`,
+      ...SHOT,
+      alt: "Audio product film — key frame on a mineral surface",
+      label: "Audio — key frame",
+    },
+    {
+      key: "filmLibEarbuds",
+      src: `${PROD}/earbuds-poster.jpg`,
+      ...LOOP,
+      alt: "Audio product film frame",
+      label: "Audio hardware",
+    },
+    {
+      key: "filmLibBrand",
+      src: `${ENT}/minimal-style-poster.jpg`,
+      ...LOOP,
+      alt: "Brand film frame — minimal motion system",
+      label: "Brand system",
+    },
+    {
+      key: "filmLibBrandComp",
+      src: `${ENT}/minimal-style-comp-poster.jpg`,
+      ...LOOP,
+      alt: "Brand film frame — composite",
+      label: "Brand film — composite",
+    },
+    {
+      key: "filmLibPharmaBrand",
+      src: `${ENT}/pharma-brand-poster.jpg`,
+      ...LOOP,
+      alt: "Brand film frame for a clinical setting",
+      label: "Clinical & pharma",
+    },
+    {
+      key: "filmLibProfile",
       src: `${ENT}/profile-poster.jpg`,
       ...LOOP,
       alt: "Social profile sequence — interface film",
+      label: "Social sequence",
+    },
+    {
+      key: "filmLibProfileSocial",
+      src: `${ENT}/profile-social-poster.jpg`,
+      ...LOOP,
+      alt: "Professional network profile sequence frame",
+      label: "Profile — social cut",
     },
   ],
 };

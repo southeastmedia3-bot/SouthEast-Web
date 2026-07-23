@@ -35,7 +35,7 @@ export type ServiceCategory = {
  *  2. The fragment exists, on that page. Each `#id` is a section the page really
  *     renders — the same ids the in-page `VerticalNav` jumps to. Checked against:
  *       /animation      #capabilities #formats #beyond #craft
- *       /films          #capabilities
+ *       /films          #units #formats #cut
  *       /vfx            #capabilities #line-to-render #motion
  *       /real-estate    #capabilities #work #motion #library
  *     A fragment that stopped existing would land the visitor at the top of the
@@ -61,14 +61,15 @@ export const serviceMenu: ServiceCategory[] = [
           "Simplify complex ideas with engaging animated visuals that captivate your audience.",
       },
       {
-        // Films capabilities: ad films, promotional reels, corporate podcasts.
+        // The films slate wall opens on "Ad film" and "Brand film".
         label: "Commercial Videos",
-        href: "/films#capabilities",
+        href: "/films#formats",
         description: "High-impact brand stories crafted for the global market.",
       },
       {
+        // Same wall: corporate podcast, interview and facility formats.
         label: "Corporate Videos",
-        href: "/films#capabilities",
+        href: "/films#formats",
         description: "Professional communication for industry leaders and enterprises.",
       },
       {
@@ -106,9 +107,9 @@ export const serviceMenu: ServiceCategory[] = [
         description: "Dynamic characters and fluid 3D motion for immersive experiences.",
       },
       {
-        // The gear: 8K capture, DoPs, lighting and grip.
+        // The call sheet: 8K capture, DoPs, lighting and grip.
         label: "Live Action",
-        href: "/films#capabilities",
+        href: "/films#units",
         description: "Raw human emotion captured on high-end cinematic optics.",
       },
       {

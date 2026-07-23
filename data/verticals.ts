@@ -5,9 +5,17 @@ import type { MediaTone } from "@/data/media";
  *
  * SOURCE OF TRUTH: everything here is drawn from the client's own material —
  * the Corporate Capability Deck, the Pharma / Medical 3D portfolio, and the Real
- * Estate 3D-rendering web copy. Pharma, Real Estate, SaaS and Enterprise are
- * written out in depth; Films, VFX and Animation carry only what the capability
- * deck actually supports.
+ * Estate 3D-rendering web copy. Pharma, Real Estate, Films, SaaS and Enterprise
+ * are written out in depth; VFX and Animation carry only what the capability deck
+ * actually supports.
+ *
+ * FILMS IS WRITTEN OUT, NOT INVENTED. Everything in that entry expands on four
+ * lines the deck really carries — uncompressed 8K capture for compositing, the
+ * PR / actor-coordination network and DoP roster, complex facility shoots on
+ * hospital floors and plant floors, and in-house editing suites with Digital
+ * Intermediate grading. What was added is the craft reasoning around them: why an
+ * uncompressed plate matters, how a facility shoot is scheduled, what a live-
+ * action engagement runs through. No client, outcome or timeline is asserted.
  *
  * Every vertical now carries real work. The claims on SaaS and Enterprise are
  * still drawn only from the capability deck (pipeline, infrastructure,
@@ -648,43 +656,255 @@ export const verticals: Vertical[] = [
   {
     slug: "films",
     label: "Films",
-    title: "In-House Live-Action & Cinematic Production",
-    eyebrow: "Capability",
-    tone: "violet",
+    /**
+     * The page title is the claim, not the category. `films-title-card.tsx` sets
+     * the closing phrase in Instrument Serif — the studio's quiet aside — so the
+     * accent string on that component has to keep matching this line word for
+     * word, punctuation included, or it is silently ignored.
+     */
+    title: "Shot in 8K, cut and graded in the same building.",
+    eyebrow: "The live-action division",
+    // Gold, not violet: this page is lit by projector light, and its hero film —
+    // the beauty master in `verticalHeroes.films` — is a warm frame. VFX keeps
+    // violet, so the two never read as the same room.
+    tone: "gold",
     summary:
-      "A fully equipped in-house live-action division — uncompressed 8K capture, DI colour grading, end-to-end.",
+      "A fully equipped in-house live-action division — uncompressed 8K capture, complex compositing, and Digital Intermediate colour grading, end to end.",
     intro:
-      "Complementing our CGI infrastructure is a fully equipped, in-house cinematic live-action division capable of end-to-end video production and complex compositing workflows.",
+      "Complementing our CGI infrastructure is a fully equipped, in-house cinematic live-action division capable of end-to-end video production and complex compositing workflows. One company from the recce to the master — so nobody inherits a problem they were not in the room for.",
     headline: [
       { value: "8K", label: "uncompressed capture" },
       { value: "0", label: "external hand-offs" },
       { value: "DI", label: "in-house colour grade" },
     ],
+    /**
+     * Read as a call sheet on the page — see `films-call-sheet.tsx`. Six units
+     * rather than the four the deck lists as prose, because "the gear" and "the
+     * finish" are each two departments a producer books separately, and a call
+     * sheet that collapses them is not a call sheet.
+     */
     capabilities: [
       {
-        name: "The Gear & Capture",
+        name: "Camera & capture",
         detail:
-          "State-of-the-art camera systems supporting uncompressed 8K footage capture for flawless background compositing and VFX integration, backed by high-end lighting and grip.",
+          "State-of-the-art camera systems supporting uncompressed 8K footage capture — the format that makes a clean key, a stable track and a flawless composite possible rather than merely likely.",
       },
       {
-        name: "The Network",
+        name: "Lighting & grip",
+        detail:
+          "High-end lighting and grip, so the frame is lit for the finish it is going to get rather than rescued in the grade afterwards.",
+      },
+      {
+        name: "Cast, crew & coordination",
         detail:
           "Established connections with top-tier PR and actor coordination agencies, alongside a roster of expert Directors of Photography and cinematographers.",
       },
       {
-        name: "The Deployments",
+        name: "Location & facility units",
         detail:
           "Specialised execution for complex facility shoots — active hospital floors, corporate office spaces and heavy manufacturing plants.",
       },
       {
-        name: "The Deliverables & Finish",
+        name: "Composite & VFX integration",
         detail:
-          "Ad films, corporate podcasts, promotional reels and interviews, handled internally through comprehensive editing suites and advanced Digital Intermediate colour grading.",
+          "Plates shot to be built on. Background replacement, CG integration and clean-up run on the same pipeline, in the same building, as the shoot that fed them.",
+      },
+      {
+        name: "Edit, DI & mastering",
+        detail:
+          "Comprehensive editing suites and advanced Digital Intermediate colour grading — ad films, corporate podcasts, promotional reels and interviews, finished internally and mastered to every format the release calls for.",
       },
     ],
-    process: STUDIO_PROCESS,
-    // Commercial product films. Captions name the craft, never the client —
-    // several frames carry third-party branding. See docs/CLIENT_ATTRIBUTION.md.
+    /**
+     * Section order maps to the bespoke page as:
+     *   [0] what we shoot · [1] where the unit goes · [2] why uncompressed ·
+     *   [3] where it earns.
+     * `[0].items` becomes the slate wall — no frames are zipped to it, and the
+     * note on `filmsAssets` in `data/media.ts` says why.
+     */
+    sections: [
+      {
+        eyebrow: "What we shoot",
+        heading: "Eight things this division can be booked to shoot.",
+        lead: "Named formats, one unit, one grade — so the launch film and the interview cut still look like they came out of the same company.",
+        items: [
+          {
+            name: "Ad film",
+            detail:
+              "The commercial itself. Boarded, shot, composited and graded as one continuous piece of work rather than three separate purchases.",
+          },
+          {
+            name: "Brand film",
+            detail:
+              "The longer form — what the company is and why it exists — cut to survive both a boardroom projector and a phone screen.",
+          },
+          {
+            name: "Product & tabletop",
+            detail:
+              "Macro work on a locked-off rig, where the light is the performance and a millimetre of flag position is the difference.",
+          },
+          {
+            name: "Corporate podcast",
+            detail:
+              "Multi-camera, in your space or ours, cut to full episodes and the short pulls that actually travel.",
+          },
+          {
+            name: "Interview & testimonial",
+            detail:
+              "Lit, framed and directed properly. The format most often shot badly, and the one where that shows fastest.",
+          },
+          {
+            name: "Facility & plant",
+            detail:
+              "Live floors, clean rooms and production lines — shot around the operation rather than through it.",
+          },
+          {
+            name: "Launch & event",
+            detail:
+              "Coverage cut fast enough to still matter, at the quality of a planned shoot rather than a camera in the aisle.",
+          },
+          {
+            name: "Social cutdowns",
+            detail:
+              "9:16 and 1:1 framed on the day, with the safe areas taped on the monitor — not cropped out of widescreen a week later.",
+          },
+        ],
+      },
+      {
+        eyebrow: "Where the unit goes",
+        heading: "The shoots most crews quote themselves out of.",
+        lead: "Active hospital floors, working offices and heavy manufacturing plants — locations where the shoot is the guest and the operation does not stop for it.",
+        body: [
+          "A facility shoot is a scheduling and access problem before it is a camera problem. The floor keeps running, the people on it have a job that is not this, and the areas that photograph best are usually the ones you are least allowed to stand in.",
+          "We plan those shoots as a discipline rather than a risk premium: the unit works to the building's rhythm, moves in the windows it is given, and lights for a room it cannot rearrange.",
+        ],
+        items: [
+          {
+            name: "Active hospital floors",
+            detail:
+              "Clinical settings shot without interrupting care — small units, fast set-ups, and framing that respects what is actually happening in the room.",
+          },
+          {
+            name: "Corporate office spaces",
+            detail:
+              "Working floors, meeting rooms and lobbies, filmed while the company keeps using them.",
+          },
+          {
+            name: "Heavy manufacturing plants",
+            detail:
+              "Production lines, machinery and scale — the environments where a shoot has to fit the safety brief before it fits the shot list.",
+          },
+        ],
+      },
+      {
+        eyebrow: "Why uncompressed",
+        heading: "The plate is a decision, not a recording.",
+        lead: "Uncompressed 8K capture is the difference between a composite that holds at full size and one that only holds at the size it was reviewed on.",
+        body: [
+          "Compression throws away exactly what a composite needs most: the clean edge a key is pulled from, the fine grain a tracker locks to, the highlight roll-off a CG element has to sit inside. None of that is missed on a laptop preview. All of it is missed on a cinema screen or a 4K TV.",
+          "So the plate is shot for the thing it will become. The same building that will replace the background, integrate the CG and grade the result is the one that specifies the capture — which is the whole argument for not splitting a film across two companies.",
+        ],
+      },
+      {
+        eyebrow: "Where it earns",
+        heading: "The briefs a real shoot answers better than anything else.",
+        items: [
+          {
+            name: "A face and a voice",
+            detail:
+              "Founders, clinicians, engineers, customers. Nothing rendered substitutes for a person saying it themselves.",
+          },
+          {
+            name: "A place that exists",
+            detail:
+              "The plant, the ward, the floor. Proof that the operation is real, filmed where it is real.",
+          },
+          {
+            name: "Live action plus CG",
+            detail:
+              "Shot plates with rendered elements inside them — the hybrid that needs both departments to have been in the same conversation.",
+          },
+          {
+            name: "A campaign, not a video",
+            detail:
+              "One shoot cut into the ad, the cutdowns, the socials and the interviews, all off one grade.",
+          },
+        ],
+      },
+    ],
+    contrast: {
+      heading: "What changes when the crew and the finish are the same company.",
+      without: {
+        label: "The usual",
+        points: [
+          "A production house that shoots it and a post house that has to live with it.",
+          "Compressed footage that keys well enough in the review and falls apart at full size.",
+          "A grade booked by the hour, in a room you meet for the first time at the end of the project.",
+          "A quote that grows every time the schedule touches a working facility.",
+        ],
+      },
+      with: {
+        label: "With Southeast Media",
+        points: [
+          "One company from the recce to the master. Nobody inherits a problem they were not in the room for.",
+          "Uncompressed 8K plates, shot to be composited, on the same pipeline that will composite them.",
+          "Digital Intermediate colour grading in our own suites, available from the first day of the edit.",
+          "Facility shoots run as a discipline — hospital floors, offices and plants, planned around the operation.",
+        ],
+      },
+    },
+    /**
+     * A live-action schedule, not the CGI pipeline. This vertical used to inherit
+     * `STUDIO_PROCESS`, which starts at pre-visualization and ends at render — an
+     * answer to "how is this modelled", on the one page where the honest question
+     * is "who is on set on the day, and what happens to the footage afterwards".
+     */
+    process: [
+      {
+        step: "Brief & treatment, under NDA",
+        detail:
+          "What the film has to make someone do, and the treatment that answers it. Scope, deliverables and access agreed before a date is held.",
+      },
+      {
+        step: "Board & shot list",
+        detail:
+          "Every set-up drawn and listed before a truck is booked. The cheapest place in the whole production to change your mind.",
+      },
+      {
+        step: "Recce & schedule",
+        detail:
+          "The location, walked. Power, access, noise, light through the day, and the windows the operation can actually give us — then a schedule built to them.",
+      },
+      {
+        step: "Pre-light & test",
+        detail:
+          "Rigged and tested before the talent stands in it. Where a facility allows no pre-light, the set-ups are designed to be fast rather than clever.",
+      },
+      {
+        step: "Principal photography",
+        detail:
+          "State-of-the-art camera systems, uncompressed 8K, with high-end lighting and grip. Shot as a plate where anything is going to be built on it.",
+      },
+      {
+        step: "Offline edit",
+        detail:
+          "Structure and pace argued out in our own suites, on the full-resolution material rather than a proxy someone else conformed.",
+      },
+      {
+        step: "Composite & VFX integration",
+        detail:
+          "Background replacement, clean-up and CG integration on the same pipeline as everything else in the building — Maya, Cinema 4D and Octane, out to 8K on the in-house farm.",
+      },
+      {
+        step: "DI grade & delivery",
+        detail:
+          "Advanced Digital Intermediate colour grading, then conform and master to every ratio and length the release calls for.",
+      },
+    ],
+    // Captions only — the frames resolve through `filmsAssets.galleryFrames` and
+    // are zipped to these by index, so changing a picture never changes what the
+    // page says about it. Captions name the craft, never the client: several
+    // frames carry third-party branding. See docs/CLIENT_ATTRIBUTION.md.
     gallery: [
       { src: "/media/products/serum-04.jpg", title: "Serum & sheer fabric", note: "Beauty" },
       { src: "/media/products/serum-12.jpg", title: "Caustics pass", note: "Lighting" },
@@ -697,46 +917,39 @@ export const verticals: Vertical[] = [
       { src: "/media/products/eyewear-poster.jpg", title: "Eyewear", note: "Product film" },
       { src: "/media/products/chain-poster.jpg", title: "Chain — metal & light", note: "Detail" },
     ],
-    videosLead:
-      "Commercial product films, running the way they ship. Modelled, lit, simulated and graded in this building.",
-    videos: [
+    // No `videos` block. Every film this vertical can show runs in the screening
+    // room at the top of its bespoke page, off `filmsAssets.programme` — a second
+    // wall of six simultaneous loops would only play the same files again.
+    faqs: [
       {
-        src: "/media/products/serum.mp4",
-        poster: "/media/products/serum-poster.jpg",
-        label: "Beauty — serum film",
-      },
-      // Jewellery and chain are the same shoot and read as near-duplicates when
-      // stacked, so the card reel sits between them to break the column up.
-      {
-        src: "/media/products/jewellery.mp4",
-        poster: "/media/products/jewellery-poster.jpg",
-        label: "Jewellery — product film",
+        q: "Do you actually shoot, or is this CGI with a camera department bolted on?",
+        a: "We shoot. The live-action division is in-house and fully equipped — camera systems capable of uncompressed 8K, high-end lighting and grip, and a roster of expert Directors of Photography and cinematographers, plus established connections with top-tier PR and actor coordination agencies. What makes it unusual is the other half: the same building composites and grades what it shoots.",
       },
       {
-        src: "/media/products/eyewear.mp4",
-        poster: "/media/products/eyewear-poster.jpg",
-        label: "Eyewear — product film",
+        q: "Why does uncompressed 8K matter to us?",
+        a: "Because of what happens after the shoot. Compression discards the clean edges a key is pulled from, the fine detail a tracker locks to, and the highlight roll-off a CG element has to sit inside — none of which is visible on a review link and all of which is visible on a cinema screen. If anything is going to be replaced, integrated or heavily graded, the plate has to be captured for it.",
       },
       {
-        src: "/media/products/chain.mp4",
-        poster: "/media/products/chain-poster.jpg",
-        label: "Chain — metal & light",
+        q: "Can you shoot inside our hospital, office or plant?",
+        a: "Yes — complex facility shoots are a specialisation, not an exception. Active hospital floors, corporate office spaces and heavy manufacturing plants. The unit works to the building's schedule and safety brief: small crews, fast set-ups, and framing designed around an operation that does not stop for us.",
       },
       {
-        src: "/media/enterprise/card-reel.mp4",
-        poster: "/media/enterprise/card-reel-poster.jpg",
-        label: "Fintech — card reel",
+        q: "What do we get at the end?",
+        a: "The graded master, plus every ratio and length the channel plan calls for, all conformed from one Digital Intermediate grade. Social verticals are framed on the day rather than cropped out of widescreen afterwards.",
       },
       {
-        src: "/media/enterprise/profile.mp4",
-        poster: "/media/enterprise/profile-poster.jpg",
-        label: "Social — profile sequence",
+        q: "Can you mix a shoot with the CG work you do on the other pages?",
+        a: "That is the point of having both. Plates are shot knowing what will be built into them, and the composite runs on the same Maya, Cinema 4D and Octane pipeline as the studio's rendered work — out to 8K on the 15-server farm we own and operate on-site.",
+      },
+      {
+        q: "How is confidentiality handled on a shoot?",
+        a: "NDA on the engagement, the same as every other vertical. Footage lands on access-controlled servers in this building and is edited, composited and graded there; we do not push client material through third-party services at any stage.",
       },
     ],
     proof: {
       label: "The standard",
       title: "Shot, cut and graded without leaving the building.",
-      body: "The entire process is handled internally — no external hand-offs, no pipeline seams between the plate and the composite, and a Digital Intermediate grade for a flawless final picture.",
+      body: "The entire process is handled internally — no external hand-offs, no pipeline seams between the plate and the composite, and a Digital Intermediate grade for a flawless final picture. The people who specify the capture are the people who have to finish it.",
       metrics: [
         { value: "8K", label: "uncompressed capture" },
         { value: "0", label: "external hand-offs" },
