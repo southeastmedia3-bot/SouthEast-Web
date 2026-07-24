@@ -45,3 +45,8 @@ next-env.d.ts
 
 # Heavy source media masters (web versions live in public/media/generated)
 source-media/
+
+# Firebase
+firebase-debug.log
+*-debug.log
+.firebase/
