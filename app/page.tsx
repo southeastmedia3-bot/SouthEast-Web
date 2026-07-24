@@ -19,14 +19,15 @@ import { createMetadata } from "@/lib/seo";
 export const metadata = createMetadata({ path: "/" });
 
 /**
- * The page breathes light -> dark -> light. It opens bright and spare, then
- * drops into black for the scenes that need it (the villa footage, the reel
- * drum), and closes dark. Never dark at the door.
+ * The page breathes dark -> light -> dark. It opens on the showreel — the work
+ * itself, uncovered by a wipe — holds dark through the villa footage, lifts into
+ * the white scenes, and closes dark. The reel is the door now: the spectacle is
+ * the first thing, not the last.
  */
 export default function Home() {
   return (
     <PageWrapper>
-      <Hero /> {/* white */}
+      <Hero /> {/* dark — the showreel, wiped open */}
       <TheFilm /> {/* dark — scroll-scrubbed villa footage */}
       <TrustBar /> {/* white */}
       <FilmReel /> {/* black — the rotating film drum */}

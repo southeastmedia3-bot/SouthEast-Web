@@ -58,6 +58,18 @@ const FILM = { w: 1800, h: 1013 } as const; // 16:9 explainer frames
 const FILM_HD = { w: 1920, h: 1080 } as const; // 16:9 architectural interiors
 const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
 
+/** The homepage opening showreel — the full studio reel, played through (not
+ *  scrubbed), uncovered on load by a clip-path wipe in the Hero. Transcoded to a
+ *  1080p, audio-stripped, faststart web master from the 4K delivery; the poster
+ *  is its own first frame, so there is no pop between still and first played
+ *  frame. Swap `video`/`poster` to change the opening reel. */
+export const homeShowreel: MediaAsset = {
+  video: `${G}/showreel.mp4`,
+  poster: `${G}/showreel-poster.jpg`,
+  alt: "Southeast Media showreel — a run of the studio's CGI work across disciplines",
+  tone: "violet",
+};
+
 /** The hero "scroll film". A short (11.6s) night-lit villa loop — ideal length
  *  for true scroll-scrub. Swap `video` to change the homepage hero footage. */
 export const heroFilm: MediaAsset = {
