@@ -50,3 +50,8 @@ source-media/
 firebase-debug.log
 *-debug.log
 .firebase/
+
+# Local agent/dev tooling — never deployed or committed
+.claude/
+.agents/
+skills-lock.json

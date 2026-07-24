@@ -1,0 +1,43 @@
+{
+  "apphosting": {
+    "backendId": "southeastmedia",
+    "rootDir": "/",
+    "ignore": [
+      "node_modules",
+      ".git",
+      ".gitignore",
+      "firebase-debug.log",
+      "firebase-debug.*.log",
+      "*-debug.log",
+      "functions",
+
+      ".next",
+      "out",
+      "build",
+      "coverage",
+      "*.tsbuildinfo",
+      "next-env.d.ts",
+
+      "source-media",
+
+      ".npm-cache",
+      ".firebase",
+      ".vercel",
+
+      ".claude",
+      ".agents",
+      ".husky",
+      "docs",
+      "skills-lock.json",
+
+      "README.md",
+      "DEPLOYMENT.md",
+      "CLAUDE.md",
+      "AGENTS.md",
+      ".prettierrc",
+      ".prettierignore",
+      ".env",
+      ".env.*"
+    ]
+  }
+}
