@@ -26,7 +26,7 @@ export const aboutPrinciples = [
       "Every vertical shares the same 8K colour science and the same zero-imperfection finish.",
   },
   {
-    label: "Security as craft",
+    label: "Crafted by security",
     detail:
       "NDA-bound, access-controlled, and auditable. Your work never leaves a secure environment.",
   },

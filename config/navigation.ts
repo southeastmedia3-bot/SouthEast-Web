@@ -280,7 +280,7 @@ export const footerNavigation = {
     { label: "Contact", href: "/contact" },
   ],
   solutions: [
-    { label: "Pharma", href: "/pharma" },
+    { label: "Healthcare", href: "/pharma" },
     { label: "Real Estate", href: "/real-estate" },
     { label: "Films", href: "/films" },
     { label: "VFX", href: "/vfx" },
@@ -289,10 +289,10 @@ export const footerNavigation = {
     { label: "Enterprise", href: "/enterprise" },
   ],
   industries: [
-    { label: "Medical & Pharma", href: "/pharma" },
-    { label: "Institutional Real Estate", href: "/real-estate" },
+    { label: "Healthcare", href: "/pharma" },
+    { label: "Real Estate", href: "/real-estate" },
     { label: "Film & VFX", href: "/vfx" },
-    { label: "Animation Systems", href: "/animation" },
+    { label: "Explainer Videos", href: "/animation" },
     { label: "SaaS & Software", href: "/saas" },
     { label: "Enterprise Retainers", href: "/enterprise" },
   ],

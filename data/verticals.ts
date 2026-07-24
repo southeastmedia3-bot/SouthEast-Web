@@ -129,9 +129,9 @@ const ARCHITECTURAL_GALLERY: NonNullable<Vertical["gallery"]> = [
  */
 const STUDIO_PROCESS: Vertical["process"] = [
   {
-    step: "Brief, under NDA",
+    step: "Confidential by Design",
     detail:
-      "Scope, stakes and success criteria agreed before a pixel moves. Server access is provisioned and locked to the engagement.",
+      "Every engagement begins under NDA, with a clearly defined scope, restricted project access and secure infrastructure protecting files and workflows from brief to final delivery.",
   },
   {
     step: "Pre-visualization",
@@ -144,14 +144,14 @@ const STUDIO_PROCESS: Vertical["process"] = [
       "Autodesk Maya and 3ds Max: the industry-standard core, for high-end modelling, rigging and complex animation.",
   },
   {
-    step: "Look-dev & simulation",
+    step: "Designed Looks. Simulated Reality.",
     detail:
-      "X-Particles, Marvelous Designer, EmberGen for volumetric fire and smoke, LiquiGen for fluid dynamics.",
+      "Art-directed materials, particles, cloth, fire, smoke and fluid effects — crafted through specialised simulation workflows to bring natural movement, atmosphere and physical detail to every frame.",
   },
   {
-    step: "Render",
+    step: "Render Power, Fully In-House",
     detail:
-      "Blender and Cinema 4D pushed through Octane, out to 8K on a 15-server farm we own and operate on-site.",
+      "Blender and Cinema 4D scenes are processed through Octane on our own servers and on-site render farm — giving us direct control over security, quality, timelines and outputs up to 8K.",
   },
   {
     step: "Finish & delivery",
@@ -445,34 +445,34 @@ export const verticals: Vertical[] = [
     ],
     capabilities: [
       {
-        name: "3D Interior Rendering",
+        name: "Interior Visualisation",
         detail:
-          "Floor plans and design concepts turned into realistic interiors — layout, furniture placement, materials, lighting, textures and colour — showing how a space will function and feel.",
+          "Turning floor plans and design concepts into photorealistic interiors that reveal the layout, materials, lighting, furniture and atmosphere — allowing every space to be experienced before it is built.",
       },
       {
-        name: "3D Exterior Rendering",
+        name: "Exterior Visualisation",
         detail:
-          "Materials, finishes, lighting conditions, landscaping and environmental context, for pre-construction marketing, investor presentations and planning approvals.",
+          "Transforming architectural plans into photorealistic exterior visuals that reveal façade materials, lighting, landscaping, scale and environmental context — helping clients present, evaluate and market developments before construction begins.",
       },
       {
         name: "Virtual Tours",
         detail:
-          "Photorealistic renders assembled into an interactive walkthrough — move through interior and exterior spaces and understand scale and flow as if physically present.",
+          "Transforming architectural layouts into immersive visual journeys through animated floor plans and cinematic walkthroughs that reveal spatial flow, design, scale and atmosphere — helping audiences understand and connect with the project before it is built.",
       },
       {
-        name: "Cinematic Walkthroughs & Floor Plans",
+        name: "Cinematic Walkthroughs & Animated Floor Plans",
         detail:
           "Dynamic floor plans, cinematic walkthroughs and feel-good films that hook an audience and drive conversion.",
       },
       {
-        name: "Interactive VR",
+        name: "Interactive VR Experiences",
         detail:
-          "Real-time custom flat design in VR, for pre-sales experiences that let a buyer configure the space they are standing in.",
+          "Creating immersive, real-time property experiences that let buyers explore, personalise and configure layouts, materials, furniture and finishes — helping them experience their future space before construction begins.",
       },
       {
-        name: "Custom & Commercial Projects",
+        name: "Commercial & Custom Developments",
         detail:
-          "Retail outlets, malls, restaurants, cafés, hospitality, offices, public buildings and mixed-use developments that don't fit a standard residential template.",
+          "Creating tailored architectural visualisations for retail, hospitality, workplaces, public spaces and mixed-use developments — capturing each project's unique function, scale, audience and spatial requirements.",
       },
     ],
     sections: [
@@ -491,34 +491,34 @@ export const verticals: Vertical[] = [
         heading: "The benefits, plainly.",
         items: [
           {
-            name: "Clear understanding of the project",
+            name: "Clarity Before Construction",
             detail:
-              "A complete visual of the property, so buyers and stakeholders understand layout, scale and design intent without relying on imagination.",
+              "Transforming architectural plans into clear, realistic visuals that reveal layout, scale, spatial flow and design intent — helping buyers and stakeholders understand the complete project before it is built.",
           },
           {
-            name: "More accurate presentations",
+            name: "Presentation with Precision",
             detail:
-              "Precise materials, lighting and proportions, so presentations feel realistic and trustworthy rather than conceptual or abstract.",
+              "Presenting materials, lighting, proportions and finishes with realistic accuracy — creating visuals that feel credible, resolved and true to the intended design.",
           },
           {
-            name: "Stronger buyer attraction",
+            name: "Vision Buyers Can Believe In",
             detail:
-              "High-quality visuals capture attention faster and appeal to a wider audience, especially for pre-construction and off-plan properties.",
+              "Presenting unbuilt spaces with enough realism and atmosphere to create trust, curiosity and emotional connection.",
           },
           {
-            name: "Better market positioning",
+            name: "A Stronger Market Position",
             detail:
-              "Listings with 3D renderings stand out in competitive markets and signal professionalism, clarity and preparedness.",
+              "Distinctive, high-quality visualisation gives the development greater credibility, recognition and perceived value — helping it stand apart across listings, campaigns and sales presentations.",
           },
           {
-            name: "Lower costs, fewer revisions",
+            name: "Clarity That Protects the Budget",
             detail:
-              "Visual clarity early reduces misunderstandings, change requests and costly revisions later in the project lifecycle.",
+              "Visualise and refine the project early to prevent misunderstandings, unnecessary revisions and avoidable expenses.",
           },
           {
-            name: "Higher-quality marketing assets",
+            name: "One Vision, Built for Every Touchpoint",
             detail:
-              "Listing pages, brochures, pitch decks and digital campaigns lifted by consistent, premium visuals.",
+              "A versatile library of premium visuals strengthens listings, brochures, sales decks, websites and campaigns — giving the property a consistent, polished and recognisable presence across every platform.",
           },
         ],
       },
@@ -582,27 +582,27 @@ export const verticals: Vertical[] = [
       {
         step: "Grey-shader iteration",
         detail:
-          "Highly detailed grey-shader passes for precise mesh visualization and structural validation — the geometry is signed off before it is ever made beautiful.",
+          "We refine the model through detailed grey-shader reviews until its geometry, proportions and spatial relationships are fully approved.",
       },
       {
-        step: "Materials & lighting",
+        step: "Materials, Defined by Light",
         detail:
-          "Advanced global illumination and ray-traced shadows. Polished stone, raw concrete, expansive glass — the factory-finished identity.",
+          "Every surface is developed for its true texture, finish and reflectivity, then shaped through physically accurate lighting, shadows and reflections — revealing the architecture with depth, atmosphere and realism.",
       },
       {
-        step: "First drafts",
+        step: "First Draft Review",
         detail:
-          "Draft renders for review. This is where layout, finishes and scale get argued out — early, cheaply, on screen rather than on site.",
+          "Initial renders bring the layout, scale, materials and visual direction into focus — giving stakeholders a clear basis for feedback before final refinement begins.",
       },
       {
-        step: "Revision",
+        step: "Unlimited Revisions. One Clear Outcome.",
         detail:
-          "Unlimited revisions. Visual clarity now is what prevents change requests and costly revisions later in the project lifecycle.",
+          "We continue refining layouts, materials, finishes and atmosphere until every detail is resolved, every stakeholder is aligned and the final visuals are ready for approval.",
       },
       {
-        step: "Final delivery",
+        step: "The Complete Visual Delivery",
         detail:
-          "8K stills, cinematic walkthroughs, dynamic floor plans, virtual tours or an interactive VR build — whatever the sale actually needs.",
+          "8K stills, cinematic walkthroughs, animated floor plans, virtual tours and VR experiences — delivered in the formats that best support the project, audience and sales objective.",
       },
     ],
     gallery: ARCHITECTURAL_GALLERY,
@@ -623,22 +623,22 @@ export const verticals: Vertical[] = [
     faqs: [
       {
         q: "How long does a set of renders take?",
-        a: "One to two weeks is typical, with unlimited revisions inside the engagement. Complex or large-scale developments are scoped individually.",
+        a: "Most standard render sets are completed within one to two weeks, including review and revisions. Larger or more complex projects receive a tailored timeline.",
       },
       {
-        q: "What do you need from us to start?",
-        a: "Floor plans, elevations and any design intent you have — material boards, references, a brand look. If the design is still moving, we start with grey-shader passes so the geometry can be validated before materials are committed.",
+        q: "What do you need to get started?",
+        a: "Share your floor plans, elevations and any available material or design references. If the design is still evolving, we begin with grey-shader previews to confirm geometry, scale and camera angles before final rendering.",
       },
       {
-        q: "Can you render a property that hasn't been designed yet?",
-        a: "Yes. That is the point of the discipline: showing unbuilt, under-construction or renovated property so buyers, tenants and stakeholders understand layout, finishes and scale before construction begins or changes are made.",
+        q: "Can you visualise a property before the design is final?",
+        a: "Yes. We can begin with early plans, sketches or references and develop the visualisation alongside the design — refining layouts, materials and details as the project evolves.",
       },
       {
-        q: "Do you do more than still images?",
-        a: "Yes. Dynamic floor plans, cinematic walkthroughs, feel-good films, virtual tours assembled from photorealistic renders, and interactive VR for real-time custom flat design — so a buyer can configure the space they are standing in.",
+        q: "Do you offer more than still renders?",
+        a: "Yes. We create animated floor plans, cinematic walkthroughs, virtual tours and interactive VR experiences that let buyers explore, understand and personalise the property before it is built.",
       },
       {
-        q: "Do you work on commercial and mixed-use, not just residential?",
+        q: "Do you work in commercial and mixed-use, not just residential?",
         a: "Yes. Retail outlets, malls, restaurants and cafés, hospitality, offices, public buildings and large-scale mixed-use developments — anything that does not fit a standard residential template.",
       },
     ],
@@ -979,9 +979,9 @@ export const verticals: Vertical[] = [
           "A robust foundation of Autodesk Maya and 3ds Max for high-end modelling, rigging and complex animation workflows.",
       },
       {
-        name: "Rapid Pre-Visualization",
+        name: "Real-Time Previsualisation & Virtual Production",
         detail:
-          "Reallusion Character Creator and iClone integrated with Unreal Engine, for lightning-fast high-fidelity previews, real-time environment building and rapid structural validation.",
+          "Characters, environments, cameras and sequences are developed interactively to validate framing, movement, timing and production decisions before final execution.",
       },
       {
         name: "The Final Cinematic Polish",
@@ -1045,8 +1045,8 @@ export const verticals: Vertical[] = [
     ],
     proof: {
       label: "The infrastructure",
-      title: "A zero-imperfection mandate requires uncompromised compute.",
-      body: "Southeast Media owns, operates and maintains its render infrastructure on-site: a 100TB RAID-configured storage array built for uncompressed 8K workflows, dual enterprise NVIDIA 96GB VRAM cards for the most demanding particle and simulation tasks, and a dedicated 15-server farm on the latest RTX 5090 and 50-series GPUs.",
+      title: "A zero-imperfection mandate requires uncompromised computation.",
+      body: "Compute behind every final frame. 100TB RAID storage, enterprise NVIDIA GPUs and a dedicated 15-server render farm support demanding 8K, simulation and effects workflows entirely on-site.",
       metrics: [
         { value: "96GB", label: "VRAM per enterprise node" },
         { value: "15", label: "server render farm" },
@@ -1071,24 +1071,24 @@ export const verticals: Vertical[] = [
     ],
     capabilities: [
       {
-        name: "Explainer & Motion Graphics",
+        name: "Motion, Explained and Experienced",
         detail:
           "A minimalistic, character-driven design approach built for clarity and rapid turnover, across the full Adobe Creative Suite.",
       },
       {
-        name: "Anamorphic & Projection Mapping",
+        name: "Beyond-the-Screen Visual Experiences",
         detail:
-          "Forced-perspective 3D anamorphic content and projection mapping for video walls, brand facilities, hospital lobbies and corporate experience centres.",
+          "Anamorphic 3D content and projection mapping transform digital displays and architectural surfaces into immersive experiences shaped around space, perspective and audience movement.",
       },
       {
-        name: "Immersive AR & VR",
+        name: "Interactive Worlds in Real Time",
         detail:
-          "Deep Unreal Engine and Twinmotion expertise, translating pristine assets into interactive experiences for product demonstration, medical training and investor showcases.",
+          "Detailed 3D assets become immersive AR and VR experiences for product demonstrations, medical training and investor presentations — designed to be explored, understood and experienced.",
       },
       {
-        name: "AI Acceleration",
+        name: "AI-Secured Visual Production",
         detail:
-          "Proprietary AI video generation run on our own secure servers — Kling, Google Veo, Luma Dream Machine, Seedance, Higgsfield and Runway — for speed and iteration capacity, never at the cost of data privacy.",
+          "Generative video workflows protected by secure systems, trusted processes and controlled data handling.",
       },
     ],
     /**
@@ -1360,12 +1360,12 @@ export const verticals: Vertical[] = [
       {
         name: "UI in Context",
         detail:
-          "Your interface composited into rendered environments — device, desk, control room, factory floor.",
+          "Your interface is composed into rendered environments — device, desk, control room, factory floor.",
       },
       {
-        name: "Animated B-Roll & Feature Loops",
+        name: "Product Motion Loops",
         detail:
-          "Short silent loops for feature pages, changelogs and in-app moments. Built as a set, from one look.",
+          "Silent animated sequences built as one cohesive visual system for feature pages, changelogs, product updates and in-app moments.",
       },
       {
         name: "Systems & Architecture Visualization",
@@ -1377,14 +1377,14 @@ export const verticals: Vertical[] = [
         detail: "Every ratio and length the channel plan needs, conformed from one master.",
       },
       {
-        name: "AI-Accelerated Iteration",
+        name: "AI-Generated. Studio Refined.",
         detail:
-          "Kling, Veo, Luma, Seedance, Higgsfield and Runway on our own servers. Direction tests only — never shipped raw.",
+          "AI generation helps us explore more creative directions in less time. We use generative tools to test concepts, motion ideas, mood, composition and early visual routes — while every approved direction is refined through our studio workflow for quality, consistency and final production use.",
       },
       {
-        name: "Event, Demo & Immersive",
+        name: "Event Experiences, Digitally Crafted",
         detail:
-          "Booth loops, anamorphic screens and interactive demos built in Unreal Engine and Twinmotion.",
+          "We create immersive event content that brings products, spaces and brand stories to life through interactive demos, booth visuals, anamorphic displays and real-time 3D environments.",
       },
     ],
     sections: [
@@ -1403,20 +1403,22 @@ export const verticals: Vertical[] = [
           {
             name: "Scriptwriter",
             detail:
-              "The argument, agreed before anything is drawn. Cheapest place to change your mind.",
+              "The argument, agreed before anything is drawn. The cheapest place to change your mind.",
           },
           {
-            name: "Storyboard & pre-viz",
+            name: "Storyboard to Moving Previz",
             detail:
-              "Frames, then a moving previz in Unreal. Timing and camera locked before render cost.",
+              "We define the key frames first, then build a real-time Unreal Engine previz to confirm camera movement, timing and sequence flow before final production begins.",
           },
           {
-            name: "Modeller & rigger",
-            detail: "Assets built in Maya and 3ds Max, rigged to be reused for the next release.",
+            name: "Production-Ready Models & Rigs",
+            detail:
+              "Detailed models and flexible rigs are built as lasting 3D assets — ready for animation today and reusable across future stories, campaigns and releases.",
           },
           {
-            name: "Look-dev & FX artist",
-            detail: "The pass that decides whether abstract systems read as physical.",
+            name: "Look Development & FX",
+            detail:
+              "We develop materials, lighting, atmosphere and visual effects to make abstract systems feel physical, dimensional and believable — giving complex ideas texture, weight and clarity on screen.",
           },
           {
             name: "Motion designer",
@@ -1428,8 +1430,9 @@ export const verticals: Vertical[] = [
             detail: "Pace, structure and sound — cutdowns conformed from the master timeline.",
           },
           {
-            name: "Colourist & delivery",
-            detail: "Digital Intermediate grade, then every ratio the channel plan calls for.",
+            name: "Final Grade & Multi-Format Delivery",
+            detail:
+              "A cinematic DI grade brings colour, contrast and tonal consistency together before the master film is adapted into every platform-ready output required for release.",
           },
         ],
       },
@@ -1439,22 +1442,23 @@ export const verticals: Vertical[] = [
         lead: "Named formats, all conformed from a single master — so the campaign cut and the site cut are genuinely the same film.",
         items: [
           {
-            name: "Launch film",
+            name: "The Film That Defines the Launch",
             detail:
-              "Carries the whole positioning. Rendered at 8K — holds on a display and a projector alike.",
+              "A cinematic 8K launch film that brings the brand positioning, product story and visual identity together in one powerful masterpiece — built to hold detail across websites, presentations, event screens and large-format projections.",
           },
           {
             name: "Explainer",
             detail: "Has to survive being watched at 1.5x with the sound off. Ruthless about pace.",
           },
           {
-            name: "Animated B-roll",
-            detail: "Silent loops for feature pages, changelogs and release notes. Built as a set.",
+            name: "Animated B-Roll",
+            detail:
+              "Short, silent motion loops for product pages, updates and website sections — simple, consistent and easy to reuse.",
           },
           {
             name: "UI in context",
             detail:
-              "Your interface composited into rendered environments, on the 8K plate workflow.",
+              "Your interface is composed into rendered environments, on the 8K plate workflow.",
           },
           {
             name: "Systems & architecture",
@@ -1463,7 +1467,8 @@ export const verticals: Vertical[] = [
           },
           {
             name: "Ad cutdowns",
-            detail: "Pre-roll, app-store and product-page cuts, conformed from the same master.",
+            detail:
+              "We adapt one approved master film into shorter versions for pre-roll, app-store previews, product pages and digital placements — keeping the message, look and quality consistent across every format.",
           },
           {
             name: "Social verticals",
@@ -1471,7 +1476,8 @@ export const verticals: Vertical[] = [
           },
           {
             name: "Demo & event media",
-            detail: "Unreal and Twinmotion builds, plus loops cut to the geometry of the screen.",
+            detail:
+              "Real-time Unreal Engine and Twinmotion experiences, along with motion loops designed to fit the exact size, shape and layout of each event display.",
           },
         ],
       },
@@ -1494,18 +1500,18 @@ export const verticals: Vertical[] = [
               "Hero film, announcement cut and social set — one look, so the launch reads as one thing.",
           },
           {
-            name: "Fundraising",
+            name: "Fundraising Visualisation",
             detail:
-              "The parts of the architecture that have no photograph, for a high-stakes room.",
+              "Clear 3D visuals for unseen systems, future spaces and technical architecture — built to support investor understanding and high-stakes pitch conversations.",
           },
           {
             name: "Sales & onboarding",
             detail: "Shortens the part of the call where someone draws the system on a whiteboard.",
           },
           {
-            name: "Continuous release",
+            name: "Continuous Release Support",
             detail:
-              "Feature loops under a milestone SOW — shipping a feature is not a new video project.",
+              "Feature visuals are delivered milestone by milestone, keeping every product release consistent without restarting the production process each time.",
           },
         ],
       },
@@ -1543,9 +1549,9 @@ export const verticals: Vertical[] = [
     },
     process: [
       {
-        step: "Brief, under NDA",
+        step: "Clear Brief. Restricted Access.",
         detail:
-          "The claim the film has to land, agreed first. Server access locked to the engagement.",
+          "We align on the core message before production begins, while every project asset stays within a controlled NDA workflow accessible only to the authorised engagement team.",
       },
       {
         step: "Script & storyboard",
@@ -1557,17 +1563,18 @@ export const verticals: Vertical[] = [
           "Timing and camera locked in Unreal. Alternate treatments explored in hours, on our servers.",
       },
       {
-        step: "Build & look-dev",
+        step: "Build & Look Development",
         detail:
-          "Maya and 3ds Max; simulation through X-Particles, Marvelous Designer, EmberGen, LiquiGen.",
+          "We build detailed 3D assets in Maya and 3ds Max, then refine materials, lighting and simulations using tools like X-Particles, Marvelous Designer, EmberGen and LiquiGen to create believable, production-ready visuals.",
       },
       {
-        step: "Render",
+        step: "The Render Pipeline",
         detail: "Cinema 4D through Octane, out to 8K on the 15-server farm we own on-site.",
       },
       {
-        step: "Conform, grade & versioning",
-        detail: "Digital Intermediate grade in-house, then every ratio the launch plan calls for.",
+        step: "Final Grade & Multi-Format Delivery",
+        detail:
+          "One approved master is conformed and colour graded in-house, then adapted into every required ratio, resolution and format for the launch plan.",
       },
     ],
     // Captions only. The frames themselves resolve through `saasAssets.galleryFrames`
@@ -1591,16 +1598,16 @@ export const verticals: Vertical[] = [
     ],
     faqs: [
       {
-        q: "How fast can you turn a product film around?",
-        a: "It depends on how much has to be built. Explainers reusing an established look are fastest; a hero film with new modelling, simulation and an 8K render is not. We scope it against milestones in the SOW rather than quote a number we would have to caveat.",
+        q: "How long does a product film take?",
+        a: "It depends on the build. Existing assets and approved styles move faster; new modelling, simulation and 8K rendering take longer. We define timelines through clear SOW milestones.",
       },
       {
         q: "What do you need from us to start?",
         a: "The product — a demo account or a build we can look at — plus whatever positioning material exists. If the messaging is not settled, we start with script and storyboard so it gets settled on paper rather than in render.",
       },
       {
-        q: "Our product is unreleased. How is our material handled?",
-        a: "Under NDA, on access-controlled servers provisioned per project. We do not push client material through third-party services — including for AI generation, which is exactly why that runs on our own infrastructure.",
+        q: "How do you protect unreleased product material?",
+        a: "Unreleased product assets are handled under NDA, stored in a restricted project server, and accessed only by the assigned team throughout the engagement.",
       },
       {
         q: "Do you use AI, and does it end up in the final video?",
@@ -1647,9 +1654,9 @@ export const verticals: Vertical[] = [
     ],
     capabilities: [
       {
-        name: "Dedicated Resource Allocation",
+        name: "Embedded Production Support",
         detail:
-          "Server bandwidth and artist time reserved against your engagement — the difference between a vendor and a department.",
+          "Assigned artists and reserved production capacity give your project consistent support across every milestone.",
       },
       {
         name: "For Brand Facilities & Hospitals",
@@ -1700,30 +1707,33 @@ export const verticals: Vertical[] = [
         ],
         items: [
           {
-            name: "15 servers",
-            detail: "In-house render farm on the latest RTX 5090 and 50-series GPUs.",
+            name: "Studio-Owned Render Power",
+            detail:
+              "Our in-house 15-server render farm gives every production dedicated GPU capacity for faster, controlled and consistent high-resolution rendering.",
           },
           {
             name: "96GB VRAM",
-            detail: "Dual enterprise NVIDIA cards, for the heaviest particle and simulation work.",
+            detail:
+              "A 96GB VRAM workstation gives us the memory headroom needed for complex particles, fluids, volumetrics and high-detail 3D production.",
           },
           {
             name: "100TB RAID",
             detail: "A storage array built for uncompressed 8K, on-site and access-controlled.",
           },
           {
-            name: "8K capture",
-            detail: "Uncompressed camera systems, with lighting and grip in-house.",
+            name: "8K Capture with Cinematic Control",
+            detail:
+              "Uncompressed 8K capture with in-house lighting and grip for clean, controlled and high-detail production.",
           },
           {
-            name: "Full 3D pipeline",
+            name: "Complete 3D Production, In-House",
             detail:
-              "Maya, 3ds Max, Unreal, Blender and Cinema 4D through Octane — on our own machines.",
+              "Modelling, animation, real-time visualisation and final rendering handled within one controlled studio pipeline.",
           },
           {
-            name: "In-house finish",
+            name: "In-House Post & Picture Finishing",
             detail:
-              "Editing suites and Digital Intermediate grading under the same roof as the farm.",
+              "Editing, colour grading and final delivery handled under one roof for a controlled, consistent final finish.",
           },
         ],
       },
@@ -1808,7 +1818,7 @@ export const verticals: Vertical[] = [
           {
             name: "Allocation",
             detail:
-              "Server bandwidth and artist capacity reserved, so your work does not compete with the book.",
+              "Server bandwidth and artist capacity are reserved, so your work does not compete with the book.",
           },
           {
             name: "Visibility",
@@ -1818,7 +1828,7 @@ export const verticals: Vertical[] = [
           {
             name: "Review cadence",
             detail:
-              "Gates at script, previz and pre-render — expensive decisions made while still cheap.",
+              "We set clear approval gates at script, previz and pre-render, so major decisions are made early while changes are still fast and manageable.",
           },
         ],
       },

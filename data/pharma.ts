@@ -113,7 +113,7 @@ export const pharmaAtlas: {
 } = {
   eyebrow: "The atlas",
   title: "Organ by organ, in medical clarity.",
-  body: "A disease-state library rendered to clear a review board — healthy tissue and pathology, sectioned, labelled and shown at full plate. Every organ, whole, at the shape it was made in.",
+  body: "A disease-state library rendered to clear a review board — healthy tissue and pathology, sectioned, labelled and shown at full plate. Every organ, whole, in the shape it was made in.",
   motion: {
     title: "The atlas in motion",
     body: "The same models, animated — the loops that play the moment they reach the screen.",
@@ -220,7 +220,7 @@ export const pharmaMolecular = {
     {
       slug: "protein",
       title: "Accurate 3D protein models",
-      body: "Protein models that make mechanism of action, molecular interaction and drug-target communication clear and visually engaging.",
+      body: "Protein models that make mechanisms of action, molecular interaction and drug-target communication clear and visually engaging.",
       video: `${PH}/moa-protein.mp4`,
       poster: `${PH}/moa-protein-poster.jpg`,
       image: `${DECK}/protein.jpg`,

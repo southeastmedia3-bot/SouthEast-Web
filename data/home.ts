@@ -7,9 +7,9 @@
  */
 
 export const heroContent = {
-  eyebrow: "Elite digital infrastructure & immersive studio",
-  headline: "Cinematic worlds, engineered to be believed.",
-  body: "An elite digital infrastructure studio in Bengaluru and Hyderabad, translating Mechanism of Action data and high-stakes structural concepts into pristine 8K cinematic assets — in-house, and under NDA.",
+  eyebrow: "Trusted Digital Infrastructure & Immersive Production Studio",
+  headline: "Cinematic worlds, built to feel real.",
+  body: "A trusted digital infrastructure studio in Bengaluru and Hyderabad, transforming complex ideas and structural concepts into precise 8K cinematic assets — created entirely in-house and protected under NDA.",
   primaryCta: { label: "Start a project", href: "/contact" },
   secondaryCta: { label: "Explore our work", href: "/verticals" },
 };
@@ -35,31 +35,31 @@ export const servicesList = {
   heading: "Pick a discipline.",
   items: [
     {
-      title: "Medical & Pharma",
+      title: "Healthcare",
       href: "/pharma",
       media: "/media/pharma/heart-poster.jpg",
       pills: ["MoA Animation", "Anatomy", "Molecular", "Cellular", "Dermatology"],
     },
     {
-      title: "Architectural CGI",
+      title: "Real Estate",
       href: "/real-estate",
       media: "/media/generated/exterior-05.jpg",
       pills: ["Interiors", "Exteriors", "Virtual Tours", "Walkthroughs", "VR"],
     },
     {
-      title: "Film & Production",
+      title: "Film",
       href: "/films",
       media: "/media/products/serum-poster.jpg",
       pills: ["8K Capture", "DI Grade", "Ad Films", "Podcasts"],
     },
     {
-      title: "VFX & Rendering",
+      title: "VFX",
       href: "/vfx",
       media: "/media/products/ribbon-poster.jpg",
       pills: ["Compositing", "X-Particles", "EmberGen", "LiquiGen", "Octane"],
     },
     {
-      title: "Motion & Immersive",
+      title: "Startups",
       href: "/animation",
       media: "/media/animation/bugs-life-poster.jpg",
       pills: ["Explainers", "Anamorphic", "AR / VR", "Projection"],
@@ -67,13 +67,13 @@ export const servicesList = {
     // SaaS and Enterprise were missing here while the wall below claimed seven
     // disciplines. Both have real libraries now, so both get a frame.
     {
-      title: "Product & SaaS Film",
+      title: "Product and SaaS",
       href: "/saas",
       media: "/media/saas/creative-poster.jpg",
       pills: ["Launch Films", "Explainers", "UI in Context", "Systems", "Cutdowns"],
     },
     {
-      title: "The Embedded Partner",
+      title: "Enterprise",
       href: "/enterprise",
       media: "/media/enterprise/minimal-style-poster.jpg",
       pills: ["Retainers", "White-Label", "Video Walls", "Governance"],
@@ -206,20 +206,20 @@ export const filmContent = {
   eyebrow: "The reel — in motion",
   headline: "We make the unseen cinematic.",
   sublines: ["Frame by frame, rendered to be believed."],
-  body: "Scroll to move through the sequence. Every asset is built at 8K, in-house — Maya and 3ds Max through to Octane.",
+  body: "Scroll to move through the sequence. Every asset is built at 8K, in-house — Maya and 3ds Max, Blender, through to Cinema 4D and Octane.",
   primaryCta: { label: "View our verticals", href: "/verticals" },
   secondaryCta: { label: "Start a project", href: "/contact" },
 };
 
 export const disciplineTags = [
-  "Medical & Pharma",
-  "Institutional Real Estate",
+  "Healthcare",
+  "Real Estate",
   "Film & VFX",
-  "Startup / Incubator",
-  "Product & E-Commerce",
-  "Animation Systems",
-  "SaaS & Product",
-  "Enterprise / Retainer",
+  "Startups",
+  "Commerce",
+  "Animation",
+  "SaaS",
+  "Enterprise",
 ];
 
 export const mandate = {

@@ -62,7 +62,7 @@ function resolveSiteUrl(): string {
 
 export const siteConfig = {
   name: "Southeast Media",
-  projectName: "Elite CGI, Enterprise Media & Immersive VFX",
+  projectName: "Trusted Digital Infrastructure & Immersive Production Studio",
   description:
     "Southeast Media engineers physically accurate 8K visualization and enterprise media systems for pharmaceutical, institutional real estate, film, and venture-stage institutions.",
   url: resolveSiteUrl(),
