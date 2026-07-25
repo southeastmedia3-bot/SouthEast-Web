@@ -48,7 +48,8 @@ export function AnatomyReveal() {
   });
 
   if (reducedMotion) {
-    const last = anatomyLayers[N - 1]!;
+    // Complete figure is the first layer now (the reveal strips down from it).
+    const complete = anatomyLayers[0]!;
     return (
       <section id="anatomy" className="scroll-mt-36 bg-black py-20">
         <Container>
@@ -56,13 +57,13 @@ export function AnatomyReveal() {
           <h2 className="type-h3 mb-8 text-[var(--ink-frame-foreground)]">
             One model. Every system.
           </h2>
-          <div className="relative mx-auto aspect-[7/8] w-full max-w-sm">
+          <div className="relative mx-auto aspect-[14/15] w-full max-w-md">
             <Image
-              src={last.src}
+              src={complete.src}
               alt="Fully rigged human anatomy model"
               fill
               className="object-contain"
-              sizes="24rem"
+              sizes="28rem"
             />
           </div>
         </Container>
@@ -74,51 +75,64 @@ export function AnatomyReveal() {
     <section id="anatomy" className="bg-black">
       {/* Tall track: its height is what the pinned stage scrubs against. */}
       <div ref={trackRef} style={{ height: `${N * PER_LAYER_VH + 60}vh` }} className="relative">
-        <div className="sticky top-0 flex h-dvh flex-col overflow-hidden">
-          <Container size="xl" className="flex flex-1 flex-col pb-10 pt-28">
-            <div className="mb-4">
-              <p className="type-label mb-3 text-[color:var(--brand-sky)]">Fully rigged anatomy</p>
-              <h2 className="type-h3 max-w-xl text-balance text-[var(--ink-frame-foreground)]">
-                One model. Every system.
-              </h2>
+        <div className="sticky top-0 h-dvh overflow-hidden">
+          {/* The figure fills the whole stage, inset so head and feet always
+              clear the edges. Every layer is `object-contain`, so the figure is
+              letterboxed to fit and never crops — at any viewport height. The
+              header, rail and caption sit over it as overlays rather than
+              stealing vertical space from it (which is what used to squeeze the
+              figure into the caption and clip it on shorter screens). */}
+          <div className="absolute inset-0 flex items-center justify-center px-6 pb-20 pt-32">
+            <div className="relative h-full w-full max-w-3xl">
+              {anatomyLayers.map((layer, i) => (
+                <AnatomyLayer key={layer.src} src={layer.src} index={i} p={p} />
+              ))}
             </div>
+          </div>
 
-            <div className="relative flex flex-1 items-center justify-center">
-              {/* The stacked, registered layers. Only the ones near the current
-                  scroll position carry any opacity. */}
-              <div className="relative h-full w-full max-w-2xl">
-                {anatomyLayers.map((layer, i) => (
-                  <AnatomyLayer key={layer.src} src={layer.src} index={i} p={p} />
-                ))}
-              </div>
+          {/* Header — top-left overlay. */}
+          <Container
+            size="xl"
+            className="pointer-events-none absolute inset-x-0 top-0 pt-28"
+          >
+            <p className="type-label mb-3 text-[color:var(--brand-sky)]">Fully rigged anatomy</p>
+            <h2 className="type-h3 max-w-xl text-balance text-[var(--ink-frame-foreground)]">
+              One model. Every system.
+            </h2>
+          </Container>
 
-              {/* Depth rail — where you are in the build. */}
-              <ol className="absolute right-0 top-1/2 hidden -translate-y-1/2 flex-col gap-2.5 md:flex">
-                {anatomyLayers.map((layer, i) => (
-                  <li key={layer.src} className="flex items-center justify-end gap-3">
-                    <span
-                      className={
-                        "type-caption transition-colors duration-300 " +
-                        (i === active
-                          ? "text-[var(--ink-frame-foreground)]"
-                          : "text-[color:var(--brand-ice)]/25")
-                      }
-                    >
-                      {layer.label}
-                    </span>
-                    <span
-                      className={
-                        "h-px transition-all duration-300 " +
-                        (i === active ? "w-8 bg-[color:var(--brand-sky)]" : "w-4 bg-white/20")
-                      }
-                      aria-hidden="true"
-                    />
-                  </li>
-                ))}
-              </ol>
-            </div>
+          {/* Depth rail — right edge, vertically centred. */}
+          <Container
+            size="xl"
+            className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2"
+          >
+            <ol className="ml-auto hidden w-fit flex-col gap-2.5 md:flex">
+              {anatomyLayers.map((layer, i) => (
+                <li key={layer.src} className="flex items-center justify-end gap-3">
+                  <span
+                    className={
+                      "type-caption transition-colors duration-300 " +
+                      (i === active
+                        ? "text-[var(--ink-frame-foreground)]"
+                        : "text-[color:var(--brand-ice)]/25")
+                    }
+                  >
+                    {layer.label}
+                  </span>
+                  <span
+                    className={
+                      "h-px transition-all duration-300 " +
+                      (i === active ? "w-8 bg-[color:var(--brand-sky)]" : "w-4 bg-white/20")
+                    }
+                    aria-hidden="true"
+                  />
+                </li>
+              ))}
+            </ol>
+          </Container>
 
-            {/* The caption for the layer you're on. */}
+          {/* Caption — bottom-left overlay, for the layer you're on. */}
+          <Container size="xl" className="pointer-events-none absolute inset-x-0 bottom-0 pb-10">
             <div className="flex items-baseline gap-4">
               <span className="type-index tabular-nums text-[color:var(--brand-ice)]/40">
                 {String(active + 1).padStart(2, "0")}
@@ -169,7 +183,7 @@ function AnatomyLayer({
         alt=""
         fill
         priority={index === 0}
-        sizes="(min-width: 768px) 42rem, 90vw"
+        sizes="(min-width: 768px) 48rem, 90vw"
         className="object-contain"
       />
     </motion.div>
