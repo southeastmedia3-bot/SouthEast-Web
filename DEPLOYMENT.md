@@ -34,7 +34,10 @@ India-facing studio.
 
 ## 2. Environment variables
 
-`apphosting.yaml` already sets `NEXT_PUBLIC_SITE_URL=https://southeastmedia.in`.
+`apphosting.yaml` sets `NEXT_PUBLIC_SITE_URL`. It currently points at the App
+Hosting backend URL, **not** `southeastmedia.in`, because that domain is serving
+no TLS certificate — see "The custom domain is down" below. Revert it to
+`https://southeastmedia.in` once the domain is fixed.
 
 The `availability: [BUILD, RUNTIME]` on it is not optional. All 17 pages are
 prerendered during `next build`, which is when canonical tags, Open Graph URLs
@@ -163,6 +166,28 @@ PNGs must stay PNG and quantise to a palette, because their alpha is
 load-bearing. If the studio ever needs the uncompressed masters online, move
 `public/media` out to Firebase Storage or a bucket behind Cloud CDN rather than
 growing this bundle.
+
+## The custom domain is down
+
+`southeastmedia.in` resolves (`35.219.201.37`) and answers on port 80 with a
+`301` to `https://…:443/`, but the HTTPS port accepts the TCP connection and then
+closes it **without presenting a certificate** — `openssl s_client` reports `no
+peer certificate available` and a handshake that read 0 bytes. Every visitor is
+therefore redirected to HTTPS and lands on a dead connection.
+
+Beware `openssl`'s `Verification: OK` / `Verify return code: 0 (ok)` in that
+output: that is its default when *no* certificate was presented at all, not
+evidence of a good one. Read the `no peer certificate available` line instead.
+
+```bash
+# The real check. "no peer certificate available" = the cert is missing.
+echo | openssl s_client -connect southeastmedia.in:443 -servername southeastmedia.in 2>&1 | head -20
+```
+
+Until it is fixed the site is served from the backend URL, and
+`NEXT_PUBLIC_SITE_URL` points there so canonicals, the sitemap and `og:image`
+reference a host that actually answers. Fix it in the Firebase console under
+App Hosting → the backend → **Domains**, then revert that variable.
 
 ## Debugging "the media isn't loading"
 

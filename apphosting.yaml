@@ -20,8 +20,22 @@ env:
   # A runtime-only value arrives far too late to change any of them: the site
   # would ship canonicals reading `http://localhost:3000` — the fallback in
   # constants/site.ts — and Google would index that.
+  #
+  # TEMPORARY: this is the App Hosting backend URL, not southeastmedia.in.
+  #
+  # southeastmedia.in currently terminates TLS with no certificate — port 80
+  # redirects to https and port 443 accepts the connection then closes without
+  # presenting one, so nothing on that host is reachable. Pointing this value at
+  # a dead domain is not cosmetic: it is the origin under every canonical tag,
+  # share card and sitemap entry, so `og:image` resolved to a host that refuses
+  # the connection and link previews came back blank everywhere the site was
+  # shared.
+  #
+  # REVERT THIS to https://southeastmedia.in the moment the domain serves a
+  # certificate again — leaving it here makes the backend URL the site's
+  # advertised identity, which is not what should end up in a search index.
   - variable: NEXT_PUBLIC_SITE_URL
-    value: https://southeastmedia.in
+    value: https://southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app
     availability:
       - BUILD
       - RUNTIME
