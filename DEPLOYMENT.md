@@ -122,6 +122,34 @@ Teams webhook via `CONTACT_WEBHOOK_URL` works instead, or alongside.
 Verify by submitting the form and confirming the mail arrives — a 200 from the
 endpoint alone does not prove delivery.
 
+## Keep the static payload small
+
+App Hosting serves `public/` and `.next/static` from a CDN-backed asset store in
+front of the container, and that store does not hold an unlimited payload. At
+~147MB it silently took only part of the set: roughly the first 73MB was served
+and the remaining 28 files — mostly the larger films — returned 404 at
+`southeastmedia.in` while still resolving fine on the backend URL
+(`southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app`). Because the
+CDN kept serving what it had already cached, the site looked partly fine and
+decayed as those entries aged out, which makes this easy to misread as a
+rendering bug.
+
+The payload is now ~56MB. Keep it there. Before adding media, check:
+
+```bash
+du -sh public            # keep well under ~70MB total
+```
+
+New films should be H.264, silent, `+faststart`, capped at 960px wide for card
+and tile loops or 1152px for full-bleed heroes, around CRF 31–34. Stills go
+through mozjpeg at quality ~76, capped at 1600px on the long edge. If the studio
+ever needs the uncompressed masters online, move `public/media` out to Firebase
+Storage or a bucket behind Cloud CDN rather than growing this bundle.
+
+A split like that is only visible from the public domain — the backend URL
+serves straight from the container and will happily return files the CDN never
+took, so verify against `https://southeastmedia.in`.
+
 ## Known follow-ups
 
 Deliberately not in the launch build:

@@ -48,8 +48,9 @@ const nextConfig: NextConfig = {
       },
       {
         /**
-         * Everything under /public/media — ~127MB of film and several hundred
-         * stills.
+         * Everything under /public/media — ~54MB of film and several hundred
+         * stills. That total matters: see "Keep the static payload small" in
+         * DEPLOYMENT.md before adding to it.
          *
          * Next serves `public/` with `Cache-Control: public, max-age=0` by
          * default, which revalidates every asset on every view. On a site that
