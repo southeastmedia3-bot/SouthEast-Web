@@ -124,31 +124,44 @@ endpoint alone does not prove delivery.
 
 ## Keep the static payload small
 
-App Hosting serves `public/` and `.next/static` from a CDN-backed asset store in
-front of the container, and that store does not hold an unlimited payload. At
-~147MB it silently took only part of the set: roughly the first 73MB was served
-and the remaining 28 files — mostly the larger films — returned 404 at
-`southeastmedia.in` while still resolving fine on the backend URL
-(`southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app`). Because the
-CDN kept serving what it had already cached, the site looked partly fine and
-decayed as those entries aged out, which makes this easy to misread as a
-rendering bug.
+`public/` was ~145MB of film and stills, which made every uncached view expensive
+and the whole bundle slow to ship. It is now ~54MB (~56MB including
+`.next/static`), re-encoded from the masters — no path, aspect ratio or crop
+changed, so `data/media.ts` was untouched.
 
-The payload is now ~56MB. Keep it there. Before adding media, check:
+Keep it near that. Before adding media:
 
 ```bash
-du -sh public            # keep well under ~70MB total
+du -sh public
 ```
 
 New films should be H.264, silent, `+faststart`, capped at 960px wide for card
-and tile loops or 1152px for full-bleed heroes, around CRF 31–34. Stills go
-through mozjpeg at quality ~76, capped at 1600px on the long edge. If the studio
-ever needs the uncompressed masters online, move `public/media` out to Firebase
+and tile loops or 1152px for full-bleed heroes, around CRF 31–34. Keep a short
+GOP (`-g 10`) on anything `ScrollVideo` scrubs — it seeks by `currentTime`, and
+sparse keyframes make that judder. Stills go through mozjpeg at quality ~76,
+capped at 1600px on the long edge; the pharma anatomy PNGs must stay PNG and
+quantise to a palette, because their alpha is load-bearing. If the studio ever
+needs the uncompressed masters online, move `public/media` out to Firebase
 Storage or a bucket behind Cloud CDN rather than growing this bundle.
 
-A split like that is only visible from the public domain — the backend URL
-serves straight from the container and will happily return files the CDN never
-took, so verify against `https://southeastmedia.in`.
+## Debugging "the media isn't loading"
+
+Check the backend URL before you touch the assets:
+
+```bash
+B=https://southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app
+curl -sI $B/media/generated/showreel.mp4        # app + deploy
+curl -sI https://southeastmedia.in/media/generated/showreel.mp4   # + domain/edge
+```
+
+If the backend URL serves a file and the custom domain 404s it, the build is
+fine and the problem is the domain mapping, not the media. Two tells that the
+request never reached Next.js at all: the response carries no `x-fah-adapter`
+header and none of the security headers from `next.config.ts`, and the body is a
+~10.8KB Google "Not Found" page rather than this app's 404. Cached edge entries
+can keep parts of the site working for up to the 24h `max-age` after routing has
+already broken, so a domain fault decays gradually and reads convincingly as a
+media or rendering bug. Compare the two URLs first.
 
 ## Known follow-ups
 
