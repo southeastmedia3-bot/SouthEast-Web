@@ -125,9 +125,12 @@ endpoint alone does not prove delivery.
 ## Keep the static payload small
 
 `public/` was ~145MB of film and stills, which made every uncached view expensive
-and the whole bundle slow to ship. It is now ~54MB (~56MB including
+and the whole bundle slow to ship. It is now ~38MB (~40MB including
 `.next/static`), re-encoded from the masters — no path, aspect ratio or crop
 changed, so `data/media.ts` was untouched.
+
+The target here is not fidelity, it is a site that plays through on a cheap phone
+on a weak connection. Where the two conflict, spend the quality.
 
 Keep it near that. Before adding media:
 
@@ -135,14 +138,31 @@ Keep it near that. Before adding media:
 du -sh public
 ```
 
-New films should be H.264, silent, `+faststart`, capped at 960px wide for card
-and tile loops or 1152px for full-bleed heroes, around CRF 31–34. Keep a short
-GOP (`-g 10`) on anything `ScrollVideo` scrubs — it seeks by `currentTime`, and
-sparse keyframes make that judder. Stills go through mozjpeg at quality ~76,
-capped at 1600px on the long edge; the pharma anatomy PNGs must stay PNG and
-quantise to a palette, because their alpha is load-bearing. If the studio ever
-needs the uncompressed masters online, move `public/media` out to Firebase
-Storage or a bucket behind Cloud CDN rather than growing this bundle.
+New films should be H.264, silent, `+faststart`, 24fps, capped at 720px on the
+long edge for card and tile loops or 960px for full-bleed heroes, around CRF
+33–34. Two things matter as much as the size:
+
+- **`-profile:v main -level 3.1`**, not High. Main is what old and low-end phones
+  hardware-decode; a High-profile film falls back to the software decoder on
+  those devices, and that is what actually drops frames.
+- **`-maxrate`/`-bufsize`** (~700k/1400k for loops, 900k/1800k for heroes). CRF
+  alone lets a busy shot spike well above its average, and a spike is exactly
+  what stalls a thin connection mid-playback.
+
+Keep a short GOP (`-g 10`) on anything `ScrollVideo` scrubs — it seeks by
+`currentTime`, and sparse keyframes make that judder. Everything else gets `-g
+48`, ~2s, so playback starts and seeks cheaply.
+
+Stills split by how they are served. `*-poster.jpg` goes into a `<video poster>`
+attribute, which is a raw URL that `next/image` never touches — those are the
+bytes a visitor on a bad connection actually downloads, so they go to mozjpeg
+q62 capped at 1152px. Every other still renders through `next/image`, which
+re-encodes to AVIF/WebP per request; those go to q68 capped at 1280px, which sets
+the deploy payload and the ceiling on the largest variant. The pharma anatomy
+PNGs must stay PNG and quantise to a palette, because their alpha is
+load-bearing. If the studio ever needs the uncompressed masters online, move
+`public/media` out to Firebase Storage or a bucket behind Cloud CDN rather than
+growing this bundle.
 
 ## Debugging "the media isn't loading"
 

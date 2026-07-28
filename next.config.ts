@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
       },
       {
         /**
-         * Everything under /public/media — ~54MB of film and several hundred
+         * Everything under /public/media — ~37MB of film and several hundred
          * stills. That total matters: see "Keep the static payload small" in
          * DEPLOYMENT.md before adding to it.
          *
