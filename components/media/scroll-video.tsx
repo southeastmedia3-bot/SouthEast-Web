@@ -22,7 +22,15 @@ type ScrollVideoProps = {
   video?: string;
   poster?: string;
   tone?: "blue" | "sky" | "violet" | "mixed";
-  /** Total scroll distance the pinned stage occupies, in viewport heights. */
+  /**
+   * Total scroll distance the pinned stage occupies, in viewport heights.
+   *
+   * The stage itself is 100vh and pinned, so the pin holds for
+   * `scrollLength - 1` screens: at 1.8 the section releases after 0.8 of a
+   * screen of scrolling. It was 2.4 (1.4 screens pinned), which is a long time
+   * to hold a visitor on one card and was the bulk of why the section felt like
+   * it would not let go.
+   */
   scrollLength?: number;
 };
 
@@ -44,7 +52,7 @@ export function ScrollVideo({
   video,
   poster,
   tone = "blue",
-  scrollLength = 2.4,
+  scrollLength = 1.8,
 }: ScrollVideoProps) {
   const reducedMotion = useReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
@@ -62,14 +70,47 @@ export function ScrollVideo({
     const { gsap, ScrollTrigger } = setupGsap();
     const videoEl = videoRef.current;
     let duration = 0;
-    let seekQueued = false;
-    let lastSeek = -1;
+
+    /** One frame of the scrub master (24fps). Below this there is nothing new
+     *  to show, so a seek would be a decode the visitor cannot perceive. */
+    const FRAME = 1 / 24;
+
+    /**
+     * The newest scroll position we owe the video, or -1 for "nothing pending".
+     *
+     * The seek is deliberately NOT issued from its own requestAnimationFrame.
+     * `write` already runs inside one, so the old nested rAF meant every frame
+     * was painted one frame after the scroll that asked for it — a fixed,
+     * permanent lag behind the gesture. Worse, the `seekQueued` flag it guarded
+     * discarded any scroll that arrived while it was pending, so a fast flick
+     * threw away everything between its first and last position.
+     *
+     * Recording only the latest target and applying it as soon as the decoder is
+     * free gives both properties we want: never more than one seek in flight,
+     * and the position we converge on is always the newest one.
+     */
+    let pendingSeek = -1;
+
+    const applySeek = () => {
+      if (!videoEl || pendingSeek < 0 || duration === 0) return;
+      // Not decodable yet, or still retiring the previous seek. `seeked` and
+      // `loadeddata` both call back in here, so nothing is lost by returning.
+      if (videoEl.readyState < 2 || videoEl.seeking) return;
+
+      const target = pendingSeek;
+      pendingSeek = -1;
+      if (Math.abs(target - videoEl.currentTime) < FRAME) return;
+      videoEl.currentTime = target;
+    };
 
     const onMeta = () => {
       duration = videoEl?.duration ?? 0;
     };
+
     if (videoEl) {
       videoEl.addEventListener("loadedmetadata", onMeta);
+      videoEl.addEventListener("loadeddata", applySeek);
+      videoEl.addEventListener("seeked", applySeek);
       if (videoEl.readyState >= 1) onMeta();
     }
 
@@ -103,18 +144,9 @@ export function ScrollVideo({
       writeQueued = false;
       const p = progress;
 
-      if (videoEl && duration && !seekQueued) {
-        // Only seek when the target frame actually differs — at 24fps anything
-        // finer than a frame is a decode the visitor cannot see.
-        const target = Math.min(duration - 0.05, p * duration);
-        if (Math.abs(target - lastSeek) > 1 / 24) {
-          seekQueued = true;
-          lastSeek = target;
-          requestAnimationFrame(() => {
-            if (videoEl.readyState >= 2) videoEl.currentTime = target;
-            seekQueued = false;
-          });
-        }
+      if (videoEl && duration) {
+        pendingSeek = Math.min(duration - 0.05, Math.max(0, p * duration));
+        applySeek();
       }
 
       // Slow push-in on the stage.
@@ -155,6 +187,12 @@ export function ScrollVideo({
       trigger: rootRef.current,
       start: "top top",
       end: "bottom bottom",
+      /*
+       * `true`, not a number. A numeric scrub adds GSAP's own catch-up tween,
+       * and Lenis is already smoothing this page with `duration: 1.15` — the
+       * two compose into a floaty double lag, which is the opposite of the fix.
+       * Lenis owns the smoothing; ScrollTrigger tracks its output exactly.
+       */
       scrub: true,
       // Measure the pin a frame early so the switch to `position: fixed` never
       // lands in the same frame as the gesture that caused it.
@@ -171,6 +209,8 @@ export function ScrollVideo({
 
     return () => {
       videoEl?.removeEventListener("loadedmetadata", onMeta);
+      videoEl?.removeEventListener("loadeddata", applySeek);
+      videoEl?.removeEventListener("seeked", applySeek);
       trigger.kill();
     };
   }, [reducedMotion]);

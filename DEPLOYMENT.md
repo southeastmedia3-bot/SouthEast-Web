@@ -35,9 +35,9 @@ India-facing studio.
 ## 2. Environment variables
 
 `apphosting.yaml` sets `NEXT_PUBLIC_SITE_URL`. It currently points at the App
-Hosting backend URL, **not** `southeastmedia.in`, because that domain is serving
-no TLS certificate — see "The custom domain is down" below. Revert it to
-`https://southeastmedia.in` once the domain is fixed.
+Hosting default domain, **not** `southeastmedia.in`, because that domain serves a
+parking stub rather than this site — see "The custom domain does not serve this
+site" below. Point it at `https://southeastmedia.in` only once that is fixed.
 
 The `availability: [BUILD, RUNTIME]` on it is not optional. All 17 pages are
 prerendered during `next build`, which is when canonical tags, Open Graph URLs
@@ -128,9 +128,12 @@ endpoint alone does not prove delivery.
 ## Keep the static payload small
 
 `public/` was ~145MB of film and stills, which made every uncached view expensive
-and the whole bundle slow to ship. It is now ~38MB (~40MB including
+and the whole bundle slow to ship. It is now ~41MB (~43MB including
 `.next/static`), re-encoded from the masters — no path, aspect ratio or crop
 changed, so `data/media.ts` was untouched.
+
+~3.4MB of that total is one deliberate exception, `villa-night-scrub.mp4`. See
+the GOP note below before trying to win it back.
 
 The target here is not fidelity, it is a site that plays through on a cheap phone
 on a weak connection. Where the two conflict, spend the quality.
@@ -152,9 +155,35 @@ long edge for card and tile loops or 960px for full-bleed heroes, around CRF
   alone lets a busy shot spike well above its average, and a spike is exactly
   what stalls a thin connection mid-playback.
 
-Keep a short GOP (`-g 10`) on anything `ScrollVideo` scrubs — it seeks by
-`currentTime`, and sparse keyframes make that judder. Everything else gets `-g
-48`, ~2s, so playback starts and seeks cheaply.
+Anything `ScrollVideo` scrubs must be **all-intra** (`-g 1 -keyint_min 1
+-sc_threshold 0 -bf 0`), not merely short-GOP. Scrubbing sets `currentTime` every
+scroll frame, and a seek can only begin at a keyframe: with `-g 10` the decoder
+walked up to nine frames forward to display one, which is what made the homepage
+reel feel heavy. All-intra makes any seek a single frame decode — measured, it
+roughly halved the frames decoded for the same flick gesture. Everything else
+gets `-g 48`, ~2s, so playback starts and seeks cheaply.
+
+All-intra costs about 5x the bytes, so it is worth it for exactly one file and
+should not spread. Note the pattern: `villa-night.mp4` (680KB, `-g 10`) is still
+what the /real-estate wall autoplays linearly, and `villa-night-scrub.mp4`
+(3.4MB, all-intra) is the same footage for the scrubbed hero only. Two encodes of
+one shot, each pointed at the use that needs it. `-profile:v main` still applies:
+
+```bash
+ffmpeg -i master.mov -an -vf "scale=960:540:flags=lanczos,fps=24" \
+  -c:v libx264 -profile:v main -level 3.1 -pix_fmt yuv420p \
+  -g 1 -keyint_min 1 -sc_threshold 0 -bf 0 \
+  -crf 28 -preset slow -movflags +faststart out-scrub.mp4
+```
+
+Verify it really is all-intra — frame count and keyframe count must be equal:
+
+```bash
+ffprobe -v error -select_streams v:0 -count_frames \
+  -show_entries stream=nb_read_frames -of csv=p=0 out-scrub.mp4
+ffprobe -v error -select_streams v:0 -skip_frame nokey \
+  -show_entries frame=pts_time -of csv=p=0 out-scrub.mp4 | grep -c .
+```
 
 Stills split by how they are served. `*-poster.jpg` goes into a `<video poster>`
 attribute, which is a raw URL that `next/image` never touches — those are the
@@ -167,27 +196,37 @@ load-bearing. If the studio ever needs the uncompressed masters online, move
 `public/media` out to Firebase Storage or a bucket behind Cloud CDN rather than
 growing this bundle.
 
-## The custom domain is down
+## The custom domain does not serve this site
 
-`southeastmedia.in` resolves (`35.219.201.37`) and answers on port 80 with a
-`301` to `https://…:443/`, but the HTTPS port accepts the TCP connection and then
-closes it **without presenting a certificate** — `openssl s_client` reports `no
-peer certificate available` and a handshake that read 0 bytes. Every visitor is
-therefore redirected to HTTPS and lands on a dead connection.
+**Status 2026-07-30.** The TLS fault previously recorded here is gone — the
+handshake now completes and the certificate is valid. The domain still is not
+serving the site:
 
-Beware `openssl`'s `Verification: OK` / `Verify return code: 0 (ok)` in that
-output: that is its default when *no* certificate was presented at all, not
-evidence of a good one. Read the `no peer certificate available` line instead.
-
-```bash
-# The real check. "no peer certificate available" = the cert is missing.
-echo | openssl s_client -connect southeastmedia.in:443 -servername southeastmedia.in 2>&1 | head -20
+```
+southeastmedia.in      → 35.219.201.37, HTTPS 200, but the body is 114 bytes:
+                         <html><head><script>window.onload=function(){
+                         window.location.href="/lander"}</script></head></html>
+www.southeastmedia.in  → same address, Firebase's "Site Not Found" page
 ```
 
-Until it is fixed the site is served from the backend URL, and
-`NEXT_PUBLIC_SITE_URL` points there so canonicals, the sitemap and `og:image`
-reference a host that actually answers. Fix it in the Firebase console under
-App Hosting → the backend → **Domains**, then revert that variable.
+So DNS already points at Firebase, but the domain was never bound to **this App
+Hosting backend**. A 200 is not proof the domain works — check the body:
+
+```bash
+# Real site = a real <title>. Parking stub = ~114 bytes and a /lander redirect.
+curl -s https://southeastmedia.in/ | head -c 300
+curl -so /dev/null -w '%{size_download} bytes\n' https://southeastmedia.in/
+```
+
+Until it is bound, the site is served from the App Hosting default domain and
+`NEXT_PUBLIC_SITE_URL` points there, so canonicals, the sitemap and `og:image`
+reference a host that actually answers. Pointing that variable at
+`southeastmedia.in` before the binding exists is worse than leaving it: it would
+bake the parking stub into every canonical tag and share card.
+
+Fix in the Firebase console → App Hosting → the backend → **Domains** (steps 3
+and 4 above), confirm with the curl checks, and only then change the variable
+and redeploy so the prerender picks it up.
 
 ## Debugging "the media isn't loading"
 
@@ -212,20 +251,15 @@ media or rendering bug. Compare the two URLs first.
 
 Deliberately not in the launch build:
 
-- **`studio@southeastmedia.com`** (`constants/site.ts`) is shown on the contact
-  page, in the form's success and error states, and in both error boundaries —
-  but the domain is `.in`. Confirm the correct address and that it is monitored.
 - **Social links** (`config/navigation.ts`) point at the bare
   `instagram.com` / `linkedin.com` / `vimeo.com` homepages. Replace with the
-  studio's real profiles or drop the row.
-- **Content-Security-Policy.** GSAP, Lenis and Framer Motion all write inline
-  styles and Next injects inline bootstrap scripts, so a correct policy needs
-  nonce plumbing through middleware. It breaks pages silently when wrong, which
-  is not a risk worth carrying on a first deploy.
-- **Rate limiting** is per-instance and in-memory (`lib/rate-limit.ts`). With
-  `maxInstances: 10` an attacker spread across instances gets more through than
-  the nominal 5-per-10-minutes. Fine for a contact form; move to a shared store
-  if abuse warrants it.
+  studio's real profiles or drop the row. **Still open** — the real handles are
+  not known to the repo, and inventing them is worse than the placeholder.
+- **Rate limiting** is per-instance and in-memory (`lib/rate-limit.ts`). The
+  client-IP parse and a global backstop are now correct, but with
+  `maxInstances: 10` each instance still keeps its own counters, so a caller
+  spread across instances gets more through than the nominal 5-per-10-minutes.
+  Fine for a contact form; move to a shared store if abuse warrants it.
 - **Preview/staging.** `lib/seo.ts` keys "is this production" off `VERCEL_ENV`,
   falling back to `NODE_ENV`. On Firebase that means any App Hosting build is
   treated as production and is crawlable. If a staging backend is added later,

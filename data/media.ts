@@ -71,9 +71,28 @@ export const homeShowreel: MediaAsset = {
 };
 
 /** The hero "scroll film". A short (11.6s) night-lit villa loop — ideal length
- *  for true scroll-scrub. Swap `video` to change the homepage hero footage. */
+ *  for true scroll-scrub. Swap `video` to change the homepage hero footage.
+ *
+ *  NOTE THE `-scrub` SUFFIX. This is a different encode of the same footage,
+ *  not a different shot, and the two are not interchangeable:
+ *
+ *    villa-night.mp4        680KB, keyframe every 10 frames. For LINEAR
+ *                           playback — the /real-estate video wall autoplays it
+ *                           start to finish, where GOP length costs nothing.
+ *    villa-night-scrub.mp4  3.4MB, ALL-INTRA (every one of its 279 frames is a
+ *                           keyframe). For SCRUBBING only.
+ *
+ *  Scrubbing sets `currentTime` on every scroll frame, and a seek can only
+ *  start from a keyframe: against the 10-frame GOP the decoder had to walk up
+ *  to nine frames forward to show one, which is exactly the lag that made this
+ *  section feel heavy. All-intra makes any seek a single frame decode, at ~5x
+ *  the bytes — worth it here, and only here. Do not point the /real-estate wall
+ *  at the scrub file to "save a download"; it would pay 2.8MB for nothing.
+ *
+ *  Encode recipe and the ffprobe check that proves it is all-intra are in
+ *  DEPLOYMENT.md, "Keep the static payload small". */
 export const heroFilm: MediaAsset = {
-  video: `${G}/villa-night.mp4`,
+  video: `${G}/villa-night-scrub.mp4`,
   poster: `${G}/villa-poster.jpg`,
   alt: "Southeast Media reel — night-lit villa exterior, cinematic render",
   tone: "blue",
