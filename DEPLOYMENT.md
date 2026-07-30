@@ -34,10 +34,9 @@ India-facing studio.
 
 ## 2. Environment variables
 
-`apphosting.yaml` sets `NEXT_PUBLIC_SITE_URL`. It currently points at the App
-Hosting default domain, **not** `southeastmedia.in`, because that domain serves a
-parking stub rather than this site — see "The custom domain does not serve this
-site" below. Point it at `https://southeastmedia.in` only once that is fixed.
+`apphosting.yaml` sets `NEXT_PUBLIC_SITE_URL` to `https://www.southeastmedia.in`,
+which is the site's canonical origin. `www` and not the bare domain, deliberately
+— see "Domain status" below.
 
 The `availability: [BUILD, RUNTIME]` on it is not optional. All 17 pages are
 prerendered during `next build`, which is when canonical tags, Open Graph URLs
@@ -51,9 +50,12 @@ Contact delivery is deliberately not configured yet — see step 6.
 ## 3. Custom domain
 
 In the Firebase console → App Hosting → your backend → **Domains** → add
-`southeastmedia.in`. Firebase then shows the exact DNS records to create. Use
-the values it displays; they are per-project and must not be copied from
-anywhere else.
+`www.southeastmedia.in` (the canonical host) and `southeastmedia.in`. Firebase
+then shows the exact DNS records to create. Use the values it displays; they are
+per-project and must not be copied from anywhere else.
+
+Both names need adding. A certificate issued for `www` does **not** cover the
+bare domain — that is exactly why the apex still refuses TLS today.
 
 ## 4. GoDaddy DNS
 
@@ -87,22 +89,30 @@ done.
 
 ```bash
 # DNS resolves to Firebase
-dig +short southeastmedia.in
+dig +short www.southeastmedia.in
 
-# Security headers present, no x-powered-by
-curl -sI https://southeastmedia.in/ | grep -iE 'strict-transport|x-frame|x-content-type|referrer|permissions|powered'
+# Request reached Next.js (x-fah-adapter) with the headers from next.config.ts,
+# and no x-powered-by
+curl -sI https://www.southeastmedia.in/ | grep -iE 'x-fah|strict-transport|x-frame|x-content-type|referrer|permissions|powered'
 
-# Canonical is the real domain — not localhost, not a run.app URL
-curl -s https://southeastmedia.in/ | grep -o '<link rel="canonical"[^>]*>'
+# Canonical is www.southeastmedia.in — not localhost, not the hosted.app URL
+curl -s https://www.southeastmedia.in/ | grep -o '<link rel="canonical"[^>]*>'
 
-# Robots allows crawling and advertises the sitemap
-curl -s https://southeastmedia.in/robots.txt
+# Robots allows crawling and advertises the sitemap on the same host
+curl -s https://www.southeastmedia.in/robots.txt
 
 # Sitemap lists 11 URLs on the right host
-curl -s https://southeastmedia.in/sitemap.xml | grep -c '<url>'
+curl -s https://www.southeastmedia.in/sitemap.xml | grep -c '<url>'
+curl -s https://www.southeastmedia.in/sitemap.xml | grep -o '<loc>[^<]*</loc>' | head -3
 
 # Media is cached rather than revalidated on every view
-curl -sI https://southeastmedia.in/media/generated/exterior-web.mp4 | grep -i cache-control
+curl -sI https://www.southeastmedia.in/media/generated/exterior-web.mp4 | grep -i cache-control
+
+# Every prerendered route answers
+for p in / /about /verticals /contact /pharma /real-estate /films /vfx \
+         /animation /saas /enterprise; do
+  printf '%s %s\n' "$p" "$(curl -s -o /dev/null -w '%{http_code}' "https://www.southeastmedia.in$p")"
+done
 ```
 
 By hand: open a vertical page on a phone, confirm the hero film plays, and
@@ -196,37 +206,55 @@ load-bearing. If the studio ever needs the uncompressed masters online, move
 `public/media` out to Firebase Storage or a bucket behind Cloud CDN rather than
 growing this bundle.
 
-## The custom domain does not serve this site
+## Domain status
 
-**Status 2026-07-30.** The TLS fault previously recorded here is gone — the
-handshake now completes and the certificate is valid. The domain still is not
-serving the site:
+**As at 2026-07-31.** `www` is live and is the canonical host. The apex is not
+yet bound.
 
 ```
-southeastmedia.in      → 35.219.201.37, HTTPS 200, but the body is 114 bytes:
-                         <html><head><script>window.onload=function(){
-                         window.location.href="/lander"}</script></head></html>
-www.southeastmedia.in  → same address, Firebase's "Site Not Found" page
+www.southeastmedia.in  → bound to this backend. Valid Google Trust Services
+                         certificate (issued 27 Jul, expires 25 Oct). Serves
+                         this app: all 11 routes 200, `x-fah-adapter` present,
+                         CSP and HSTS present, body byte-identical to the
+                         backend URL.
+southeastmedia.in      → 35.219.201.37, but the TLS handshake is REFUSED — the
+                         certificate covers only www.southeastmedia.in and
+                         *.www.southeastmedia.in, so there is nothing to present
+                         for the bare name. Plain HTTP 301s to
+                         https://southeastmedia.in, which then cannot connect.
+                         A visitor typing the bare domain gets a browser error.
 ```
 
-So DNS already points at Firebase, but the domain was never bound to **this App
-Hosting backend**. A 200 is not proof the domain works — check the body:
+`NEXT_PUBLIC_SITE_URL` is therefore `https://www.southeastmedia.in` — a host
+that answers when a crawler follows a canonical tag. It does not depend on the
+apex work landing.
+
+### Finishing the apex
+
+Firebase console → App Hosting → the `southeastmedia` backend → **Domains**
+(steps 3 and 4 above). Prefer configuring `southeastmedia.in` to **redirect** to
+`https://www.southeastmedia.in` rather than serving both: one origin serves, the
+other forwards, and there is no duplicate host to reconcile.
+
+If both end up serving instead, leave `NEXT_PUBLIC_SITE_URL` alone — the
+canonical tags already name `www`, which is what dedupes them for search
+engines. Do not add a host-based redirect in `next.config.ts`: these pages are
+CDN-served and a cached cross-host redirect is a loop waiting to happen.
+
+Confirm when it is done:
 
 ```bash
-# Real site = a real <title>. Parking stub = ~114 bytes and a /lander redirect.
-curl -s https://southeastmedia.in/ | head -c 300
-curl -so /dev/null -w '%{size_download} bytes\n' https://southeastmedia.in/
+# Handshake completes and the cert now covers the apex
+echo | openssl s_client -connect southeastmedia.in:443 -servername southeastmedia.in 2>/dev/null \
+  | openssl x509 -noout -ext subjectAltName
+
+# Either a 301 to www (preferred) or the real site
+curl -sI https://southeastmedia.in/ | head -3
 ```
 
-Until it is bound, the site is served from the App Hosting default domain and
-`NEXT_PUBLIC_SITE_URL` points there, so canonicals, the sitemap and `og:image`
-reference a host that actually answers. Pointing that variable at
-`southeastmedia.in` before the binding exists is worse than leaving it: it would
-bake the parking stub into every canonical tag and share card.
-
-Fix in the Firebase console → App Hosting → the backend → **Domains** (steps 3
-and 4 above), confirm with the curl checks, and only then change the variable
-and redeploy so the prerender picks it up.
+A 200 alone is not proof a domain works — this one returned 200 for weeks while
+serving a 114-byte parking stub that redirected to `/lander`. Check the body
+size and look for a real `<title>`.
 
 ## Debugging "the media isn't loading"
 
@@ -234,8 +262,8 @@ Check the backend URL before you touch the assets:
 
 ```bash
 B=https://southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app
-curl -sI $B/media/generated/showreel.mp4        # app + deploy
-curl -sI https://southeastmedia.in/media/generated/showreel.mp4   # + domain/edge
+curl -sI $B/media/generated/showreel.mp4                              # app + deploy
+curl -sI https://www.southeastmedia.in/media/generated/showreel.mp4   # + domain/edge
 ```
 
 If the backend URL serves a file and the custom domain 404s it, the build is

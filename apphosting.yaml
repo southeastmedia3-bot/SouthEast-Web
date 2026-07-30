@@ -21,40 +21,38 @@ env:
   # would ship canonicals reading `http://localhost:3000` — the fallback in
   # constants/site.ts — and Google would index that.
   #
-  # TEMPORARY: this is the App Hosting default domain, not southeastmedia.in.
+  # WHY www AND NOT THE BARE DOMAIN
   #
-  # STATUS AS AT 2026-07-30 — the TLS fault described here previously is fixed,
-  # but the domain still is not ours to point canonicals at:
+  # Verified 2026-07-31: www.southeastmedia.in is bound to this backend, holds a
+  # valid Google Trust Services certificate, and serves this app — same byte
+  # count as the backend URL, with `x-fah-adapter` and the security headers from
+  # next.config.ts on the response. It is a real host, today.
   #
-  #   southeastmedia.in  → 35.219.201.37, HTTPS 200, valid certificate, and the
-  #                        body is a 114-byte parking stub whose only content is
-  #                        `window.location.href = "/lander"`.
-  #   www.southeastmedia.in → same address, serves the Firebase "Site Not Found"
-  #                        page.
+  # The apex, southeastmedia.in, is NOT. DNS aims it at the same Firebase
+  # address, but the TLS handshake is refused outright — the certificate above
+  # covers only `www.southeastmedia.in` and `*.www.southeastmedia.in`, so there
+  # is nothing to present for the bare name. Plain HTTP 301s to
+  # `https://southeastmedia.in`, which then cannot connect at all. Apex binding
+  # is expected shortly; this value does not depend on it landing.
   #
-  # So DNS is already aimed at Firebase, but the domain has never been bound to
-  # THIS App Hosting backend. Until it is, southeastmedia.in does not serve the
-  # site at all.
+  # That asymmetry is the whole reason this is `www`. The string here is the
+  # origin frozen under every canonical tag, og:image and sitemap entry at BUILD
+  # time, so it must name a host that answers when a crawler tries it. Pointing
+  # it at the apex before that host completes a handshake would bake an
+  # unreachable origin into all 11 prerendered pages.
   #
-  # Do not "fix" this by setting the value to https://southeastmedia.in ahead of
-  # that binding. This string is the origin baked under every canonical tag,
-  # og:image and sitemap entry at BUILD time, so doing so would point Google and
-  # every link preview at the parking stub — strictly worse than the backend URL,
-  # which at least resolves to the real site.
+  # ONCE THE APEX IS BOUND, prefer a redirect over a second live host: configure
+  # southeastmedia.in → https://www.southeastmedia.in in the Firebase console, so
+  # one origin serves and the other forwards. If instead both end up serving,
+  # this stays as-is and the canonical tags dedupe them for search engines —
+  # correct, just less tidy. Do not add a host-based redirect in next.config.ts:
+  # these pages are CDN-served and a cached cross-host redirect is a loop
+  # waiting to happen.
   #
-  # TO CUT OVER, in this order:
-  #   1. Firebase console → App Hosting → the `southeastmedia` backend → add the
-  #      custom domain southeastmedia.in (and www), and complete the DNS records
-  #      it asks for at the registrar.
-  #   2. Confirm `curl -sI https://southeastmedia.in` returns the site, not the
-  #      stub — check for a real <title>, not a 114-byte body.
-  #   3. Only then change the value below to https://southeastmedia.in and
-  #      redeploy, so the prerender picks it up.
-  #
-  # Leaving it here long-term makes the backend URL the site's advertised
-  # identity, which is not what should end up in a search index.
+  # Changing this value requires a redeploy to take effect — the prerender is
+  # where it gets baked, so a restart alone does nothing.
   - variable: NEXT_PUBLIC_SITE_URL
-    value: https://southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app
+    value: https://www.southeastmedia.in
     availability:
       - BUILD
       - RUNTIME
