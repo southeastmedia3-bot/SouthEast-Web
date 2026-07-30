@@ -8,6 +8,7 @@ import { filmReel } from "@/data/home";
 import { setupGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useVisibleRaf } from "@/hooks/use-visible-raf";
 
 /* Drum geometry. The cards butt together around each ring, so the ring reads as
    one continuous strip of film wrapped into a cylinder. */
@@ -66,36 +67,61 @@ export function FilmReel() {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const drumRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+  /* Scroll state the frame loop reads. Refs, not state: the trigger fires far
+     more often than a render should. */
+  const scrollAngle = useRef(0);
+  const scale = useRef(1);
+  const autoAngle = useRef(0);
+  /* Last value written per card, so a frame that would repaint a node with the
+     value it already has skips the write entirely. Thirty-six nodes turning
+     slowly means most frames only genuinely change a handful of them. */
+  const lastShade = useRef<number[]>([]);
 
   useEffect(() => {
-    if (reducedMotion || !rootRef.current || !stageRef.current || !drumRef.current) return;
+    if (reducedMotion || !rootRef.current || !stageRef.current) return;
 
     const { ScrollTrigger } = setupGsap();
-
-    let auto = 0; // idle rotation
-    let scrollAngle = 0;
-    let scale = 1;
-    let raf = 0;
 
     const trigger = ScrollTrigger.create({
       trigger: rootRef.current,
       start: "top top",
       end: "bottom bottom",
       scrub: true,
+      // Let ScrollTrigger take the pin measurement a beat early, so the swap to
+      // `position: fixed` doesn't land in the same frame as the scroll gesture.
+      anticipatePin: 1,
       pin: stageRef.current,
       onUpdate: (self) => {
         const p = self.progress;
-        scrollAngle = p * 300; // the drum turns as you scroll
-        scale = 1 - p * 0.22; // and recedes toward the end
+        scrollAngle.current = p * 300; // the drum turns as you scroll
+        scale.current = 1 - p * 0.22; // and recedes toward the end
       },
     });
 
-    const loop = () => {
-      auto += 0.06;
-      const rot = auto + scrollAngle;
+    return () => trigger.kill();
+  }, [reducedMotion]);
+
+  /*
+   * The drum's idle turn. Gated on the drum being on screen — it used to run
+   * from mount, so a visitor still reading the hero was paying for thirty-six
+   * `filter` writes a frame on a scene three screens down.
+   *
+   * The per-card shade is quantized to 40 steps and compared against the last
+   * value written. `filter: brightness()` forces a repaint of the card's raster,
+   * and thirty-six of those per frame is the single most expensive thing on this
+   * page; at this rotation speed the quantized value changes for only a few
+   * cards per frame, so almost all of that repaint work simply stops happening.
+   * `zIndex` is folded into the same check — restacking is a style recalc across
+   * the whole drum, and it was being written unconditionally.
+   */
+  useVisibleRaf(
+    drumRef,
+    () => {
+      autoAngle.current += 0.06;
+      const rot = autoAngle.current + scrollAngle.current;
 
       if (drumRef.current) {
-        drumRef.current.style.transform = `translateZ(-${RADIUS}px) rotateX(-10deg) rotateY(${rot}deg) scale(${scale})`;
+        drumRef.current.style.transform = `translateZ(-${RADIUS}px) rotateX(-10deg) rotateY(${rot}deg) scale(${scale.current})`;
       }
 
       // Shade each frame by how far it has turned away from the camera.
@@ -105,21 +131,18 @@ export function FilmReel() {
         if (!node) continue;
         const theta = ((cell.slot * 360) / PER_RING + cell.ring * TWIST + rot) * (Math.PI / 180);
         const facing = Math.cos(theta); // 1 = toward camera, -1 = away
-        const t = (facing + 1) / 2;
+        const step = Math.round(((facing + 1) / 2) * 40);
+        if (lastShade.current[i] === step) continue;
+        lastShade.current[i] = step;
+
+        const t = step / 40;
         node.style.opacity = String(0.18 + t * 0.82);
-        node.style.filter = `brightness(${0.45 + t * 0.75})`;
+        node.style.filter = `brightness(${(0.45 + t * 0.75).toFixed(3)})`;
         node.style.zIndex = String(Math.round(t * 100));
       }
-
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      trigger.kill();
-    };
-  }, [reducedMotion]);
+    },
+    !reducedMotion,
+  );
 
   if (reducedMotion) {
     return (

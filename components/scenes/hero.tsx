@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { LinkButton } from "@/components/ui/link-button";
 import { heroContent } from "@/data/home";
@@ -29,6 +29,7 @@ const WIPE_EASE = [0.76, 0, 0.24, 1] as const;
  */
 export function Hero() {
   const reducedMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [revealed, setRevealed] = useState(false);
   useEffect(() => {
@@ -38,6 +39,30 @@ export function Hero() {
     const id = requestAnimationFrame(() => setRevealed(true));
     return () => cancelAnimationFrame(id);
   }, []);
+
+  /*
+   * Stop decoding the reel once it is off screen.
+   *
+   * A plain `autoPlay loop` keeps an eighty-second film decoding for the whole
+   * visit — the visitor is five sections down, watching a pinned scrub, and the
+   * hero is still handing the compositor twenty-four frames a second of video it
+   * is painting nowhere. That decode is competing for exactly the budget the
+   * scrub needs.
+   */
+  useEffect(() => {
+    const video = videoRef.current;
+    if (reducedMotion || !video) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      },
+      { threshold: 0.01 },
+    );
+    io.observe(video);
+    return () => io.disconnect();
+  }, [reducedMotion]);
 
   // Under reduced motion everything is simply present: no wipe, no travel.
   const shown = revealed || reducedMotion;
@@ -50,17 +75,22 @@ export function Hero() {
       aria-label="Southeast Media — opening"
       className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] px-6 pb-24 pt-32 text-center"
     >
-      {/* The showreel, uncovered left-to-right. The clip lives on the wrapper;
-          the slow push-in lives on the video, so neither transform fights the
-          other. */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        aria-hidden="true"
-        initial={reducedMotion ? false : { clipPath: "inset(0 100% 0 0)" }}
-        animate={{ clipPath: shown ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
-        transition={{ duration: reducedMotion ? 0 : 1.5, ease: WIPE_EASE, delay: reducedMotion ? 0 : 0.2 }}
-      >
+      {/* The showreel, uncovered left-to-right.
+
+          The uncovering is a panel sliding off, not a `clip-path: inset()` on the
+          reel. Both read identically — the panel is the section's own background,
+          so what is behind the seam is the same colour either way — but a clip
+          path is recomputed and repainted against a full-viewport, playing video
+          on every frame of the animation, and this arrives during hydration,
+          while the film drum's images decode. Transforming an opaque panel is
+          compositor-only, so the wipe now costs nothing on the frame budget it
+          was previously blowing.
+
+          The slow push-in stays on the video itself, so neither transform fights
+          the other. */}
+      <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
         <motion.video
+          ref={videoRef}
           className="h-full w-full object-cover"
           initial={reducedMotion ? false : { scale: 1.12 }}
           animate={{ scale: shown ? 1 : 1.12 }}
@@ -69,12 +99,26 @@ export function Hero() {
           loop={!reducedMotion}
           muted
           playsInline
-          preload={reducedMotion ? "metadata" : "auto"}
+          // `auto` told the browser to pull all four megabytes down as fast as it
+          // could, against the first paint. `metadata` still streams the reel the
+          // moment it plays — it just stops it racing the page for bandwidth.
+          preload="metadata"
           poster={homeShowreel.poster}
         >
           <source src={homeShowreel.video} type="video/mp4" />
         </motion.video>
-      </motion.div>
+        <motion.div
+          className="absolute inset-0 bg-[#0a0a0f]"
+          initial={reducedMotion ? false : { x: "0%" }}
+          animate={{ x: shown ? "100%" : "0%" }}
+          transition={{
+            duration: reducedMotion ? 0 : 1.5,
+            ease: WIPE_EASE,
+            delay: reducedMotion ? 0 : 0.2,
+          }}
+          style={{ willChange: "transform" }}
+        />
+      </div>
 
       {/* Legibility scrim: a top/bottom darkening for the type and the scroll
           cue, plus a soft centre vignette that follows the statement regardless

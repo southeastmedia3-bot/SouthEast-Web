@@ -62,7 +62,8 @@ export function ScrollVideo({
     const { gsap, ScrollTrigger } = setupGsap();
     const videoEl = videoRef.current;
     let duration = 0;
-    let frameQueued = false;
+    let seekQueued = false;
+    let lastSeek = -1;
 
     const onMeta = () => {
       duration = videoEl?.duration ?? 0;
@@ -72,54 +73,98 @@ export function ScrollVideo({
       if (videoEl.readyState >= 1) onMeta();
     }
 
+    /*
+     * Everything below is written from one rAF rather than from the scroll
+     * callback itself. ScrollTrigger's `onUpdate` can fire more than once per
+     * frame — Lenis drives it off its own ticker as well as native scroll — and
+     * every one of those was previously seeking the video, setting a transform
+     * and writing a `filter` on the title card. Coalescing to a single write per
+     * frame is most of the difference on this section.
+     */
+    let progress = 0;
+    let writeQueued = false;
+
+    // gsap's setters cache the target's style object; over a pinned scrub that
+    // is meaningfully cheaper than going through `gsap.set` each time.
+    const setMediaScale = mediaRef.current
+      ? gsap.quickSetter(mediaRef.current, "scale")
+      : undefined;
+
+    /* The title card's blur, quantized to whole pixels and dropped entirely
+       below 1px. A blur filter re-rasterizes the whole card — the headline, the
+       sublines, the body and both buttons — and it was being handed a new
+       fractional radius on every scroll event, so the browser could never reuse
+       a rasterization. Whole-pixel steps mean it re-blurs about a dozen times
+       across the section instead of hundreds, and the `none` below 1px is what
+       lets the held middle of the card be a plain composited layer. */
+    let lastBlur = -1;
+
+    const write = () => {
+      writeQueued = false;
+      const p = progress;
+
+      if (videoEl && duration && !seekQueued) {
+        // Only seek when the target frame actually differs — at 24fps anything
+        // finer than a frame is a decode the visitor cannot see.
+        const target = Math.min(duration - 0.05, p * duration);
+        if (Math.abs(target - lastSeek) > 1 / 24) {
+          seekQueued = true;
+          lastSeek = target;
+          requestAnimationFrame(() => {
+            if (videoEl.readyState >= 2) videoEl.currentTime = target;
+            seekQueued = false;
+          });
+        }
+      }
+
+      // Slow push-in on the stage.
+      setMediaScale?.(1 + p * 0.14);
+
+      // Title card: assemble (0–0.32), hold (0.32–0.68), release (0.68–1).
+      if (overlayRef.current) {
+        let opacity = 1;
+        let y = 0;
+        let blur = 0;
+        if (p < 0.32) {
+          const t = p / 0.32;
+          opacity = t;
+          y = (1 - t) * 40;
+          blur = (1 - t) * 12;
+        } else if (p > 0.68) {
+          const t = (p - 0.68) / 0.32;
+          opacity = 1 - t;
+          y = -t * 40;
+          blur = t * 10;
+        }
+        overlayRef.current.style.opacity = opacity.toFixed(3);
+        overlayRef.current.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+
+        const blurStep = Math.round(blur);
+        if (blurStep !== lastBlur) {
+          lastBlur = blurStep;
+          overlayRef.current.style.filter = blurStep < 1 ? "none" : `blur(${blurStep}px)`;
+        }
+      }
+
+      if (hintRef.current) {
+        hintRef.current.style.opacity = Math.max(0, 1 - p * 6).toFixed(3);
+      }
+    };
+
     const trigger = ScrollTrigger.create({
       trigger: rootRef.current,
       start: "top top",
       end: "bottom bottom",
       scrub: true,
+      // Measure the pin a frame early so the switch to `position: fixed` never
+      // lands in the same frame as the gesture that caused it.
+      anticipatePin: 1,
       pin: stageRef.current,
       onUpdate: (self) => {
-        const p = self.progress;
-
-        // Frame-scrub the video (throttled to one seek per animation frame).
-        if (videoEl && duration && !frameQueued) {
-          frameQueued = true;
-          requestAnimationFrame(() => {
-            if (videoEl.readyState >= 2) {
-              videoEl.currentTime = Math.min(duration - 0.05, p * duration);
-            }
-            frameQueued = false;
-          });
-        }
-
-        // Slow push-in on the stage.
-        if (mediaRef.current) {
-          gsap.set(mediaRef.current, { scale: 1 + p * 0.14, force3D: true });
-        }
-
-        // Title card: assemble (0–0.32), hold (0.32–0.68), release (0.68–1).
-        if (overlayRef.current) {
-          let opacity = 1;
-          let y = 0;
-          let blur = 0;
-          if (p < 0.32) {
-            const t = p / 0.32;
-            opacity = t;
-            y = (1 - t) * 40;
-            blur = (1 - t) * 12;
-          } else if (p > 0.68) {
-            const t = (p - 0.68) / 0.32;
-            opacity = 1 - t;
-            y = -t * 40;
-            blur = t * 10;
-          }
-          overlayRef.current.style.opacity = String(opacity);
-          overlayRef.current.style.transform = `translateY(${y}px)`;
-          overlayRef.current.style.filter = `blur(${blur}px)`;
-        }
-
-        if (hintRef.current) {
-          hintRef.current.style.opacity = String(Math.max(0, 1 - p * 6));
+        progress = self.progress;
+        if (!writeQueued) {
+          writeQueued = true;
+          requestAnimationFrame(write);
         }
       },
     });

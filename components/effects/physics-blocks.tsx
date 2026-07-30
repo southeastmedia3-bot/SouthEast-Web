@@ -200,18 +200,82 @@ export function PhysicsBlocks({
       });
 
       const runner = Runner.create();
+      let raf = 0;
       let running = false;
-      const start = () => {
-        if (!running) {
-          Runner.run(runner, engine);
-          running = true;
+
+      /* The block's box only changes on resize, so it is written there rather
+         than on every frame. It used to be set in `draw`, which meant six
+         `style.width`/`style.height` writes a frame — each one invalidating
+         layout — for the entire life of the page. */
+      const sizeNodes = () => {
+        for (let i = 0; i < bodies.length; i++) {
+          const node = nodeRefs.current[i];
+          if (!node) continue;
+          node.style.width = `${size}px`;
+          node.style.height = `${size}px`;
         }
       };
-      const stop = () => {
-        if (running) {
-          Runner.stop(runner);
-          running = false;
+
+      /* Last shadow step written per block. A box-shadow change is a repaint of
+         the block and the ground under it; at rest the value is constant, so
+         comparing against the last one written means a settled row repaints
+         nothing at all. */
+      const lastShadow: number[] = [];
+
+      const paint = () => {
+        for (let i = 0; i < bodies.length; i++) {
+          const body = bodies[i]!;
+          const node = nodeRefs.current[i];
+          const home = homes[i]!;
+          if (!node) continue;
+
+          // How far it has been knocked out of its slot, 0..1.
+          const disp = Math.min(
+            1,
+            Math.hypot(body.position.x - home.x, body.position.y - home.y) / 220,
+          );
+          // A block in flight lifts and leans into its travel; both unwind to
+          // nothing as the spring seats it back in the row.
+          const scale = 1 + disp * 0.07;
+          const tilt = Math.max(-9, Math.min(9, body.velocity.x * 0.9));
+
+          // Transform only — compositor work, no layout, no repaint.
+          node.style.transform =
+            `translate3d(${body.position.x - size / 2}px, ${body.position.y - size / 2}px, 0)` +
+            ` rotate(${tilt.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+
+          const shadowStep = Math.round(disp * 20);
+          if (lastShadow[i] !== shadowStep) {
+            lastShadow[i] = shadowStep;
+            const d = shadowStep / 20;
+            node.style.boxShadow = `0 ${(6 + d * 26).toFixed(0)}px ${(18 + d * 44).toFixed(0)}px -${(
+              10 -
+              d * 4
+            ).toFixed(0)}px rgba(21, 20, 26, ${(0.06 + d * 0.14).toFixed(3)})`;
+          }
         }
+      };
+
+      const draw = () => {
+        paint();
+        raf = requestAnimationFrame(draw);
+      };
+
+      /* Both the simulation and the readout are gated on the row being on
+         screen. The runner already was; the draw loop was not, so the blocks
+         kept writing to the DOM every frame from anywhere on the page. */
+      const start = () => {
+        if (running) return;
+        running = true;
+        Runner.run(runner, engine);
+        raf = requestAnimationFrame(draw);
+      };
+      const stop = () => {
+        if (!running) return;
+        running = false;
+        Runner.stop(runner);
+        cancelAnimationFrame(raf);
+        raf = 0;
       };
 
       const io = new IntersectionObserver(([entry]) => (entry?.isIntersecting ? start() : stop()), {
@@ -231,43 +295,16 @@ export function PhysicsBlocks({
             Body.scale(body, size / current, size / current);
           }
         }
+        sizeNodes();
       });
       ro.observe(scene);
 
-      let raf = 0;
-      const draw = () => {
-        for (let i = 0; i < bodies.length; i++) {
-          const body = bodies[i]!;
-          const node = nodeRefs.current[i];
-          const home = homes[i]!;
-          if (!node) continue;
-
-          // How far it has been knocked out of its slot, 0..1.
-          const disp = Math.min(
-            1,
-            Math.hypot(body.position.x - home.x, body.position.y - home.y) / 220,
-          );
-          // A block in flight lifts and leans into its travel; both unwind to
-          // nothing as the spring seats it back in the row.
-          const scale = 1 + disp * 0.07;
-          const tilt = Math.max(-9, Math.min(9, body.velocity.x * 0.9));
-
-          node.style.width = `${size}px`;
-          node.style.height = `${size}px`;
-          node.style.transform =
-            `translate3d(${body.position.x - size / 2}px, ${body.position.y - size / 2}px, 0)` +
-            ` rotate(${tilt.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
-          node.style.boxShadow = `0 ${(6 + disp * 26).toFixed(0)}px ${(18 + disp * 44).toFixed(0)}px -${(
-            10 -
-            disp * 4
-          ).toFixed(0)}px rgba(21, 20, 26, ${(0.06 + disp * 0.14).toFixed(3)})`;
-        }
-        raf = requestAnimationFrame(draw);
-      };
-      raf = requestAnimationFrame(draw);
+      // Seat the row once up front, so it is already correct the moment it is
+      // scrolled onto rather than snapping into place on the first frame.
+      sizeNodes();
+      paint();
 
       cleanup = () => {
-        cancelAnimationFrame(raf);
         io.disconnect();
         ro.disconnect();
         window.removeEventListener("mousemove", onMove);

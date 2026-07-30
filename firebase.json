@@ -10,26 +10,21 @@
       "firebase-debug.*.log",
       "*-debug.log",
       "functions",
-
       ".next",
       "out",
       "build",
       "coverage",
       "*.tsbuildinfo",
       "next-env.d.ts",
-
       "source-media",
-
       ".npm-cache",
       ".firebase",
       ".vercel",
-
       ".claude",
       ".agents",
       ".husky",
       "docs",
       "skills-lock.json",
-
       "README.md",
       "DEPLOYMENT.md",
       "CLAUDE.md",
@@ -38,6 +33,7 @@
       ".prettierignore",
       ".env",
       ".env.*"
-    ]
+    ],
+    "alwaysDeployFromSource": true
   }
 }

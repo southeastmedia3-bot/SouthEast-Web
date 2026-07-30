@@ -909,11 +909,10 @@ export const verticals: Vertical[] = [
       { src: "/media/products/serum-04.jpg", title: "Serum & sheer fabric", note: "Beauty" },
       { src: "/media/products/serum-12.jpg", title: "Caustics pass", note: "Lighting" },
       { src: "/media/products/jewellery-poster.jpg", title: "Jewellery", note: "Studio light" },
-      {
-        src: "/media/enterprise/card-reel-poster.jpg",
-        title: "Card, raking light",
-        note: "Fintech",
-      },
+      // Was the `card-reel` frame under "Card, raking light / Fintech". That file
+      // is a flat 2D explainer, not a product film — it moved to the Animation
+      // vertical, and this slot took a real product-film key frame instead.
+      { src: "/media/products/earbuds-key.jpg", title: "Audio — key frame", note: "Product film" },
       { src: "/media/products/eyewear-poster.jpg", title: "Eyewear", note: "Product film" },
       { src: "/media/products/chain-poster.jpg", title: "Chain — metal & light", note: "Detail" },
     ],

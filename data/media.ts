@@ -504,8 +504,8 @@ export const enterpriseAssets: {
       key: "marqueeA3",
       src: `${ENT}/card-reel-poster.jpg`,
       ...LOOP,
-      alt: "Product film frame — payment card in raking light",
-      label: "Fintech — card reel",
+      alt: "Flat 2D explainer frame — two characters, flat colour and line",
+      label: "Flat 2D — explainer",
     },
     {
       key: "marqueeA4",
@@ -673,8 +673,8 @@ export const enterpriseAssets: {
       key: "entCard",
       src: `${ENT}/card-reel-poster.jpg`,
       ...LOOP,
-      alt: "Payment card film frame",
-      label: "Fintech reel",
+      alt: "Flat 2D explainer frame — two characters, flat colour and line",
+      label: "Flat 2D explainer",
     },
     {
       key: "entProfile",
@@ -899,15 +899,9 @@ export const filmsAssets: {
       label: "Minimal style — brand system",
       note: "Brand film",
     },
-    {
-      key: "filmCardReel",
-      src: `${ENT}/card-reel-poster.jpg`,
-      video: `${ENT}/card-reel.mp4`,
-      ...LOOP,
-      alt: "Product film — a payment card turning in raking light",
-      label: "Fintech — card reel",
-      note: "Product film",
-    },
+    /* `card-reel` used to sit here as "Fintech — card reel". The file is a flat
+       2D character explainer, not a product film — it is now on the Animation
+       vertical as `reelFlat2D`, which is where a 2D film belongs. */
     {
       key: "filmJewellery",
       src: `${PROD}/jewellery-poster.jpg`,
@@ -991,11 +985,14 @@ export const filmsAssets: {
       alt: "Product film — jewellery under studio light",
     },
     {
-      key: "filmsGalleryCard",
-      src: `${ENT}/card-reel-poster.jpg`,
-      video: `${ENT}/card-reel.mp4`,
-      ...LOOP,
-      alt: "Product film — a payment card turning in raking light",
+      // Was `card-reel` — a flat 2D explainer captioned as a fintech product
+      // film. Replaced with an actual product-film key frame; the caption in
+      // `verticals.ts` is zipped to this by index and was changed with it.
+      key: "filmsGalleryEarbuds",
+      src: `${PROD}/earbuds-key.jpg`,
+      w: 1280,
+      h: 720,
+      alt: "Product film frame — audio hardware lit on a dark surface",
     },
     {
       key: "filmsGalleryEyewear",
@@ -1034,13 +1031,8 @@ export const filmsAssets: {
       alt: "Chain product film — metal and light",
       label: "Metal & light",
     },
-    {
-      key: "filmLibCard",
-      src: `${ENT}/card-reel-poster.jpg`,
-      ...LOOP,
-      alt: "Payment card film — raking light on a metal card",
-      label: "Fintech reel",
-    },
+    /* `card-reel` removed — a flat 2D explainer, not a film frame this division
+       shot. It lives on the Animation vertical now. */
     {
       key: "filmLibEarbudsKey",
       src: `${PROD}/earbuds-key.jpg`,
@@ -1264,6 +1256,20 @@ export const animationAssets: {
       alt: "Explainer film — infrastructure sequence in motion graphics",
       label: "Explainer film",
       note: "Motion graphics",
+    },
+    {
+      // Moved here off the Films page, where it ran as "Fintech — card reel" over
+      // an alt line about "a payment card turning in raking light". It is neither:
+      // it is a flat 2D character explainer about choosing from a menu. A 2D
+      // vector film has no business in a screening room whose whole argument is
+      // uncompressed 8K capture — but it is exactly what this vertical sells.
+      key: "reelFlat2D",
+      src: `${ENT}/card-reel-poster.jpg`,
+      video: `${ENT}/card-reel.mp4`,
+      ...LOOP,
+      alt: "Flat 2D explainer — two characters choosing from a menu",
+      label: "Flat 2D explainer",
+      note: "Character explainer",
     },
     {
       key: "reelLogo",

@@ -93,8 +93,14 @@ export default function AboutPage() {
       <Container className="py-24 md:py-32">
         <dl className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
           {aboutMetrics.map((m) => (
-            <div key={m.label} className="border-t border-border pt-5">
-              <dt className="type-display text-foreground">
+            // min-w-0: a grid column's default `min-width: auto` refuses to be
+            // narrower than its content, so an oversized figure silently ran out
+            // over its neighbour instead of being contained.
+            <div key={m.label} className="min-w-0 border-t border-border pt-5">
+              {/* type-h2, not type-display. At four columns a display-scale
+                  figure is wider than the column it sits in — "100TB" was
+                  overlapping the "15" beside it on any desktop width. */}
+              <dt className="type-h2 text-foreground tabular-nums">
                 <AnimatedCounter value={m.value} suffix={m.suffix} />
               </dt>
               <dd className="type-caption mt-3 uppercase tracking-[0.1em] text-muted">{m.label}</dd>

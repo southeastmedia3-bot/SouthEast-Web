@@ -84,21 +84,26 @@ export const servicesList = {
 /**
  * Scene: the pinned production pipeline.
  *
- * Every stage is now a real artifact rather than a finished render standing in
- * for one — the whole point of the section is to show *how* the work is made.
- * `script` and `lighting` are the client's own process photographs; the boards,
- * line pass, grey model, simulation and final frame come from the studio's own
- * projects.
+ * Every stage is a real artifact rather than a finished render standing in for
+ * one — the whole point of the section is to show *how* the work is made. Six of
+ * the seven are now the studio's own stage artifacts, supplied per stage: the
+ * brief document, the storyboard panels, the character turnaround, the lighting
+ * render, the VFX plate and the graded delivery frame. Only Previz still uses a
+ * frame from the product library, because no previz artifact was supplied.
  *
- * WITHHELD, still: the source set also included an animatic and a modelling
- * still carrying other artists' watermarks ("© Robert Schlunze 2021" and a
- * "Demon Bust W.I.P." credit). Publishing another artist's work on a cropped-
- * watermark basis is not something to do, so they stay out. The stages they
- * would have filled now use our own equivalents instead of stand-ins.
+ * WITHHELD, still: the earlier source set also included an animatic and a
+ * modelling still carrying other artists' watermarks ("© Robert Schlunze 2021"
+ * and a "Demon Bust W.I.P." credit). Publishing another artist's work on a
+ * cropped-watermark basis is not something to do, so they stay out.
  *
- * NOTE ON CROP: the pinned frame is `aspect-[4/5]` with `object-cover`, so a
- * wide source loses its edges here. Pick square or portrait frames for this
- * list — a 2.4:1 diagram would come out as its middle third.
+ * `w`/`h` are each file's real pixel dimensions, measured from the file. The
+ * pinned frame takes its shape from these, so a stage is shown whole at the
+ * shape it was made in — a 2.3:1 delivery frame stays a 2.3:1 delivery frame,
+ * and the brief document stays readable. The frame used to be a hard
+ * `aspect-[4/5]` with `object-cover`, which meant every wide artifact here was
+ * displayed as its middle third; a document cropped that way is unreadable, so
+ * the numbers below are load-bearing. Measure a replacement before swapping it
+ * in.
  */
 export const pipeline = {
   eyebrow: "How the work gets made",
@@ -107,39 +112,53 @@ export const pipeline = {
     {
       title: "Brief & Discovery",
       detail: "Scope, stakes and success criteria, agreed under NDA before a pixel moves.",
-      media: "/media/process/storyboard-desk.jpg",
+      media: "/media/process/creative-brief.jpg",
+      w: 1400,
+      h: 1002,
     },
     {
       title: "Script & Storyboard",
       detail: "The argument the visuals have to make, drawn frame by frame.",
-      media: "/media/process/script.jpg",
+      media: "/media/process/storyboard-frames.jpg",
+      w: 1200,
+      h: 1294,
     },
     {
       title: "Previz & Animatic",
       detail:
         "Reallusion Character Creator and iClone into Unreal Engine — real-time previews and structural validation before expensive frames are committed.",
       media: "/media/products/watch-sketch-02.jpg",
+      w: 1080,
+      h: 1080,
     },
     {
       title: "Modelling & Look-Dev",
       detail: "Autodesk Maya and 3ds Max: modelling, rigging and physically based materials.",
-      media: "/media/products/cell-04.jpg",
+      media: "/media/process/modelling-turnaround.jpg",
+      w: 1600,
+      h: 900,
     },
     {
       title: "Lighting & Rendering",
       detail: "Blender and Cinema 4D through Octane — 8K on a 15-server farm with 96GB VRAM nodes.",
-      media: "/media/process/lighting.jpg",
+      media: "/media/process/lighting-render.jpg",
+      w: 1600,
+      h: 682,
     },
     {
       title: "VFX & Simulation",
       detail:
         "X-Particles, Marvelous Designer, EmberGen and LiquiGen — CG integrated into plates until the seam is gone.",
-      media: "/media/products/horse-03.jpg",
+      media: "/media/process/vfx-plate.jpg",
+      w: 1600,
+      h: 790,
     },
     {
       title: "Final Delivery",
       detail: "Conformed, Digital Intermediate graded, and mastered to every format you need.",
-      media: "/media/products/watch-06.jpg",
+      media: "/media/process/final-frame.jpg",
+      w: 1600,
+      h: 686,
     },
   ],
 } as const;

@@ -24,6 +24,8 @@ export function ServicesList() {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   const rowRefs = useRef<Array<HTMLLIElement | null>>([]);
+  const pointer = useRef({ x: 0, y: 0 });
+  const easedPointer = useRef({ x: 0, y: 0, seeded: false });
 
   // Measure the hovered row so the pills land on its baseline, not at the foot
   // of the whole list.
@@ -40,30 +42,39 @@ export function ServicesList() {
   }, [active]);
 
   // Preview frame trails the cursor, tilting with its horizontal velocity.
+  // Only while a row is actually hovered: there is nothing to trail otherwise,
+  // and this used to be a frame loop plus a global mousemove listener running
+  // for the whole visit over a section most visitors scroll straight past.
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || active === null) return;
     const stage = stageRef.current;
     if (!stage) return;
 
-    let mx = 0;
-    let my = 0;
-    let cx = 0;
-    let cy = 0;
+    // Target and eased position live in refs, so moving between rows — which
+    // restarts this effect — picks the frame up where it left it instead of
+    // flinging it back through the corner.
+    const target = pointer.current;
+    const eased = easedPointer.current;
     let raf = 0;
 
     const onMove = (event: MouseEvent) => {
       const rect = stage.getBoundingClientRect();
-      mx = event.clientX - rect.left;
-      my = event.clientY - rect.top;
+      target.x = event.clientX - rect.left;
+      target.y = event.clientY - rect.top;
+      if (!eased.seeded) {
+        eased.x = target.x;
+        eased.y = target.y;
+        eased.seeded = true;
+      }
     };
 
     const loop = () => {
-      const prev = cx;
-      cx += (mx - cx) * 0.14;
-      cy += (my - cy) * 0.14;
-      const tilt = Math.max(-14, Math.min(14, (cx - prev) * 0.9));
+      const prev = eased.x;
+      eased.x += (target.x - eased.x) * 0.14;
+      eased.y += (target.y - eased.y) * 0.14;
+      const tilt = Math.max(-14, Math.min(14, (eased.x - prev) * 0.9));
       if (previewRef.current) {
-        previewRef.current.style.transform = `translate3d(${cx + 28}px, ${cy - 90}px, 0) rotate(${tilt}deg)`;
+        previewRef.current.style.transform = `translate3d(${(eased.x + 28).toFixed(1)}px, ${(eased.y - 90).toFixed(1)}px, 0) rotate(${tilt.toFixed(2)}deg)`;
       }
       raf = requestAnimationFrame(loop);
     };
@@ -74,7 +85,7 @@ export function ServicesList() {
       cancelAnimationFrame(raf);
       window.removeEventListener("mousemove", onMove);
     };
-  }, [reducedMotion]);
+  }, [reducedMotion, active]);
 
   const activeItem = active === null ? null : servicesList.items[active];
 

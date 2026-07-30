@@ -67,9 +67,9 @@ export function Pipeline() {
                 <Image
                   src={step.media}
                   alt={step.title}
-                  width={800}
-                  height={1000}
-                  className="w-full rounded-lg object-cover"
+                  width={step.w}
+                  height={step.h}
+                  className="h-auto w-full rounded-lg"
                   sizes="(min-width: 768px) 45vw, 92vw"
                 />
                 <div>
@@ -102,8 +102,11 @@ export function Pipeline() {
 
             <div
               className={cn(
-                "grid items-center gap-8 md:grid-cols-[auto_1fr_1fr] md:gap-12",
-                flip && "md:grid-cols-[1fr_auto_1fr]",
+                // The frame column gets the larger share — the artifacts are
+                // mostly wide now, and a 16:9 turnaround needs the width to
+                // still read as a frame rather than a strip.
+                "grid items-center gap-8 md:grid-cols-[auto_1.35fr_1fr] md:gap-12",
+                flip && "md:grid-cols-[1.35fr_auto_1fr]",
               )}
             >
               {/* Index */}
@@ -116,27 +119,43 @@ export function Pipeline() {
                 {String(index + 1).padStart(2, "0")}
               </span>
 
-              {/* The frame — keyed so each step re-runs the reveal */}
+              {/* The frame. It takes the shape of whichever stage is active —
+                  the brief document, the portrait storyboard and the 2.3:1
+                  delivery frame are all shown whole, at the shape each was made
+                  in, rather than centre-cropped into one box.
+
+                  Width is the lesser of the column and (height budget × ratio),
+                  so the frame never grows taller than the pinned stage can hold
+                  however tall the artifact is; `aspect-ratio` then derives the
+                  height. Both transition, so a step change is the frame morphing
+                  rather than the layout jumping. */}
               <div className={cn("relative", flip && "md:order-1")}>
-                <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-lg">
+                <div
+                  className="relative overflow-hidden rounded-lg bg-foreground/[0.04] transition-[aspect-ratio,width] duration-700 ease-out"
+                  style={{
+                    aspectRatio: `${active.w} / ${active.h}`,
+                    width: `min(100%, calc(clamp(14rem, 46vh, 28rem) * ${active.w / active.h}))`,
+                  }}
+                >
                   {STEPS.map((step, i) => (
                     <Image
                       key={step.title}
                       src={step.media}
                       alt={step.title}
                       fill
-                      sizes="(min-width: 768px) 30vw, 80vw"
+                      sizes="(min-width: 768px) 36vw, 84vw"
                       className={cn(
-                        "object-cover transition-all duration-700 ease-out",
-                        i === index
-                          ? "scale-100 opacity-100 blur-0"
-                          : "scale-105 opacity-0 blur-sm",
+                        // contain, not cover: during the 700ms crossfade the box
+                        // is already the incoming shape, and the outgoing frame
+                        // must letterbox inside it rather than be cropped.
+                        "object-contain transition-opacity duration-700 ease-out",
+                        i === index ? "opacity-100" : "opacity-0",
                       )}
                       priority={i === 0}
                     />
                   ))}
                 </div>
-                <p className="type-body mt-5 max-w-sm text-muted">{active.detail}</p>
+                <p className="type-body mt-5 max-w-md text-muted">{active.detail}</p>
               </div>
 
               {/* The stage list */}
