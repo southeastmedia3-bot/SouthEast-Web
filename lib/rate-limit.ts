@@ -52,13 +52,49 @@ export function checkRateLimit(key: string, limit: number, windowMs: number): Ra
 }
 
 /**
- * Best-effort client address. Behind Vercel/most proxies `x-forwarded-for` is
- * a trusted, proxy-written list whose first entry is the real client; we fall
- * back to a shared bucket rather than letting an unidentifiable caller through
- * unlimited.
+ * Best-effort client address.
+ *
+ * DO NOT "simplify" this back to `xff.split(",")[0]`. That reads the *first*
+ * entry, and the first entry is whatever the caller sent. Google's front end —
+ * which is what fronts App Hosting — does not replace `X-Forwarded-For`, it
+ * appends to it, so the header arrives as:
+ *
+ *     <anything the client made up>, <real client IP>, <load balancer IP>
+ *
+ * Trusting entry 0 therefore lets an attacker mint a brand new rate-limit
+ * bucket on every request just by varying a header, which is the whole limiter
+ * defeated by one line of curl. The two hops Google appends are the only ones
+ * we did not receive from the network, so the real client is the second entry
+ * from the end.
+ *
+ * With a single entry there is no proxy in front of us (local `next start`, or
+ * a direct container hit) and the value is the peer address itself.
  */
 export function clientKey(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]!.trim();
+
+  if (forwarded) {
+    const hops = forwarded
+      .split(",")
+      .map((hop) => hop.trim())
+      .filter(Boolean);
+
+    if (hops.length >= 2) return hops[hops.length - 2]!;
+    if (hops.length === 1) return hops[0]!;
+  }
+
   return request.headers.get("x-real-ip") ?? "unknown";
 }
+
+/**
+ * A ceiling on total enquiries per instance per window, on top of the per-client
+ * limit.
+ *
+ * The per-client bucket above is only as good as our ability to identify a
+ * client, and behind a proxy that is always an inference. This bucket needs no
+ * such inference: it is the answer to "how many enquiries could this site
+ * plausibly receive in ten minutes", and the honest answer for a studio that
+ * fields a handful a day is nowhere near 120. It costs a legitimate visitor
+ * nothing and turns a distributed hammering into a bounded one.
+ */
+export const GLOBAL_KEY = "__global__";

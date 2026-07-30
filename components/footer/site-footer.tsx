@@ -94,7 +94,10 @@ export function SiteFooter() {
                 key={link.label}
                 href={link.href}
                 target="_blank"
-                rel="noreferrer"
+                // `noopener` explicitly, not just implied by `noreferrer`: it is
+                // what stops the opened tab reaching back through `window.opener`
+                // to navigate this one (reverse tabnabbing).
+                rel="noopener noreferrer"
                 className="rounded-full px-3 py-1.5 text-sm text-[color:var(--brand-ice)]/70 transition hover:bg-white/[0.08] hover:text-[var(--ink-frame-foreground)] focus-visible:text-[color:var(--brand-sky)]"
               >
                 {link.label}

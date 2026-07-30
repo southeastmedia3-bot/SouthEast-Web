@@ -52,10 +52,20 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: ["/brand/og.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  /**
+   * No `robots` key here on purpose, and it must stay that way.
+   *
+   * Every real page sets its own via `createMetadata`, so this entry only ever
+   * reached one page: the 404 — where Next injects `<meta name="robots"
+   * content="noindex">` automatically for any route returning a 404 status. The
+   * two landed in the same document and the served HTML carried both `noindex`
+   * and `index, follow`. Crawlers resolve that collision toward the most
+   * restrictive directive, so nothing was actually indexed that shouldn't be,
+   * but it is a contradiction on the page and every SEO audit flags it.
+   *
+   * Re-adding `index: true` here would restore it. `index, follow` is the
+   * default in the absence of any tag, so there is nothing to restore.
+   */
 };
 
 export const viewport: Viewport = {

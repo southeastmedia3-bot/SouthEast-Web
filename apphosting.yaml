@@ -21,19 +21,38 @@ env:
   # would ship canonicals reading `http://localhost:3000` — the fallback in
   # constants/site.ts — and Google would index that.
   #
-  # TEMPORARY: this is the App Hosting backend URL, not southeastmedia.in.
+  # TEMPORARY: this is the App Hosting default domain, not southeastmedia.in.
   #
-  # southeastmedia.in currently terminates TLS with no certificate — port 80
-  # redirects to https and port 443 accepts the connection then closes without
-  # presenting one, so nothing on that host is reachable. Pointing this value at
-  # a dead domain is not cosmetic: it is the origin under every canonical tag,
-  # share card and sitemap entry, so `og:image` resolved to a host that refuses
-  # the connection and link previews came back blank everywhere the site was
-  # shared.
+  # STATUS AS AT 2026-07-30 — the TLS fault described here previously is fixed,
+  # but the domain still is not ours to point canonicals at:
   #
-  # REVERT THIS to https://southeastmedia.in the moment the domain serves a
-  # certificate again — leaving it here makes the backend URL the site's
-  # advertised identity, which is not what should end up in a search index.
+  #   southeastmedia.in  → 35.219.201.37, HTTPS 200, valid certificate, and the
+  #                        body is a 114-byte parking stub whose only content is
+  #                        `window.location.href = "/lander"`.
+  #   www.southeastmedia.in → same address, serves the Firebase "Site Not Found"
+  #                        page.
+  #
+  # So DNS is already aimed at Firebase, but the domain has never been bound to
+  # THIS App Hosting backend. Until it is, southeastmedia.in does not serve the
+  # site at all.
+  #
+  # Do not "fix" this by setting the value to https://southeastmedia.in ahead of
+  # that binding. This string is the origin baked under every canonical tag,
+  # og:image and sitemap entry at BUILD time, so doing so would point Google and
+  # every link preview at the parking stub — strictly worse than the backend URL,
+  # which at least resolves to the real site.
+  #
+  # TO CUT OVER, in this order:
+  #   1. Firebase console → App Hosting → the `southeastmedia` backend → add the
+  #      custom domain southeastmedia.in (and www), and complete the DNS records
+  #      it asks for at the registrar.
+  #   2. Confirm `curl -sI https://southeastmedia.in` returns the site, not the
+  #      stub — check for a real <title>, not a 114-byte body.
+  #   3. Only then change the value below to https://southeastmedia.in and
+  #      redeploy, so the prerender picks it up.
+  #
+  # Leaving it here long-term makes the backend URL the site's advertised
+  # identity, which is not what should end up in a search index.
   - variable: NEXT_PUBLIC_SITE_URL
     value: https://southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app
     availability:

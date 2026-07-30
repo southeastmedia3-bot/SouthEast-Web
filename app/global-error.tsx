@@ -51,8 +51,12 @@ export default function GlobalError({
           </h1>
           <p style={{ margin: "0 0 1.5rem", lineHeight: 1.6, color: "#5b6470" }}>
             Something went wrong at the root of the application. Please try again, or write to{" "}
-            <a href="mailto:studio@southeastmedia.com" style={{ color: "#1951a8" }}>
-              studio@southeastmedia.com
+            {/* Deliberately hardcoded, not `siteConfig.contactEmail`: this boundary
+                exists for the case where the root layout itself threw, so it takes
+                no dependency it does not absolutely need. Keep it in step with
+                `contactEmail` in constants/site.ts. */}
+            <a href="mailto:studio@southeastmedia.in" style={{ color: "#1951a8" }}>
+              studio@southeastmedia.in
             </a>
             .
           </p>

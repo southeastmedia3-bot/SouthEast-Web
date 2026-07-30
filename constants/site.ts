@@ -68,6 +68,16 @@ export const siteConfig = {
   url: resolveSiteUrl(),
   locale: "en_US",
   themeColor: "#f8f6f1",
-  /** Fallback shown to visitors when the enquiry form cannot reach us. */
-  contactEmail: "studio@southeastmedia.com",
+  /**
+   * Fallback shown to visitors when the enquiry form cannot reach us.
+   *
+   * MUST stay on southeastmedia.in — the domain the studio actually owns. This
+   * read `studio@southeastmedia.com` for several releases, which is a domain
+   * nobody here controls: the address is printed on the contact page and is the
+   * only route offered when the form fails, so every visitor who hit an error
+   * was handed an address that bounces. Change the domain here and in
+   * `app/global-error.tsx` together — that boundary cannot import this module
+   * safely, so it carries its own copy.
+   */
+  contactEmail: "studio@southeastmedia.in",
 } as const;
