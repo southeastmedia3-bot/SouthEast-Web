@@ -6,10 +6,14 @@
  * deck's own — don't invent new ones.
  */
 
+/**
+ * The hero carries one line and two buttons, and shows them as a scroll beat —
+ * the page opens on the reel alone. The eyebrow and the descriptive paragraph
+ * that used to sit here were dropped with that change rather than left dangling:
+ * the same claims are made properly by `trustBar` and the mandate scene.
+ */
 export const heroContent = {
-  eyebrow: "Trusted Digital Infrastructure & Immersive Production Studio",
   headline: "Cinematic worlds, built to feel real.",
-  body: "A trusted digital infrastructure studio in Bengaluru and Hyderabad, transforming complex ideas and structural concepts into precise 8K cinematic assets — created entirely in-house and protected under NDA.",
   primaryCta: { label: "Start a project", href: "/contact" },
   secondaryCta: { label: "Explore our work", href: "/verticals" },
 };
