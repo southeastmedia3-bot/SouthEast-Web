@@ -59,10 +59,24 @@ const FILM_HD = { w: 1920, h: 1080 } as const; // 16:9 architectural interiors
 const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
 
 /** The homepage opening showreel — the full studio reel, played through (not
- *  scrubbed), uncovered on load by a clip-path wipe in the Hero. Transcoded to a
- *  1080p, audio-stripped, faststart web master from the 4K delivery; the poster
- *  is its own first frame, so there is no pop between still and first played
- *  frame. Swap `video`/`poster` to change the opening reel. */
+ *  scrubbed), uncovered on load by a clip-path wipe in the Hero. Audio-stripped,
+ *  faststart; the poster is its own first frame, so there is no pop between
+ *  still and first played frame. Swap `video`/`poster` to change the reel.
+ *
+ *  ENCODED AT 1440x810, ~1.4 Mbps (two-pass), from the 1080p master.
+ *
+ *  This slot is the one place on the site where compression is visible to a
+ *  visitor, and it had been swept up in two successive site-wide "shrink
+ *  everything" passes that took it to 960x540 at 418 kbps. That is a quarter of
+ *  the pixels of the frame it is painted into — the Hero runs it full-bleed and
+ *  additionally scales it 1.12 on entry — and at that bitrate the product shots
+ *  it exists to sell (label type, watch faces, caustics) resolved as mush.
+ *
+ *  So do not fold this file into a bulk re-encode of `public/media/`. The
+ *  thumbnails and card loops in the rest of the manifest are small on screen and
+ *  should stay cheap; this one is eighty seconds of full-viewport hero and is
+ *  budgeted deliberately. `preload="metadata"` in the Hero keeps it off the
+ *  critical path, so the size is spent on playback, not on first paint. */
 export const homeShowreel: MediaAsset = {
   video: `${G}/showreel.mp4`,
   poster: `${G}/showreel-poster.jpg`,
