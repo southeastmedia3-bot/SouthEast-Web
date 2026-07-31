@@ -138,21 +138,34 @@ endpoint alone does not prove delivery.
 ## Keep the static payload small
 
 `public/` was ~145MB of film and stills, which made every uncached view expensive
-and the whole bundle slow to ship. It is now ~61MB, re-encoded from the masters —
+and the whole bundle slow to ship. It is now ~81MB, re-encoded from the masters —
 no path, aspect ratio or crop changed, so `data/media.ts` was untouched.
 
-~28MB of that total is two deliberate exceptions, and both are the homepage:
+~49MB of that total is two deliberate exceptions, and both are the homepage:
 
-- `showreel.mp4` (24MB) is the **1080p master itself**, not an encode of it. The
-  hero is the frame the studio is judged on, it plays full-bleed and scaled 1.12,
-  and three rounds of shrinking took it to 960x540/418kbps mush. Read the note
-  above `homeShowreel` in `data/media.ts` before touching it — including why it
-  is not offered as AV1. It is High@5.0 rather than the Main profile the rule
-  below asks for, and stays that way: every device made in the last decade
-  hardware-decodes High at this level, and "fixing" the profile would mean
-  another generational re-encode, which is the thing being undone.
+- `showreel.mp4` (~46MB) is **1080p at 4.6 Mbps two-pass, cut from the 4K
+  master** — the frame the studio is judged on, played full-bleed and scaled
+  1.12, where three rounds of shrinking had taken it to 960x540/418kbps mush. It
+  is High@4.1 rather than the Main profile the rule below asks for; every device
+  made in the last decade hardware-decodes High at that level. Read the note
+  above `homeShowreel` in `data/media.ts` before touching it — where the master
+  lives, why 4.6 and not 7.4, and why it is not offered as AV1.
 - `villa-night-scrub.mp4` (3.4MB) is all-intra. See the GOP note below before
   trying to win it back.
+
+The showreel recipe, for when the cut changes. Both passes read the 4K master;
+only `-b:v` is worth arguing about, and the poster is regenerated with it:
+
+```bash
+M=source-media/showreel-4k-master.mp4
+V="scale=1920:1080:flags=lanczos"
+X="-c:v libx264 -preset slow -profile:v high -level 4.1 -pix_fmt yuv420p \
+   -b:v 4600k -maxrate 6900k -bufsize 13800k -g 48 \
+   -color_primaries bt709 -color_trc bt709 -colorspace bt709"
+ffmpeg -y -i $M -an -vf "$V" $X -pass 1 -f mp4 /dev/null
+ffmpeg -y -i $M -an -vf "$V" $X -pass 2 -movflags +faststart \
+  public/media/generated/showreel.mp4
+```
 
 The target for everything _else_ is not fidelity, it is a site that plays through
 on a cheap phone on a weak connection. Where the two conflict, spend the quality.
@@ -210,13 +223,15 @@ Stills split by how they are served. `*-poster.jpg` goes into a `<video poster>`
 attribute, which is a raw URL that `next/image` never touches — those are the
 bytes a visitor on a bad connection actually downloads, so they go to mozjpeg
 q62 capped at 1152px. `showreel-poster.jpg` is the exception, at 1920x1080 / q3
-(328KB): it is the film's own frame 0 standing in for the film during the wipe,
-and a soft poster in front of a sharp master is the pop the poster exists to
-prevent. Regenerate it with the reel, never separately:
+(~360KB): it is frame 0 standing in for the film during the wipe, and a soft
+poster in front of a sharp film is the pop the poster exists to prevent. Cut it
+from the 4K master, not from the encode, and regenerate it whenever the reel
+changes:
 
 ```bash
-ffmpeg -y -i public/media/generated/showreel.mp4 -vf "select=eq(n\,0)" \
-  -vframes 1 -q:v 3 -huffman optimal public/media/generated/showreel-poster.jpg
+ffmpeg -y -i source-media/showreel-4k-master.mp4 \
+  -vf "select=eq(n\,0),scale=1920:1080:flags=lanczos" -vframes 1 -q:v 3 \
+  -huffman optimal public/media/generated/showreel-poster.jpg
 ```
 
 Every other still renders through `next/image`, which

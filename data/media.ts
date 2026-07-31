@@ -63,36 +63,50 @@ const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
  *  faststart; the poster is its own first frame, so there is no pop between
  *  still and first played frame. Swap `video`/`poster` to change the reel.
  *
- *  THIS IS THE MASTER ITSELF: 1920x1080, 2.41 Mbps, 25fps, H.264 High, 24MB,
- *  faststart, silent. Not a re-encode of it — the ingested bytes, restored.
+ *  ENCODED FROM THE 4K MASTER: 1920x1080, 4.6 Mbps two-pass, 25fps, H.264
+ *  High@4.1, ~46MB, faststart, silent, bt709-tagged.
  *
- *  That is the point. This slot is the one place on the site where compression
- *  is visible to a visitor, and it had been swept up in three successive
- *  site-wide "shrink everything" passes: 1080p -> 1152x648 -> 960x540 at 418
- *  kbps, then partly won back to 1440x810 at 1.39 Mbps. Every one of those was a
- *  generational re-encode of an ingest that is only ~0.047 bits per pixel to
- *  begin with, and the Hero paints it full-bleed and scales it 1.12 on entry, so
- *  the product shots it exists to sell (label type, watch faces, caustics)
- *  resolved as mush. Note that 1440x810 at 1.39 Mbps is the SAME bits per pixel
- *  as the master — it bought nothing but a softer image on a 1080p screen.
+ *  THE MASTER IS `source-media/showreel-4k-master.mp4` — 3840x2160 at 64 Mbps,
+ *  1993 frames, 79.72s. `source-media/` is gitignored, so it is on the machine
+ *  that built this and nowhere else; if it is missing, ask the studio for
+ *  "Showreel_4K_2026" before re-encoding anything from the web file. Every
+ *  encode of this slot must start from that master, never from the deployed mp4,
+ *  or it is a generation of loss for nothing.
  *
- *  So there is no quality left to add here: the master is the ceiling, and the
- *  only way to raise it is a better ingest from the studio, not another encode.
- *  What there IS to do is not spend it twice — do not fold this file into a bulk
- *  re-encode of `public/media/`. The thumbnails and card loops in the rest of
- *  the manifest are small on screen and should stay cheap; this one is eighty
- *  seconds of full-viewport hero and is budgeted deliberately.
+ *  That matters because this slot is the one place on the site where compression
+ *  is visible to a visitor, and it kept being swept up in site-wide "shrink
+ *  everything" passes: 1080p/2.41 -> 1152x648 -> 960x540 at 418 kbps, then
+ *  partly won back to 1440x810 at 1.39 Mbps (which is the SAME bits per pixel as
+ *  the 1080p it came from — it bought nothing but a softer image), then back to
+ *  the 1080p ingest. The Hero paints this full-bleed and scales it 1.12 on
+ *  entry, so at those rates the shots it exists to sell — watch faces, label
+ *  type, caustics — carried visible blocking in the dark gradients.
+ *
+ *  WHY 4.6 Mbps AND NOT MORE. The reel is expensive content: CRF 19 off the same
+ *  master measures 7.41 Mbps / 74MB, and is indistinguishable from the master in
+ *  a 1:1 crop. 4.6 Mbps is the knee — it clears the blocking that prompted this,
+ *  at ~1.9x the old bit budget rather than 3x. Two-pass rather than CRF because
+ *  the deploy payload should be a number chosen up front, not one discovered
+ *  after encoding. If the studio ever decides the hero is worth 74MB, the recipe
+ *  is in DEPLOYMENT.md and only the rate changes.
+ *
+ *  Do not fold this file into a bulk re-encode of `public/media/`. The thumbnails
+ *  and card loops in the rest of the manifest are small on screen and should stay
+ *  cheap; this one is eighty seconds of full-viewport hero and is budgeted
+ *  deliberately.
  *
  *  Nor should it be handed to AV1/VP9 for the byte saving. A browser picks the
  *  first source it *can* decode, not the one it decodes well, and a mid-range
  *  Android with no AV1 silicon would take that source and software-decode 1080p
  *  — worse playback than the H.264 every phone of the last decade decodes in
- *  hardware. `preload="metadata"` in the Hero is what keeps the 24MB off the
- *  critical path: it is spent on playback, not on first paint.
+ *  hardware. Same reason it is capped at 1080p/level 4.1 rather than sent up to
+ *  1440p: above that the hardware decoder is a gamble on cheap devices.
+ *  `preload="metadata"` in the Hero is what keeps the ~46MB off the critical
+ *  path: it is spent on playback, not on first paint.
  *
- *  The poster is the master's own frame 0 at 1920x1080 (q3), so the still a
- *  visitor sees during the wipe is as sharp as the film that replaces it, and
- *  there is no pop at the handover. */
+ *  The poster is the 4K master's own frame 0, lanczos-scaled to 1920x1080 (q3),
+ *  so the still a visitor sees during the wipe is as sharp as the film that
+ *  replaces it and there is no pop at the handover. Regenerate the two together. */
 export const homeShowreel: MediaAsset = {
   video: `${G}/showreel.mp4`,
   poster: `${G}/showreel-poster.jpg`,

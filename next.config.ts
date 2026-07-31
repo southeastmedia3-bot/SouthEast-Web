@@ -125,10 +125,10 @@ const nextConfig: NextConfig = {
       },
       {
         /**
-         * Everything under /public/media — ~60MB of film and several hundred
-         * stills, 24MB of which is the homepage showreel master. That total
-         * matters: see "Keep the static payload small" in DEPLOYMENT.md before
-         * adding to it.
+         * Everything under /public/media — ~81MB of film and several hundred
+         * stills, ~46MB of which is the homepage showreel. That total matters:
+         * see "Keep the static payload small" in DEPLOYMENT.md before adding to
+         * it.
          *
          * Next serves `public/` with `Cache-Control: public, max-age=0` by
          * default, which revalidates every asset on every view. On a site that
