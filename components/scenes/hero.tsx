@@ -161,6 +161,20 @@ export function Hero() {
     <>
       {/* The showreel, uncovered left-to-right.
 
+          IT STARTS BELOW THE HEADER, not under it. The frosted bar is fixed and
+          always on, so a full-bleed `inset-0` reel spent its top 5rem behind an
+          opaque-ish white bar — the first thing a visitor saw of the studio's
+          work was a slice of it hidden. Every layer of the scene is inset by
+          `--header-h` (the bar's own height token) so the film begins exactly at
+          the bar's lower edge.
+
+          `object-top` on the video is the other half of it. Below the bar the
+          frame is wider than 16:9 on most desktops, so `object-cover` has to
+          lose some height — centred, it takes that off the top as well as the
+          bottom, which is the same crop again by another route. Pinned to the
+          top, the whole cut comes off the bottom, where the closing gradient
+          and the scroll cue already sit.
+
           The uncovering is a panel sliding off, not a `clip-path: inset()` on the
           reel. Both read identically — the panel is the section's own background,
           so what is behind the seam is the same colour either way — but a clip
@@ -172,20 +186,29 @@ export function Hero() {
 
           The slow push-in stays on the video itself, so neither transform fights
           the other. */}
-      <div className="absolute inset-0 z-0 overflow-hidden" aria-hidden="true">
+      <div
+        className="absolute inset-x-0 bottom-0 top-[var(--header-h)] z-0 overflow-hidden"
+        aria-hidden="true"
+      >
         <motion.video
           ref={videoRef}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-top"
           initial={reducedMotion ? false : { scale: 1.12 }}
           animate={{ scale: shown ? 1 : 1.12 }}
-          transition={{ duration: reducedMotion ? 0 : 2.6, ease: EASE, delay: reducedMotion ? 0 : 0.2 }}
+          transition={{
+            duration: reducedMotion ? 0 : 2.6,
+            ease: EASE,
+            delay: reducedMotion ? 0 : 0.2,
+          }}
           autoPlay={!reducedMotion}
           loop={!reducedMotion}
           muted
           playsInline
-          // `auto` told the browser to pull all four megabytes down as fast as it
-          // could, against the first paint. `metadata` still streams the reel the
-          // moment it plays — it just stops it racing the page for bandwidth.
+          // `auto` told the browser to pull the whole file down as fast as it
+          // could, against the first paint — and the reel is now the full 1080p
+          // master, so that is 24MB. `metadata` still streams it the moment it
+          // plays; it just stops it racing the rest of the page for bandwidth,
+          // which is what keeps the stills below the fold arriving on time.
           preload="metadata"
           poster={homeShowreel.poster}
         >
@@ -204,22 +227,27 @@ export function Hero() {
         />
       </div>
 
-      {/* Always on, and light: it seats the header at the top, carries the
-          scroll cue at the bottom, and hands the eye off to the dark section
-          below — none of which should cost the frame its clarity. */}
+      {/* Always on, and light: it softens the seam where the film meets the
+          header bar, carries the scroll cue at the bottom, and hands the eye off
+          to the dark section below — none of which should cost the frame its
+          clarity. Inset to match the reel, so it tints the film and not the
+          strip the header sits on. The top stop is lighter than it was: it no
+          longer has a bar to seat, only an edge to soften. */}
       <div
-        className="absolute inset-0 z-[1]"
+        className="absolute inset-x-0 bottom-0 top-[var(--header-h)] z-[1]"
         aria-hidden="true"
         style={{
           background:
-            "linear-gradient(180deg, rgba(8,8,14,0.34) 0%, rgba(8,8,14,0) 24%, rgba(8,8,14,0) 62%, rgba(8,8,14,0.62) 100%)",
+            "linear-gradient(180deg, rgba(8,8,14,0.22) 0%, rgba(8,8,14,0) 18%, rgba(8,8,14,0) 62%, rgba(8,8,14,0.62) 100%)",
         }}
       />
 
-      {/* Legibility scrim for the statement only — faded in and out with it. */}
+      {/* Legibility scrim for the statement only — faded in and out with it.
+          Inset to the reel so its centre is the film's centre, which is where
+          the statement now sits. */}
       <div
         ref={scrimRef}
-        className="absolute inset-0 z-[1]"
+        className="absolute inset-x-0 bottom-0 top-[var(--header-h)] z-[1]"
         aria-hidden="true"
         style={{
           opacity: reducedMotion ? 1 : 0,
@@ -311,7 +339,7 @@ export function Hero() {
       <section
         id="hero"
         aria-label="Southeast Media — opening"
-        className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] px-6 pb-24 pt-32 text-center"
+        className="relative flex min-h-dvh flex-col items-center justify-center overflow-hidden bg-[#0a0a0f] px-6 pb-24 pt-[calc(var(--header-h)+3rem)] text-center"
       >
         {reel}
         {statement}
@@ -327,7 +355,10 @@ export function Hero() {
       className="relative bg-[#0a0a0f]"
       style={{ height: `${SCENE_HEIGHT_VH}vh` }}
     >
-      <div className="sticky top-0 flex h-dvh flex-col items-center justify-center overflow-hidden px-6 text-center">
+      {/* The padding centres the statement on the film rather than on the
+          viewport — absolutely positioned children resolve against the padding
+          box, so the reel and its scrims are untouched by it. */}
+      <div className="sticky top-0 flex h-dvh flex-col items-center justify-center overflow-hidden px-6 pt-[var(--header-h)] text-center">
         {reel}
         {statement}
         {cue}

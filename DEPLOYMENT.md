@@ -138,15 +138,24 @@ endpoint alone does not prove delivery.
 ## Keep the static payload small
 
 `public/` was ~145MB of film and stills, which made every uncached view expensive
-and the whole bundle slow to ship. It is now ~41MB (~43MB including
-`.next/static`), re-encoded from the masters — no path, aspect ratio or crop
-changed, so `data/media.ts` was untouched.
+and the whole bundle slow to ship. It is now ~61MB, re-encoded from the masters —
+no path, aspect ratio or crop changed, so `data/media.ts` was untouched.
 
-~3.4MB of that total is one deliberate exception, `villa-night-scrub.mp4`. See
-the GOP note below before trying to win it back.
+~28MB of that total is two deliberate exceptions, and both are the homepage:
 
-The target here is not fidelity, it is a site that plays through on a cheap phone
-on a weak connection. Where the two conflict, spend the quality.
+- `showreel.mp4` (24MB) is the **1080p master itself**, not an encode of it. The
+  hero is the frame the studio is judged on, it plays full-bleed and scaled 1.12,
+  and three rounds of shrinking took it to 960x540/418kbps mush. Read the note
+  above `homeShowreel` in `data/media.ts` before touching it — including why it
+  is not offered as AV1. It is High@5.0 rather than the Main profile the rule
+  below asks for, and stays that way: every device made in the last decade
+  hardware-decodes High at this level, and "fixing" the profile would mean
+  another generational re-encode, which is the thing being undone.
+- `villa-night-scrub.mp4` (3.4MB) is all-intra. See the GOP note below before
+  trying to win it back.
+
+The target for everything _else_ is not fidelity, it is a site that plays through
+on a cheap phone on a weak connection. Where the two conflict, spend the quality.
 
 Keep it near that. Before adding media:
 
@@ -156,7 +165,9 @@ du -sh public
 
 New films should be H.264, silent, `+faststart`, 24fps, capped at 720px on the
 long edge for card and tile loops or 960px for full-bleed heroes, around CRF
-33–34. Two things matter as much as the size:
+33–34. (The homepage showreel is exempt — see above. That exemption is for the
+one film a visitor lands on, not a licence to widen it.) Two things matter as
+much as the size:
 
 - **`-profile:v main -level 3.1`**, not High. Main is what old and low-end phones
   hardware-decode; a High-profile film falls back to the software decoder on
@@ -198,7 +209,17 @@ ffprobe -v error -select_streams v:0 -skip_frame nokey \
 Stills split by how they are served. `*-poster.jpg` goes into a `<video poster>`
 attribute, which is a raw URL that `next/image` never touches — those are the
 bytes a visitor on a bad connection actually downloads, so they go to mozjpeg
-q62 capped at 1152px. Every other still renders through `next/image`, which
+q62 capped at 1152px. `showreel-poster.jpg` is the exception, at 1920x1080 / q3
+(328KB): it is the film's own frame 0 standing in for the film during the wipe,
+and a soft poster in front of a sharp master is the pop the poster exists to
+prevent. Regenerate it with the reel, never separately:
+
+```bash
+ffmpeg -y -i public/media/generated/showreel.mp4 -vf "select=eq(n\,0)" \
+  -vframes 1 -q:v 3 -huffman optimal public/media/generated/showreel-poster.jpg
+```
+
+Every other still renders through `next/image`, which
 re-encodes to AVIF/WebP per request; those go to q68 capped at 1280px, which sets
 the deploy payload and the ceiling on the largest variant. The pharma anatomy
 PNGs must stay PNG and quantise to a palette, because their alpha is

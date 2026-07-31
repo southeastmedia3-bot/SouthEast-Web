@@ -63,20 +63,36 @@ const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
  *  faststart; the poster is its own first frame, so there is no pop between
  *  still and first played frame. Swap `video`/`poster` to change the reel.
  *
- *  ENCODED AT 1440x810, ~1.4 Mbps (two-pass), from the 1080p master.
+ *  THIS IS THE MASTER ITSELF: 1920x1080, 2.41 Mbps, 25fps, H.264 High, 24MB,
+ *  faststart, silent. Not a re-encode of it — the ingested bytes, restored.
  *
- *  This slot is the one place on the site where compression is visible to a
- *  visitor, and it had been swept up in two successive site-wide "shrink
- *  everything" passes that took it to 960x540 at 418 kbps. That is a quarter of
- *  the pixels of the frame it is painted into — the Hero runs it full-bleed and
- *  additionally scales it 1.12 on entry — and at that bitrate the product shots
- *  it exists to sell (label type, watch faces, caustics) resolved as mush.
+ *  That is the point. This slot is the one place on the site where compression
+ *  is visible to a visitor, and it had been swept up in three successive
+ *  site-wide "shrink everything" passes: 1080p -> 1152x648 -> 960x540 at 418
+ *  kbps, then partly won back to 1440x810 at 1.39 Mbps. Every one of those was a
+ *  generational re-encode of an ingest that is only ~0.047 bits per pixel to
+ *  begin with, and the Hero paints it full-bleed and scales it 1.12 on entry, so
+ *  the product shots it exists to sell (label type, watch faces, caustics)
+ *  resolved as mush. Note that 1440x810 at 1.39 Mbps is the SAME bits per pixel
+ *  as the master — it bought nothing but a softer image on a 1080p screen.
  *
- *  So do not fold this file into a bulk re-encode of `public/media/`. The
- *  thumbnails and card loops in the rest of the manifest are small on screen and
- *  should stay cheap; this one is eighty seconds of full-viewport hero and is
- *  budgeted deliberately. `preload="metadata"` in the Hero keeps it off the
- *  critical path, so the size is spent on playback, not on first paint. */
+ *  So there is no quality left to add here: the master is the ceiling, and the
+ *  only way to raise it is a better ingest from the studio, not another encode.
+ *  What there IS to do is not spend it twice — do not fold this file into a bulk
+ *  re-encode of `public/media/`. The thumbnails and card loops in the rest of
+ *  the manifest are small on screen and should stay cheap; this one is eighty
+ *  seconds of full-viewport hero and is budgeted deliberately.
+ *
+ *  Nor should it be handed to AV1/VP9 for the byte saving. A browser picks the
+ *  first source it *can* decode, not the one it decodes well, and a mid-range
+ *  Android with no AV1 silicon would take that source and software-decode 1080p
+ *  — worse playback than the H.264 every phone of the last decade decodes in
+ *  hardware. `preload="metadata"` in the Hero is what keeps the 24MB off the
+ *  critical path: it is spent on playback, not on first paint.
+ *
+ *  The poster is the master's own frame 0 at 1920x1080 (q3), so the still a
+ *  visitor sees during the wipe is as sharp as the film that replaces it, and
+ *  there is no pop at the handover. */
 export const homeShowreel: MediaAsset = {
   video: `${G}/showreel.mp4`,
   poster: `${G}/showreel-poster.jpg`,

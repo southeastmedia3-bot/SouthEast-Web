@@ -22,7 +22,10 @@ export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-[60]">
       <div className="border-b border-border/60 bg-white/75 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 max-w-[100rem] items-center justify-between px-6 sm:px-10 lg:px-16">
+        {/* The bar's height is the `--header-h` token, not a literal — the
+            homepage reel offsets itself by the same token so it starts below
+            this bar instead of running under it. */}
+        <div className="mx-auto flex h-[var(--header-h)] max-w-[100rem] items-center justify-between px-6 sm:px-10 lg:px-16">
           <Link
             href="/"
             className="group inline-flex items-center gap-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
