@@ -1,19 +1,23 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- * TEMPORARY MAINTENANCE HOLD — DELETE THIS FILE TO BRING THE SITE BACK
+ * MAINTENANCE HOLD — PARKED, NOT ACTIVE. MOVE TO THE REPO ROOT TO ARM IT.
  * ─────────────────────────────────────────────────────────────────────────────
  *
- * Added 2026-08-02 at the studio's request to hold the site behind a notice
- * while work happens off-site. Nothing else in the repository was touched: the
- * real site is intact and still builds. Removing this one file and pushing is
- * the entire revert.
+ * Held the site behind a notice from 2026-08-02 to 2026-08-03 while work
+ * happened off-site. It is kept here, verbatim and still valid TypeScript, so
+ * the next hold is a move rather than a rewrite:
  *
- *     git rm proxy.ts && git commit -m "..." && git push
+ *     git mv docs/maintenance-hold/proxy.ts proxy.ts   # arm
+ *     git mv proxy.ts docs/maintenance-hold/proxy.ts   # release
  *
- * App Hosting auto-rollout is Enabled on this backend, so that push rebuilds
- * and restores the live site on its own in a few minutes. No console step, no
- * DNS change, no certificate work — the domain is bound to the *backend*, not
- * to any particular build, so it never moves while this is in place.
+ * Only the repository root (or src/) is a proxy convention location, so
+ * sitting in docs/ makes it inert — Next never loads it and the real site
+ * serves normally. Nothing else in the repository is involved either way.
+ *
+ * App Hosting auto-rollout is Enabled on this backend, so whichever direction
+ * you push rebuilds and takes effect on its own in a few minutes. No console
+ * step, no DNS change, no certificate work — the domain is bound to the
+ * *backend*, not to any particular build, so it never moves.
  *
  * WHY A PROXY AND NOT AN EDITED PAGE
  *
@@ -60,7 +64,7 @@ const HOLDING_PAGE = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Southeast Media — Under Maintenance</title>
+<title>Southeast Media — Under Maintenance Now </title>
 <meta name="theme-color" content="#f8f6f1">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <style>
