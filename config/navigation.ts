@@ -279,22 +279,25 @@ export const footerNavigation = {
     { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ],
+  // Both lists follow the site's running order — see `DISCIPLINE_ORDER` in
+  // `data/verticals.ts`. Films and VFX come last here for the same reason they
+  // come last on the homepage.
   solutions: [
     { label: "Healthcare", href: "/pharma" },
     { label: "Real Estate", href: "/real-estate" },
+    { label: "SaaS", href: "/saas" },
+    { label: "Animation", href: "/animation" },
+    { label: "Enterprise", href: "/enterprise" },
     { label: "Films", href: "/films" },
     { label: "VFX", href: "/vfx" },
-    { label: "Animation", href: "/animation" },
-    { label: "SaaS", href: "/saas" },
-    { label: "Enterprise", href: "/enterprise" },
   ],
   industries: [
     { label: "Healthcare", href: "/pharma" },
     { label: "Real Estate", href: "/real-estate" },
-    { label: "Film & VFX", href: "/vfx" },
-    { label: "Explainer Videos", href: "/animation" },
     { label: "SaaS & Software", href: "/saas" },
+    { label: "Explainer Videos", href: "/animation" },
     { label: "Enterprise Retainers", href: "/enterprise" },
+    { label: "Film & VFX", href: "/vfx" },
   ],
   resources: [
     { label: "All verticals", href: "/verticals" },

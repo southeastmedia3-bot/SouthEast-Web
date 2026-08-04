@@ -7,16 +7,15 @@ import type { VerticalSection } from "@/data/verticals";
 /**
  * The named formats, each with the frame that shows what it means.
  *
- * Columns rather than a grid, for the reason documented on `FrameLibrary`: the
- * aspects here are deliberately mixed — a 3.6:1 LED strip sits in the same run as
- * a 1:1 character master — and a two-column *grid* would give every row the
- * height of its tallest cell and leave a screen of dead white under the shorter
- * one. Columns let each card end where it ends.
+ * A grid, with one cell shape for the whole run. The aspects here are
+ * deliberately mixed — a 3.6:1 LED strip sits in the same run as a 1:1 character
+ * master — and this used to be CSS columns so that each card could end where it
+ * ended; what that actually produced was two ragged strips that never lined up.
+ * The cell is 4:3, near the middle of the spread, and every frame is contained
+ * inside it, so mixing a strip with a square costs a mat rather than a crop.
  *
- * The caption sits above its frame here, not below. Reading order in a column
- * layout is down-then-across rather than across-then-down, so leading with the
- * name is what makes a card scannable when a visitor is hunting for the one
- * format they came to buy; every card carries its index for the same reason.
+ * The caption sits above its frame, and every card carries its index: a visitor
+ * hunting for the one format they came to buy is scanning names, not pictures.
  *
  * The curtain is held inside `NaturalMedia` rather than wrapped around it — a
  * `Reveal clip` on the outside takes the frame's dark plate behind the curtain
@@ -52,13 +51,13 @@ export function AnimationFormatGrid({
           ) : null}
         </div>
 
-        <div className="lg:columns-2 lg:gap-10">
+        <div className="grid gap-x-10 gap-y-14 lg:grid-cols-2">
           {formats.map((format, i) => {
             const slot = animationAssets.formatFrames[i];
             if (!slot) return null;
 
             return (
-              <article key={format.name} className="mb-14 break-inside-avoid last:mb-0">
+              <article key={format.name}>
                 <div className="mb-5 flex items-baseline gap-4 border-t border-[color:var(--border-strong)] pt-5">
                   <span className="type-index shrink-0 text-muted">
                     {String(i + 1).padStart(2, "0")}
@@ -69,10 +68,11 @@ export function AnimationFormatGrid({
                 <NaturalMedia
                   image={slot.src}
                   video={slot.video}
-                  ratio={slot.w / slot.h}
+                  ratio={4 / 3}
                   alt={slot.alt}
                   sizes="(min-width: 1024px) 45vw, 92vw"
                   className="rounded-[1.25rem] bg-[#0a0a0d]"
+                  imgClassName="object-contain"
                   reveal={i % 2 === 0 ? "up" : "left"}
                 />
 

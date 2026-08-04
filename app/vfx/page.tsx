@@ -19,6 +19,8 @@ export default function VfxPage() {
   return (
     <VerticalTemplate
       vertical={vertical}
+      // Four square simulation renders against two at 16:9 — 5:4 splits them.
+      workCellRatio="5 / 4"
       extraNav={[
         { id: "line-to-render", label: "Line to render" },
         { id: "sequence", label: "Sequence" },
@@ -47,6 +49,10 @@ export default function VfxPage() {
             id="library"
             rule={RULE}
             frames={vfxAssets.library}
+            // The one genuinely split set: 25 square simulation renders against
+            // 16 at 16:9. 5:4 sits between them, so neither half is heavily
+            // matted and neither is cropped.
+            cellRatio="5 / 4"
             heading="The simulation library"
             lead="Cloth, particles, volumetrics, fluid and fibre — every frame the pipeline above exists to render."
           />

@@ -1,7 +1,6 @@
 import { Container } from "@/components/common/container";
 import { NaturalMedia } from "@/components/pharma/natural-media";
 import type { MediaSlot } from "@/data/media";
-import { cn } from "@/lib/utils";
 
 export type GalleryEntry = {
   slot: MediaSlot;
@@ -14,60 +13,35 @@ export type GalleryEntry = {
 /**
  * Selected work, shown whole.
  *
- * The shared `WorkGrid` crops every frame to a uniform 4:3 tile, which is the one
- * thing the media rule on these pages forbids — so this is its natural-aspect
- * counterpart: two columns, each frame taking the shape of its own file, the right
- * column dropped half a frame so the two never line up into a grid. Aspects
- * alternate down each column, so no two neighbouring frames share a crop.
+ * The media rule on these pages is that a frame is never cropped to fit a tile,
+ * and that still holds — but it used to be paid for with the layout: two columns
+ * dealt by running height, one of them dropped half a frame so the two "never
+ * line up into a grid". Deliberately ragged, and it read as exactly that. Frames
+ * sat at unrelated heights, the columns ended at different depths, and the drop
+ * left a hole under the shorter one.
  *
- * The curtain opens from alternating edges (Iris/Curtain) rather than fading in —
- * the frames arrive, they do not appear.
+ * So the grid is a grid. Every frame sits in an identical cell, rows line up, and
+ * nothing is cropped to make that happen: the cell is a mat and the frame is
+ * contained inside it at its own aspect. Wide film frames and square renders can
+ * then sit next to each other without either being cut.
+ *
+ * The curtain still opens from alternating edges — the frames arrive, they do not
+ * appear.
  */
-
-/** Caption block plus the rule above it, in the same units as the frame heights. */
-const CAPTION = 0.13;
-
-/**
- * Deal the frames into two columns so both end at roughly the same line, and say
- * which column should carry the half-frame drop.
- *
- * Alternating by index — the obvious split — is what left a screen of white
- * under the shorter column, because a run of squares on one side and 16:9s on
- * the other is exactly what the alternating aspects produce. So each frame goes
- * to whichever column is currently shorter, measured in column-widths from the
- * slot's own `w`/`h`. Nothing is cropped to make it fit; the order is preserved.
- *
- * The stagger then goes on the column that finished *shorter*, so the offset
- * absorbs what is left of the imbalance instead of adding to it. Which side it
- * lands on is immaterial — its whole job is to stop the two columns lining up
- * into a grid, and it does that from either side.
- */
-function deal(entries: GalleryEntry[]) {
-  const columns: [GalleryEntry[], GalleryEntry[]] = [[], []];
-  const height: [number, number] = [0, 0];
-
-  for (const entry of entries) {
-    const c = height[1] < height[0] ? 1 : 0;
-    columns[c].push(entry);
-    height[c] += entry.slot.h / entry.slot.w + CAPTION;
-  }
-
-  return { columns, stagger: height[0] <= height[1] ? 0 : 1 };
-}
-
 export function NaturalGallery({
   entries,
   rule,
   eyebrow = "Selected work",
   heading,
+  cellRatio = 4 / 3,
 }: {
   entries: GalleryEntry[];
   rule: string;
   eyebrow?: string;
   heading?: string;
+  /** Cell shape as w/h. Match the set's dominant aspect and the mat vanishes. */
+  cellRatio?: number;
 }) {
-  const { columns, stagger } = deal(entries);
-
   return (
     <section
       id="work"
@@ -79,35 +53,33 @@ export function NaturalGallery({
           <h2 className="type-h3 text-foreground">{heading ?? eyebrow}</h2>
         </div>
 
-        <div className="grid gap-x-8 gap-y-14 lg:grid-cols-2">
-          {columns.map((column, c) => (
-            <div key={c} className={cn("flex flex-col gap-14", c === stagger && "lg:mt-28")}>
-              {column.map((entry) => (
-                <figure key={entry.slot.key}>
-                  {/* Curtain held inside the frame — see `NaturalMedia`'s
-                      `reveal`. Around the outside it hid the frame's own ground
-                      as well as the picture, which is what read as blank space
-                      down this column. */}
-                  <NaturalMedia
-                    image={entry.slot.src}
-                    video={entry.slot.video}
-                    ratio={entry.slot.w / entry.slot.h}
-                    alt={entry.slot.alt}
-                    sizes="(min-width: 1024px) 45vw, 92vw"
-                    className="bg-[#0a0a0d]"
-                    reveal={c === 0 ? "right" : "left"}
-                  />
-                  <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-border pt-4">
-                    <span className="type-h4 text-[1.05rem] text-foreground">{entry.title}</span>
-                    {entry.note ? (
-                      <span className="type-label text-muted" style={{ color: rule }}>
-                        {entry.note}
-                      </span>
-                    ) : null}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
+        <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+          {entries.map((entry, i) => (
+            <figure key={entry.slot.key}>
+              {/* Curtain held inside the frame — see `NaturalMedia`'s `reveal`.
+                  Around the outside it hid the frame's own ground as well as the
+                  picture, which is what read as blank space down this column. */}
+              <NaturalMedia
+                image={entry.slot.src}
+                video={entry.slot.video}
+                // The cell shape, not the file's — the file's own shape is
+                // preserved by containing it inside the cell instead.
+                ratio={cellRatio}
+                alt={entry.slot.alt}
+                sizes="(min-width: 1024px) 31vw, (min-width: 640px) 46vw, 92vw"
+                className="bg-[#0a0a0d]"
+                imgClassName="object-contain"
+                reveal={i % 2 === 0 ? "right" : "left"}
+              />
+              <figcaption className="mt-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-border pt-4">
+                <span className="type-h4 text-[1.05rem] text-foreground">{entry.title}</span>
+                {entry.note ? (
+                  <span className="type-label text-muted" style={{ color: rule }}>
+                    {entry.note}
+                  </span>
+                ) : null}
+              </figcaption>
+            </figure>
           ))}
         </div>
       </Container>

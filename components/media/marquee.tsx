@@ -14,7 +14,15 @@ type MarqueeProps = {
  * safe as a Server Component.
  */
 export function DisciplineMarquee({ items, duration = 42, className }: MarqueeProps) {
-  const doubled = [...items, ...items];
+  // The track is translated by exactly -50%, so the two halves have to be
+  // identical AND each half has to be wider than the viewport — otherwise the
+  // loop runs off the end and leaves a bare strip behind it. A short list (the
+  // discipline tags are five merged names now) is repeated until a half is long
+  // enough to cover a wide screen; the halves stay identical either way.
+  const half = items.length
+    ? Array.from({ length: Math.ceil(8 / items.length) }, () => items).flat()
+    : items;
+  const doubled = [...half, ...half];
 
   return (
     <div

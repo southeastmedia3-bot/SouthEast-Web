@@ -135,15 +135,19 @@ export function AnimationVertical({ vertical }: { vertical: Vertical }) {
       {/* The rail says the stages. This is the evidence they happened here. */}
       <AnimationLadder id="craft" rule={RULE} />
 
-      <NaturalGallery entries={gallery} rule={RULE} heading="Selected work" />
+      {/* An even split — three square character frames, three at 16:9. */}
+      <NaturalGallery entries={gallery} rule={RULE} heading="Selected work" cellRatio={5 / 4} />
 
       {/* Everything else this discipline has, as one sheet. */}
       <FrameLibrary
         id="library"
         rule={RULE}
         frames={[...animationAssets.characterFrames, ...animationAssets.brandBuilds]}
+        // Twelve of the sixteen are square character masters; the four 16:9 brand
+        // builds mat inside the square cell rather than being cropped to it.
+        cellRatio="1 / 1"
         heading="The full animation library"
-        lead="Character frames and brand builds — every finished still the discipline can show, at its own shape."
+        lead="Character frames and brand builds — every finished still the discipline can show, in full."
       />
 
       {vertical.faqs?.length ? <FaqList faqs={vertical.faqs} rule={RULE} /> : null}

@@ -33,7 +33,22 @@ export const trustBar = {
   ],
 } as const;
 
-/** Scene: the big services list. Hovering drops physics word-pills + a preview. */
+/**
+ * Scene: the big services list. Hovering drops physics word-pills + a preview.
+ *
+ * THE ORDER IS THE PRIORITY ORDER, and it is deliberate: healthcare, real
+ * estate, product & SaaS, startups & enterprise, films & VFX. Films and VFX sit
+ * last on purpose — they are the capability the studio sells least often as the
+ * headline, and leading with them buried the two core verticals. Keep this order
+ * in step with `disciplineWall` below and with the `verticals` array in
+ * `data/verticals.ts`; all three are read as one running order.
+ *
+ * TWO ROWS ARE MERGED PAIRS. Films and VFX are one purchase (the same building
+ * shoots the plate and composites it), and startups and enterprise are one
+ * engagement model at two sizes. Each merged row links to the primary page of
+ * its pair and its pills are drawn from both; the second page of each pair stays
+ * reachable from the Services mega-menu and the footer, so nothing is orphaned.
+ */
 export const servicesList = {
   eyebrow: "We know what we're good at",
   heading: "Pick a discipline.",
@@ -51,36 +66,26 @@ export const servicesList = {
       pills: ["Interiors", "Exteriors", "Virtual Tours", "Walkthroughs", "VR"],
     },
     {
-      title: "Film",
-      href: "/films",
-      media: "/media/products/serum-poster.jpg",
-      pills: ["8K Capture", "DI Grade", "Ad Films", "Podcasts"],
-    },
-    {
-      title: "VFX",
-      href: "/vfx",
-      media: "/media/products/ribbon-poster.jpg",
-      pills: ["Compositing", "X-Particles", "EmberGen", "LiquiGen", "Octane"],
-    },
-    {
-      title: "Startups",
-      href: "/animation",
-      media: "/media/animation/bugs-life-poster.jpg",
-      pills: ["Explainers", "Anamorphic", "AR / VR", "Projection"],
-    },
-    // SaaS and Enterprise were missing here while the wall below claimed seven
-    // disciplines. Both have real libraries now, so both get a frame.
-    {
-      title: "Product and SaaS",
+      title: "Product & SaaS",
       href: "/saas",
       media: "/media/saas/creative-poster.jpg",
       pills: ["Launch Films", "Explainers", "UI in Context", "Systems", "Cutdowns"],
     },
     {
-      title: "Enterprise",
+      // /animation (the startup-facing explainer work) merged with /enterprise
+      // (the retainer). Links to the engagement model; the animation page is one
+      // click away under Video Services in the mega-menu.
+      title: "Startups & Enterprise",
       href: "/enterprise",
       media: "/media/enterprise/minimal-style-poster.jpg",
-      pills: ["Retainers", "White-Label", "Video Walls", "Governance"],
+      pills: ["Explainers", "AR / VR", "Retainers", "White-Label", "Governance"],
+    },
+    {
+      // /films merged with /vfx, and last in the running order.
+      title: "Films & VFX",
+      href: "/films",
+      media: "/media/products/serum-poster.jpg",
+      pills: ["8K Capture", "DI Grade", "Compositing", "X-Particles", "Octane"],
     },
   ],
 } as const;
@@ -100,14 +105,15 @@ export const servicesList = {
  * and a "Demon Bust W.I.P." credit). Publishing another artist's work on a
  * cropped-watermark basis is not something to do, so they stay out.
  *
- * `w`/`h` are each file's real pixel dimensions, measured from the file. The
- * pinned frame takes its shape from these, so a stage is shown whole at the
- * shape it was made in — a 2.3:1 delivery frame stays a 2.3:1 delivery frame,
- * and the brief document stays readable. The frame used to be a hard
- * `aspect-[4/5]` with `object-cover`, which meant every wide artifact here was
- * displayed as its middle third; a document cropped that way is unreadable, so
- * the numbers below are load-bearing. Measure a replacement before swapping it
- * in.
+ * `w`/`h` are each file's real pixel dimensions, measured from the file. They no
+ * longer drive the frame — the scene shows all seven stages in one fixed 3:2 box
+ * with `object-contain`, so every artifact is the same size on screen and none of
+ * them is cropped (see `FRAME_RATIO` in `components/scenes/pipeline.tsx`). They
+ * are kept because they are the record of what each file actually is, and
+ * because the range they span is the argument for containing rather than
+ * covering: 0.93 for the portrait storyboard up to 2.35 for the delivery frame.
+ * Covering one box with that spread would show the middle third of a document.
+ * Measure a replacement before swapping it in.
  */
 export const pipeline = {
   eyebrow: "How the work gets made",
@@ -234,15 +240,14 @@ export const filmContent = {
   secondaryCta: { label: "Start a project", href: "/contact" },
 };
 
+/** The marquee under the film scene. Same running order as `servicesList` and
+ *  `disciplineWall` — the merged pairs read as one tag each. */
 export const disciplineTags = [
   "Healthcare",
   "Real Estate",
-  "Film & VFX",
-  "Startups",
-  "Commerce",
-  "Animation",
-  "SaaS",
-  "Enterprise",
+  "Product & SaaS",
+  "Startups & Enterprise",
+  "Films & VFX",
 ];
 
 export const mandate = {
@@ -282,9 +287,19 @@ export const mandate = {
  */
 export const disciplineWall = {
   eyebrow: "05 — Every discipline",
-  heading: "One studio. Seven disciplines.",
+  heading: "One studio. Five disciplines.",
   intro:
     "Point at any frame. Each one opens the vertical behind it — the people, the pipeline, and the work.",
+  /**
+   * Five tiles, in the same running order as `servicesList` — films and VFX
+   * merged into one, animation and enterprise merged into one, and the merged
+   * film tile last.
+   *
+   * The mosaic fills a 4-column grid exactly: pharma takes a 2x2 block on the
+   * left, real estate and SaaS stack beside it, and the two merged tiles form the
+   * closing row. Change a `span` and check the grid still closes — a wall with a
+   * hole in it is what this layout is arranged to avoid.
+   */
   tiles: [
     {
       slug: "pharma",
@@ -309,40 +324,6 @@ export const disciplineWall = {
       corner: "3.25rem",
     },
     {
-      slug: "films",
-      kicker: "Capability",
-      title: "Film & Production",
-      sub: "Uncompressed 8K, in-house",
-      href: "/films",
-      media: "/media/products/serum-poster.jpg",
-      // The second and last video on this wall. Seven autoplaying tiles would be
-      // seven concurrent decodes above the fold; two is the budget.
-      video: "/media/products/serum.mp4",
-      span: "md:col-span-1 md:row-span-1",
-      corner: "3.25rem",
-    },
-    {
-      slug: "vfx",
-      kicker: "Capability",
-      title: "VFX & Rendering",
-      sub: "The zero-imperfection pipeline",
-      href: "/vfx",
-      media: "/media/products/ribbon-poster.jpg",
-      span: "md:col-span-1 md:row-span-1",
-      corner: "3.25rem",
-    },
-    {
-      slug: "animation",
-      kicker: "Capability",
-      title: "Motion & Immersive",
-      sub: "Explainers, anamorphic, AR / VR",
-      href: "/animation",
-      media: "/media/animation/bugs-life-poster.jpg",
-      span: "md:col-span-2 md:row-span-1",
-      corner: "3.25rem",
-    },
-    // The wall promised seven disciplines and showed six — SaaS had no tile.
-    {
       slug: "saas",
       kicker: "Product marketing",
       title: "Product & SaaS Film",
@@ -355,12 +336,24 @@ export const disciplineWall = {
     {
       slug: "enterprise",
       kicker: "Engagement",
-      title: "The Embedded Partner",
-      sub: "Your outsourced media division",
+      title: "Startups & Enterprise",
+      sub: "Explainers, immersive, embedded retainers",
       href: "/enterprise",
       media: "/media/enterprise/minimal-style-poster.jpg",
-      // Full width: it is the engagement model the other six are bought through.
-      span: "md:col-span-4 md:row-span-1",
+      span: "md:col-span-2 md:row-span-1",
+      corner: "3.25rem",
+    },
+    {
+      slug: "films",
+      kicker: "Capability",
+      title: "Films & VFX",
+      sub: "Uncompressed 8K, shot and composited in-house",
+      href: "/films",
+      media: "/media/products/serum-poster.jpg",
+      // The second and last video on this wall. Five autoplaying tiles would be
+      // five concurrent decodes above the fold; two is the budget.
+      video: "/media/products/serum.mp4",
+      span: "md:col-span-2 md:row-span-1",
       corner: "3.25rem",
     },
   ],

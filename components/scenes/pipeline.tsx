@@ -24,6 +24,23 @@ const SCROLL_PER_STEP_VH = 40;
 const STAGE_HEIGHT_VH = STEPS.length * SCROLL_PER_STEP_VH + 100;
 
 /**
+ * The one frame shape every stage is shown in.
+ *
+ * The frame used to take each artifact's own aspect ratio, so the box resized on
+ * every step — a portrait storyboard, then a 2.3:1 delivery frame — and the
+ * stage visibly reflowed underneath it. Seven artifacts of seven different sizes
+ * read as seven unrelated pictures rather than one pipeline.
+ *
+ * So the box is fixed at 3:2 and every artifact is `object-contain`ed inside it.
+ * Same size for all seven, and no image is cropped or stretched to get there:
+ * 3:2 sits in the middle of the range these files actually span (0.93 for the
+ * portrait storyboard up to 2.35 for the delivery frame), so nothing is matted
+ * heavily on either axis. The source files are untouched — this is purely how
+ * they are framed.
+ */
+const FRAME_RATIO = "3 / 2";
+
+/**
  * Scene — the pipeline. A pinned stage the visitor scrolls through: the index
  * ticks up, the frame for that stage cross-reveals, and the stage list beside it
  * marks the active step. The image alternates sides so the eye keeps moving.
@@ -64,14 +81,21 @@ export function Pipeline() {
           <ol className="flex flex-col gap-16">
             {STEPS.map((step, i) => (
               <li key={step.title} className="grid gap-6 md:grid-cols-2 md:items-center">
-                <Image
-                  src={step.media}
-                  alt={step.title}
-                  width={step.w}
-                  height={step.h}
-                  className="h-auto w-full rounded-lg"
-                  sizes="(min-width: 768px) 45vw, 92vw"
-                />
+                {/* Same fixed frame as the pinned stage, for the same reason:
+                    seven artifacts at seven different heights read as seven
+                    unrelated pictures. Contained, so none of them is cropped. */}
+                <div
+                  className="relative w-full overflow-hidden rounded-lg bg-foreground/[0.04]"
+                  style={{ aspectRatio: FRAME_RATIO }}
+                >
+                  <Image
+                    src={step.media}
+                    alt={step.title}
+                    fill
+                    className="object-contain"
+                    sizes="(min-width: 768px) 45vw, 92vw"
+                  />
+                </div>
                 <div>
                   <span className="type-index text-muted">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="type-h3 mt-2 text-foreground">{step.title}</h3>
@@ -119,22 +143,17 @@ export function Pipeline() {
                 {String(index + 1).padStart(2, "0")}
               </span>
 
-              {/* The frame. It takes the shape of whichever stage is active —
-                  the brief document, the portrait storyboard and the 2.3:1
-                  delivery frame are all shown whole, at the shape each was made
-                  in, rather than centre-cropped into one box.
-
-                  Width is the lesser of the column and (height budget × ratio),
-                  so the frame never grows taller than the pinned stage can hold
-                  however tall the artifact is; `aspect-ratio` then derives the
-                  height. Both transition, so a step change is the frame morphing
-                  rather than the layout jumping. */}
+              {/* The frame. One fixed box, identical on every step — see
+                  FRAME_RATIO. Each artifact is contained inside it, so the brief
+                  document, the portrait storyboard and the 2.3:1 delivery frame
+                  are all shown whole at the same frame size; a step change is now
+                  only a crossfade, with no reflow underneath it. */}
               <div className={cn("relative", flip && "md:order-1")}>
                 <div
-                  className="relative overflow-hidden rounded-lg bg-foreground/[0.04] transition-[aspect-ratio,width] duration-700 ease-out"
+                  className="relative overflow-hidden rounded-lg bg-foreground/[0.04]"
                   style={{
-                    aspectRatio: `${active.w} / ${active.h}`,
-                    width: `min(100%, calc(clamp(14rem, 46vh, 28rem) * ${active.w / active.h}))`,
+                    aspectRatio: FRAME_RATIO,
+                    width: "min(100%, calc(clamp(14rem, 46vh, 28rem) * 1.5))",
                   }}
                 >
                   {STEPS.map((step, i) => (
@@ -145,9 +164,9 @@ export function Pipeline() {
                       fill
                       sizes="(min-width: 768px) 36vw, 84vw"
                       className={cn(
-                        // contain, not cover: during the 700ms crossfade the box
-                        // is already the incoming shape, and the outgoing frame
-                        // must letterbox inside it rather than be cropped.
+                        // contain, not cover: the box is one shared shape now, so
+                        // covering it would crop every artifact that isn't 3:2 —
+                        // which is all but none of them.
                         "object-contain transition-opacity duration-700 ease-out",
                         i === index ? "opacity-100" : "opacity-0",
                       )}

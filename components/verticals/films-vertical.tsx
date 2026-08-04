@@ -116,13 +116,17 @@ export function FilmsVertical({ vertical }: { vertical: Vertical }) {
 
       {vertical.process?.length ? <ProcessRail steps={vertical.process} rule={RULE} /> : null}
 
-      <NaturalGallery entries={gallery} rule={RULE} heading="Selected work" />
+      {/* Every frame in this shortlist is 16:9, so the cell is too. */}
+      <NaturalGallery entries={gallery} rule={RULE} heading="Selected work" cellRatio={16 / 9} />
 
       {/* Everything this division has, as one sheet. */}
       <FrameLibrary
         id="library"
         rule={RULE}
         frames={filmsAssets.library}
+        // Every frame in this library is 16:9 — the cell matches it exactly, so
+        // the set shows with no mat at all.
+        cellRatio="16 / 9"
         heading="The full film library"
         lead="Every finished frame the division can show — the beauty cut in full, plus the brand, product and social work either side of it."
       />

@@ -45,6 +45,7 @@ export function VerticalTemplate({
   vertical,
   extras,
   extraNav = [],
+  workCellRatio,
 }: {
   vertical: Vertical;
   /**
@@ -59,6 +60,13 @@ export function VerticalTemplate({
   extras?: ReactNode;
   /** Nav entries for whatever `extras` renders. Ids must match the section ids. */
   extraNav?: NavSection[];
+  /**
+   * Tile shape for the Selected work grid, as a CSS `aspect-ratio`. Set it to
+   * whatever the vertical's own shortlist mostly is — the frames are contained
+   * rather than cropped, so a matching shape is the difference between a full
+   * tile and a matted one.
+   */
+  workCellRatio?: string;
 }) {
   const hero = verticalHeroes[vertical.slug];
   const rule = toneRule[vertical.tone] ?? "var(--brand-sky)";
@@ -179,7 +187,9 @@ export function VerticalTemplate({
 
       {vertical.process?.length ? <ProcessRail steps={vertical.process} rule={rule} /> : null}
 
-      {vertical.gallery?.length ? <WorkGrid images={vertical.gallery} rule={rule} /> : null}
+      {vertical.gallery?.length ? (
+        <WorkGrid images={vertical.gallery} rule={rule} cellRatio={workCellRatio} />
+      ) : null}
 
       {vertical.videos?.length ? (
         <VideoWall

@@ -33,12 +33,16 @@ export function MolecularSection() {
           </Reveal>
         </div>
 
-        {/* Lead item — full width, media on top. */}
+        {/* Lead item — full width, media on top.
+
+            16:9, not the 21:9 this used to be. Every loop in this section is a
+            16:9 master, so a 21:9 box was cropping a quarter of the height off
+            the protein animation for no reason other than the shape of the box. */}
         {lead ? (
           <Parallax distance={16}>
             <Reveal y={56} duration={0.85}>
               <div className="overflow-hidden rounded-[1.75rem] border border-border bg-black">
-                <div className="relative aspect-[21/9] w-full">
+                <div className="relative aspect-[16/9] w-full">
                   {lead.video && lead.poster ? (
                     <LoopVideo src={lead.video} poster={lead.poster} />
                   ) : (
@@ -47,7 +51,7 @@ export function MolecularSection() {
                       alt={lead.title}
                       fill
                       sizes="90vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   )}
                 </div>
@@ -69,6 +73,11 @@ export function MolecularSection() {
                   "flex h-full flex-col overflow-hidden rounded-[1.5rem] border border-border bg-black",
                 )}
               >
+                {/* One box shape across the row so the cards line up, and
+                    `object-contain` so nothing is cut off to achieve that. The
+                    loops are 16:9 and fill it exactly; the one still here
+                    (`interaction.jpg`) is a tall portrait, and covering the box
+                    with it showed a narrow band out of its middle. */}
                 <div className="relative aspect-[16/9] w-full">
                   {item.video && item.poster ? (
                     <LoopVideo src={item.video} poster={item.poster} />
@@ -78,7 +87,7 @@ export function MolecularSection() {
                       alt={item.title}
                       fill
                       sizes="(min-width: 768px) 45vw, 92vw"
-                      className="object-cover"
+                      className="object-contain"
                     />
                   )}
                 </div>

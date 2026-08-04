@@ -13,16 +13,13 @@ import type { VerticalSection } from "@/data/verticals";
  * keeps each frame around 45vw, which is the same composition read at a scale
  * where the picture is still the subject.
  *
- * Frames take their own shape rather than a shared tile, and the aspects are
- * sequenced in `data/media.ts` so no card sits next to — or above — a card
- * cropped the same way. The curtain opens upward; nothing fades in.
- *
- * Columns, not a grid — the same reason `FrameLibrary` uses them. A two-column
- * grid gives every row the height of its tallest cell, so the moment a square
- * render sits beside a 16:9 one (which the alternating aspects guarantee), the
- * shorter card leaves a screen of dead white under its caption. Columns let each
- * card end where it ends. Reading order becomes down-then-across, which is why
- * every card carries its own index.
+ * A grid, and the frames read across it in order. This was CSS columns, which
+ * let every card end where it ended — and produced two ragged strips reading
+ * down-then-across, with the numbered formats out of sequence for anyone
+ * scanning left to right. Rows line up now, and the shared cell costs nothing,
+ * because the frames are contained inside it rather than cropped to it: the run
+ * is nearly all 16:9, so the cell is 16:9 and only the deliberate square social
+ * master carries any mat. The curtain opens upward; nothing fades in.
  */
 export function SaasFormatGrid({
   section,
@@ -54,16 +51,13 @@ export function SaasFormatGrid({
           ) : null}
         </div>
 
-        <div className="lg:columns-2 lg:gap-8">
+        <div className="grid gap-x-8 gap-y-16 lg:grid-cols-2">
           {formats.map((format, i) => {
             const slot = saasAssets.formatFrames[i];
             if (!slot) return null;
 
             return (
-              // `break-inside-avoid` keeps a card from being torn across the
-              // column split; `mb-16` is the vertical gutter (columns ignore
-              // `gap-y`).
-              <article key={format.name} className="mb-16 break-inside-avoid last:mb-0">
+              <article key={format.name}>
                 {/* The curtain is held inside the frame, so the plate is on the
                     page from the moment the box has its shape and only the
                     picture wipes up. Wrapped around the outside it took the
@@ -71,10 +65,11 @@ export function SaasFormatGrid({
                 <NaturalMedia
                   image={slot.src}
                   video={slot.video}
-                  ratio={slot.w / slot.h}
+                  ratio={16 / 9}
                   alt={slot.alt}
                   sizes="(min-width: 1024px) 45vw, 92vw"
                   className="rounded-[1.25rem] bg-[#0a0a0d]"
+                  imgClassName="object-contain"
                   reveal="up"
                 />
 

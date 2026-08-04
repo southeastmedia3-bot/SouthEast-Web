@@ -167,7 +167,13 @@ export const verticalsOverview = {
     "Every vertical runs through the same in-house pipeline — Maya and 3ds Max for modelling and animation, Blender and Cinema 4D finished through Octane, rendered at 8K on our own farm. Choose the outcome; the craft underneath is constant.",
 };
 
-export const verticals: Vertical[] = [
+/**
+ * Every vertical, in the order they happen to have been written. Nothing reads
+ * this directly — `verticals` below is the ordered export, and the order there
+ * is the one the site presents. Add a new vertical here and give it a place in
+ * `DISCIPLINE_ORDER`.
+ */
+const verticalCatalogue: Vertical[] = [
   {
     slug: "pharma",
     label: "Pharma",
@@ -1928,6 +1934,32 @@ export const verticals: Vertical[] = [
     },
   },
 ];
+
+/**
+ * The running order the whole site presents these in — the same order as
+ * `servicesList` and `disciplineWall` in `data/home.ts`, expanded back out to
+ * one entry per page.
+ *
+ * Healthcare, real estate, product & SaaS, then startups & enterprise, then
+ * films & VFX last. The homepage merges the last two pairs into one row each
+ * (animation sits under startups, VFX under films); this array keeps a page per
+ * discipline, because each of those pages carries its own library and its own
+ * argument. Pairs stay adjacent so the merge on the homepage and the list here
+ * never contradict each other.
+ */
+const DISCIPLINE_ORDER: VerticalSlug[] = [
+  "pharma",
+  "real-estate",
+  "saas",
+  "animation",
+  "enterprise",
+  "films",
+  "vfx",
+];
+
+export const verticals: Vertical[] = DISCIPLINE_ORDER.map(
+  (slug) => verticalCatalogue.find((v) => v.slug === slug)!,
+);
 
 export function getVertical(slug: string): Vertical | undefined {
   return verticals.find((v) => v.slug === slug);

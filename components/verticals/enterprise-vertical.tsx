@@ -114,6 +114,8 @@ export function EnterpriseVertical({ vertical }: { vertical: Vertical }) {
         id="library"
         rule={RULE}
         frames={enterpriseAssets.library}
+        // 16 of the 22 are 16:9; the squares and the two ultra-wides mat.
+        cellRatio="16 / 9"
         heading="Every discipline, one studio"
         lead="Brand, product, technical, medical, architectural, character and abstract — all of it produced on the same pipeline, in the same building."
       />

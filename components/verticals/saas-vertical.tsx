@@ -119,7 +119,8 @@ export function SaasVertical({ vertical }: { vertical: Vertical }) {
       {/* The rail above says the six stages. This shows them. */}
       <ProcessArtifacts rule={RULE} id="artifacts" />
 
-      <NaturalGallery entries={gallery} rule={RULE} />
+      {/* Five of the six are 16:9; the square social master mats. */}
+      <NaturalGallery entries={gallery} rule={RULE} cellRatio={16 / 9} />
 
       {/* The hero panel opens with one storyboard cell against the finished film.
           This is the rest of that board — the whole argument for the page, which
@@ -129,6 +130,8 @@ export function SaasVertical({ vertical }: { vertical: Vertical }) {
         id="storyboard"
         rule={RULE}
         frames={saasLibrary.storyboard}
+        // The board cells are all one export size, so the cell is that size.
+        cellRatio="1157 / 806"
         heading="The storyboard behind the film"
         lead="Every cell of the hybrid-cloud board, in order — the marker drawings that became the explainer at the top of this page."
       />
@@ -150,6 +153,8 @@ export function SaasVertical({ vertical }: { vertical: Vertical }) {
           ...saasLibrary.explainerFrames,
           saasLibrary.band,
         ]}
+        // All 16:9 bar the one wide title band, which mats.
+        cellRatio="16 / 9"
         heading="The full software library"
         lead="Abstract systems, explainer frames and title treatments — everything produced for software teams."
       />

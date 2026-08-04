@@ -118,10 +118,19 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
 
       {/* The remaining deck cutouts the set-pieces above do not already carry —
           orbital, musculoskeletal, the lung comparison and the body-type range. */}
+      {/* Three columns and a square cell, not the four-column default.
+          This library is the widest spread of shapes on the site — a 0.26:1 liver
+          strip and a 2.97:1 lung comparison in the same set — so the cells are
+          bigger and squarer than elsewhere: a tall render then fills the cell's
+          full height rather than being reduced to a sliver of a wide box. Every
+          frame is shown whole; the page is longer for it, which is the right
+          trade on the one page where the work is the argument. */}
       <FrameLibrary
         id="library"
         rule="var(--brand-blue)"
         frames={pharmaExtraFrames}
+        cols={3}
+        cellRatio="1 / 1"
         heading="More from the anatomy library"
         lead="Orbital, musculoskeletal, disease comparison and the body-type range — all expert-reviewed, all built to be posed and sectioned."
       />

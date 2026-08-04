@@ -9,13 +9,20 @@ import { cn } from "@/lib/utils";
  *
  * A visitor lands on one service page and never sees the others, so each page has
  * to carry the complete run of its own discipline — not a curated six. This is
- * where the rest of it goes: every remaining frame, dense, at natural aspect.
+ * where the rest of it goes: every remaining frame.
  *
- * CSS multi-column rather than a grid. A grid forces one row height and would
- * crop square simulation renders and 16:9 film frames into the same tile; columns
- * let each frame keep its own shape and let the mixed aspects interlock. That
- * matters more here than anywhere else on the site, because a library is exactly
- * where the shapes are most varied.
+ * A REAL GRID, AND EVERY FRAME WHOLE. This was CSS multi-columns, which let each
+ * frame keep its own height — and produced a masonry collage where nothing lined
+ * up, columns ended at wildly different depths, and a tall render dragged one
+ * column a screen below its neighbours. Now every frame sits in an identical cell
+ * and the rows line up.
+ *
+ * The cell is a mat, not a crop. `object-contain` means a 2.9:1 lung comparison
+ * and a 0.45:1 standing figure are both shown complete, at their own aspect,
+ * inside the same box — which is the whole requirement for a library: the work is
+ * what is being shown, so nothing in it may be cut off to make the layout tidy.
+ * Where a set is mostly one shape, pass a `cellRatio` that matches it and the
+ * mat all but disappears.
  *
  * Frames already shown higher up the page reappear here on purpose — a contact
  * sheet that skips the ones you have seen is not a contact sheet.
@@ -27,6 +34,8 @@ export function FrameLibrary({
   rule,
   id,
   dark = false,
+  cellRatio = "4 / 3",
+  cols = 4,
 }: {
   frames: MediaSlot[];
   heading: string;
@@ -34,6 +43,17 @@ export function FrameLibrary({
   rule: string;
   id?: string;
   dark?: boolean;
+  /**
+   * The shape of every cell, as a CSS `aspect-ratio`. Pick the shape most of the
+   * set already is — a run of 16:9 film frames wants `16 / 9`, a set with tall
+   * anatomy in it wants something nearer square so the tall frames stay large.
+   */
+  cellRatio?: string;
+  /**
+   * Columns at the widest breakpoint (steps down to 3/2 on smaller screens).
+   * Fewer columns means bigger cells, which is what a set of tall frames needs.
+   */
+  cols?: 3 | 4;
 }) {
   return (
     <section
@@ -76,22 +96,36 @@ export function FrameLibrary({
           ) : null}
         </Reveal>
 
-        <div className="columns-2 gap-3 md:columns-3 md:gap-4 xl:columns-4">
+        <div
+          className={cn(
+            "grid grid-cols-2 gap-3 md:gap-4",
+            cols === 3 ? "md:grid-cols-2 xl:grid-cols-3" : "md:grid-cols-3 xl:grid-cols-4",
+          )}
+        >
           {frames.map((frame) => (
             <figure
               key={frame.key}
-              // `break-inside-avoid` is what stops a column split tearing a frame
-              // in half; `mb-*` is the vertical gutter (columns ignore `gap-y`).
-              className="group relative mb-3 break-inside-avoid overflow-hidden bg-[#0a0a0d] md:mb-4"
+              className={cn(
+                "group relative overflow-hidden",
+                // The mat. On a light section a light mat lets the frames shot on
+                // white disappear into the page and the ones shot on black read as
+                // plates; on a dark section the reverse. A mid grey would fight
+                // both.
+                dark ? "bg-white/[0.04]" : "bg-foreground/[0.04]",
+              )}
+              style={{ aspectRatio: cellRatio }}
             >
               <Image
                 src={frame.src}
                 alt={frame.alt}
-                width={frame.w}
-                height={frame.h}
-                sizes="(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 46vw"
+                fill
+                sizes={
+                  cols === 3
+                    ? "(min-width: 1280px) 30vw, (min-width: 768px) 46vw, 46vw"
+                    : "(min-width: 1280px) 22vw, (min-width: 768px) 30vw, 46vw"
+                }
                 loading="lazy"
-                className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                className="object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03]"
               />
               {frame.label ? (
                 <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-black/85 to-transparent p-4 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
