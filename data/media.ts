@@ -887,8 +887,8 @@ export const enterpriseAssets: {
     {
       key: "entPharmaAnat",
       src: `/media/pharma/brain.jpg`,
-      w: 1600,
-      h: 650,
+      w: 1044,
+      h: 874,
       alt: "Anatomical brain render",
       label: "Medical",
     },
@@ -1611,6 +1611,14 @@ export const saasLibrary = {
  * started sizing plates from them. Measure with sharp before editing a pair;
  * nothing on this page is 1600 wide, the deck tops out at 1280.
  *
+ * EVERY FILE IS ALSO CROPPED TO ITS SUBJECT. The slide exports carry a lot of
+ * ground — the kidney and pancreas filled 44% of their frame, the liver 55%, the
+ * heart 63% — and on a page that shows each render a metre wide, enlarging those
+ * only enlarges the margin: you had to lean at the screen to tell a kidney from
+ * a pancreas. They are trimmed to the render plus about 2.5% breathing room,
+ * which more than doubled the kidney on the page without showing it a pixel
+ * wider. A replacement wants the same treatment before it is wired in.
+ *
  * SEVERAL OF THESE WERE RE-CUT from `public/media/pharma/slides/`, which holds
  * the full uncropped slide behind each one. The originals shipped here were
  * botched crops of those slides — the heart lost its left model to the frame
@@ -1631,7 +1639,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   {
     key: "pharmaFamily",
     src: `/media/pharma/deck/family.jpg`,
-    w: 866,
+    w: 845,
     h: 1280,
     alt: "Anatomical figures across ages and body types, standing in a row",
     label: "Body types & age range",
@@ -1648,7 +1656,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
     key: "pharmaLungCompare",
     src: `/media/pharma/deck/lung.jpg`,
     w: 1280,
-    h: 431,
+    h: 426,
     alt: "Four lungs compared — healthy, smoker's, virus-affected and tuberculosis-affected",
     label: "Lung — disease comparison",
   },
@@ -1663,7 +1671,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   {
     key: "pharmaLeg",
     src: `/media/pharma/deck/leg.jpg`,
-    w: 576,
+    w: 431,
     h: 1280,
     alt: "Leg musculature over bone, full length",
     label: "Leg — muscle over bone",
@@ -1673,24 +1681,24 @@ export const pharmaExtraFrames: MediaSlot[] = [
   // so a sheet of the isolated models is complementary rather than a repeat.
   ...(
     [
-      ["heart", 691, 587, "Anatomical heart, whole and in cross-section", "Heart"],
-      ["brain", 1280, 946, "Brain — neurological structures", "Brain"],
-      ["liver", 602, 709, "Liver — healthy, fatty and cancer-affected", "Liver — disease progression"],
-      ["kidney", 1280, 949, "Kidney and pancreas cross-section", "Kidney & pancreas"],
-      ["stomach", 717, 698, "Stomach — abnormal tissue growth", "Stomach"],
-      ["thyroid", 768, 223, "Thyroid — healthy gland beside a tumour-affected one", "Thyroid"],
+      ["heart", 657, 432, "Anatomical heart, whole and in cross-section", "Heart"],
+      ["brain", 1044, 874, "Brain — neurological structures", "Brain"],
+      ["liver", 383, 706, "Liver — healthy, fatty and cancer-affected", "Liver — disease progression"],
+      ["kidney", 729, 798, "Kidney and pancreas cross-section", "Kidney & pancreas"],
+      ["stomach", 705, 698, "Stomach — abnormal tissue growth", "Stomach"],
+      ["thyroid", 730, 216, "Thyroid — healthy gland beside a tumour-affected one", "Thyroid"],
       ["bronchial", 1280, 956, "Bronchial cells — airway inflammation", "Bronchial"],
       ["cell", 1280, 1228, "Eukaryotic cell and mitochondria, cross-section", "Cellular"],
-      ["fetal", 1280, 1194, "Fetal development stage", "Fetal development"],
-      ["hand", 1280, 815, "Hand muscle anatomy", "Hand"],
-      ["orofacial", 971, 1280, "Oral, dental and jaw structures", "Orofacial"],
+      ["fetal", 1276, 1044, "Fetal development stage", "Fetal development"],
+      ["hand", 1218, 815, "Hand muscle anatomy", "Hand"],
+      ["orofacial", 880, 1280, "Oral, dental and jaw structures", "Orofacial"],
       // The molecular section plays these as loops, so its `image` field never
       // renders — which left the best frames in the deck unseen.
-      ["protein", 762, 1152, "Protein structure — drug–target binding", "Protein structure"],
-      ["moa-vessel", 926, 462, "Blood vessel in cross-section through tissue", "MoA — vasculature"],
-      ["moa-tissue", 926, 489, "Tissue architecture with capillary network", "MoA — tissue"],
-      ["moa-receptor", 926, 470, "Drug molecule binding a cell-surface receptor", "MoA — receptor binding"],
-      ["moa-membrane", 926, 509, "Transport across the cell membrane", "MoA — membrane transport"],
+      ["protein", 756, 887, "Protein structure — drug–target binding", "Protein structure"],
+      ["moa-vessel", 916, 462, "Blood vessel in cross-section through tissue", "MoA — vasculature"],
+      ["moa-tissue", 916, 484, "Tissue architecture with capillary network", "MoA — tissue"],
+      ["moa-receptor", 915, 470, "Drug molecule binding a cell-surface receptor", "MoA — receptor binding"],
+      ["moa-membrane", 916, 500, "Transport across the cell membrane", "MoA — membrane transport"],
       ["interaction", 1025, 1280, "Molecular interaction — receptor activity", "Molecular interaction"],
     ] as const
   ).map(([slug, w, h, alt, label]) => ({

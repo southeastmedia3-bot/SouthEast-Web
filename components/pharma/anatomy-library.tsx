@@ -5,29 +5,42 @@ import type { MediaSlot } from "@/data/media";
 import { cn } from "@/lib/utils";
 
 /**
- * The side of the notional square each plate is sized against.
+ * How tall a plate is allowed to run.
  *
- * NOT a row height and not a column width — an AREA. Given a render of ratio r,
- * its plate is `PLATE * sqrt(r)` wide and `PLATE / sqrt(r)` tall, so a 0.45
- * standing figure and a 3.4 thyroid comparison cover the same number of square
- * pixels and land on the page with the same weight. This is the only sizing rule
- * that survives a set spanning that range. Sizing by height turns the wide ones
- * into billboards three times the width of the tall ones; sizing by width turns
- * the tall ones into towers you scroll past in sections.
+ * EQUAL AREA WAS THE WRONG RULE. It was the second attempt here and it read as
+ * fair — every render covering the same number of square pixels, so no shape
+ * dominated — but "fair" is not what this section is for. Averaging the area
+ * across a set that spans 0.34:1 to 3.4:1 means nothing is ever shown at the
+ * size it needs, and the whole library came out small enough that you had to
+ * lean at the screen to tell a kidney from a pancreas.
  *
- * It is deliberately large — a 16:9 frame comes out around 1000px wide on a
- * desktop, which is the full useful width of the container and about the largest
- * these files can be shown before they soften (the deck masters top out at
- * 1280px on the long edge). The page is long as a result. That is the trade this
- * section exists to make: this is the studio's medical work, and a visitor who
- * scrolls this far came to look at it, not to skim thumbnails of it.
+ * So the rule now is simply: AS LARGE AS IT GOES. Each plate takes the largest
+ * of the three sizes it is allowed — the column's full width, this much height,
+ * or a soft ceiling on how far its own file can be enlarged — whichever binds
+ * first. In practice a wide render fills the column and a tall one fills the
+ * screen, which is what each of them needed all along.
+ *
+ * Tracking the viewport keeps a tall render to about a screenful, so it is taken
+ * in as one image rather than scrolled through in pieces; the rem cap stops it
+ * from outrunning the file on a tall display.
  */
-const PLATE = "clamp(17rem, 62vw, 47rem)";
+const PLATE_H = "clamp(26rem, 105vh, 80rem)";
 
-/** Width and shape of the plate for a render of `w x h`, at constant area. */
+/**
+ * How far past its own pixels a file may be enlarged.
+ *
+ * The deck masters top out at 1280px on the long edge, and several of the frames
+ * cut from the slides are smaller than that. Without a ceiling the widest of
+ * them would be stretched over a 1376px column from a 657px original. At 1.75
+ * the softest frame on the page is still sharp at reading distance, which is the
+ * distance this section is composed for.
+ */
+const MAX_ZOOM = 1.75;
+
+/** The plate for a render of `w x h`: the largest size all three limits allow. */
 function plate(w: number, h: number) {
   return {
-    width: `min(100%, calc(${PLATE} * ${Math.sqrt(w / h).toFixed(4)}))`,
+    width: `min(100%, ${Math.round(w * MAX_ZOOM)}px, calc(${PLATE_H} * ${(w / h).toFixed(4)}))`,
   };
 }
 
@@ -43,9 +56,17 @@ function plate(w: number, h: number) {
  * the work is the entire argument.
  *
  * So each render gets a band of its own, at its own proportions, as large as its
- * master will carry. The plates alternate left and right of the column so the
- * eye keeps moving down a long page instead of tracking one centred stack, and
- * the caption sits in the margin the alternation opens up.
+ * master will carry — see PLATE_H. The plates alternate left and right of the
+ * column so the eye keeps moving down a long page instead of tracking one
+ * centred stack, and the caption sits in the margin the alternation opens up.
+ *
+ * THE FILES ARE CROPPED TO THEIR SUBJECT, which is half of why this reads at a
+ * distance. The deck exports carry a lot of ground: the kidney and pancreas sat
+ * in a frame they filled 44% of, the liver 55%, the heart 63%. Enlarging those
+ * only enlarges the margin. They are trimmed to the render plus a hair of
+ * breathing room, so the plate is the work rather than a field with the work
+ * somewhere in it — the kidney frame alone more than doubled on the page without
+ * being shown a pixel wider.
  *
  * The ground is near-black on purpose. These renders were shot on two different
  * grounds — most on black, a handful (the body types, the lung comparison, the
