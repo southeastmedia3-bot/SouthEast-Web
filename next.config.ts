@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { PHARMA_LIBRARY_REV } from "./constants/media-rev";
 
 /**
  * Content-Security-Policy.
@@ -112,6 +113,20 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    /**
+     * An allowlist, so it has to name everything — declaring `localPatterns` at
+     * all blocks every local source that does not match one of these, with a 400.
+     *
+     * The first entry is the site as it was: any path under /public, no query
+     * string. The second is the one exception, the pharma library's revision tag
+     * (see `constants/media-rev.ts`). Both spell `search` out rather than
+     * omitting it — omitting it allows *any* query, which lets someone else
+     * point the optimizer at URLs of their choosing.
+     */
+    localPatterns: [
+      { pathname: "/**", search: "" },
+      { pathname: "/media/pharma/**", search: PHARMA_LIBRARY_REV },
+    ],
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "framer-motion"],

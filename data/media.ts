@@ -38,6 +38,8 @@ export type MediaAsset = {
   kicker?: string;
 };
 
+import { PHARMA_LIBRARY_REV } from "@/constants/media-rev";
+
 const G = "/media/generated";
 const G_PHARMA = "/media/pharma/anat";
 const PROD = "/media/products";
@@ -1627,10 +1629,20 @@ export const saasLibrary = {
  * If a clean master arrives, measure it and add it back. Same rule as the two
  * slides that were dropped for baked headlines — see [[pharma-deck-baked-text]].
  */
+
+/**
+ * Only this array carries the revision tag. These twenty-three frames are the
+ * ones under active iteration; the atlas and the set-pieces read the same folder
+ * through their own paths and are deliberately left alone, because a URL that
+ * never changes is exactly what the day-long cache is for. Bumping the tag when
+ * a frame is re-cut is the whole contract — see `constants/media-rev.ts`.
+ */
+const REV = PHARMA_LIBRARY_REV;
+
 export const pharmaExtraFrames: MediaSlot[] = [
   {
     key: "pharmaFamily",
-    src: `/media/pharma/deck/family.jpg`,
+    src: `/media/pharma/deck/family.jpg${REV}`,
     w: 866,
     h: 1280,
     alt: "Anatomical figures across ages and body types, standing in a row",
@@ -1638,7 +1650,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   },
   {
     key: "pharmaEyeSkull",
-    src: `/media/pharma/deck/eye-skull.jpg`,
+    src: `/media/pharma/deck/eye-skull.jpg${REV}`,
     w: 1219,
     h: 1280,
     alt: "Orbital anatomy — eyes seated in the skull, close cutaway",
@@ -1646,7 +1658,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   },
   {
     key: "pharmaLungCompare",
-    src: `/media/pharma/deck/lung.jpg`,
+    src: `/media/pharma/deck/lung.jpg${REV}`,
     w: 1280,
     h: 431,
     alt: "Four lungs compared — healthy, smoker's, virus-affected and tuberculosis-affected",
@@ -1654,7 +1666,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   },
   {
     key: "pharmaKnee",
-    src: `/media/pharma/deck/knee.jpg`,
+    src: `/media/pharma/deck/knee.jpg${REV}`,
     w: 618,
     h: 1280,
     alt: "Knee joint anatomy — musculoskeletal cutaway",
@@ -1662,7 +1674,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   },
   {
     key: "pharmaLeg",
-    src: `/media/pharma/deck/leg.jpg`,
+    src: `/media/pharma/deck/leg.jpg${REV}`,
     w: 576,
     h: 1280,
     alt: "Leg musculature over bone, full length",
@@ -1695,7 +1707,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
     ] as const
   ).map(([slug, w, h, alt, label]) => ({
     key: `pharmaDeck-${slug}`,
-    src: `/media/pharma/deck/${slug}.jpg`,
+    src: `/media/pharma/deck/${slug}.jpg${REV}`,
     w,
     h,
     alt,
@@ -1705,7 +1717,7 @@ export const pharmaExtraFrames: MediaSlot[] = [
   // rather than alternating two.
   {
     key: "pharmaTumor",
-    src: `/media/pharma/tumor.jpg`,
+    src: `/media/pharma/tumor.jpg${REV}`,
     w: 1280,
     h: 720,
     alt: "Tumour formation in affected tissue",

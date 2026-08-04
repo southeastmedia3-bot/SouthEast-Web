@@ -53,6 +53,23 @@ To replace one:
 2. Edit that slot's `src`, `w`, `h`, `alt` — and `video` / `label` if it has them.
 3. Nothing else. **No component changes, no layout changes.**
 
+### If you overwrite a file rather than adding one
+
+`/media/:path*` is served `public, max-age=86400, stale-while-revalidate=604800`, so a
+replacement that keeps its filename does **not** reach anyone who has already loaded the
+page — for a day hard, then a week stale. The origin serves the new bytes immediately;
+that is not the problem. From the outside it looks exactly like the change never
+shipped, and it is easy to lose an afternoon re-doing work that was already correct.
+
+The pharma library frames (`pharmaExtraFrames`) are the set this bit hardest — three
+re-cuts in one day, all under the same names — so their URLs carry a revision tag:
+`constants/media-rev.ts`. **Overwrite one of those files and you must bump that
+constant in the same commit.** It is declared in `images.localPatterns` too, so a bump
+in only one of the two places fails the build instead of shipping quietly.
+
+For any other library, either give the new file a new name, or add the same kind of tag
+before assuming a swap is not working.
+
 `w` and `h` are the file's true pixel dimensions and must be measured from the actual
 file, not estimated — they are what lets each frame take its own shape before it loads
 (no crop, no letterbox, no layout shift). Measure with:
