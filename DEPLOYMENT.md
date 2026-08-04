@@ -138,33 +138,56 @@ endpoint alone does not prove delivery.
 ## Keep the static payload small
 
 `public/` was ~145MB of film and stills, which made every uncached view expensive
-and the whole bundle slow to ship. It is now ~81MB, re-encoded from the masters —
+and the whole bundle slow to ship. It is now ~61MB, re-encoded from the masters —
 no path, aspect ratio or crop changed, so `data/media.ts` was untouched.
 
-~49MB of that total is two deliberate exceptions, and both are the homepage:
+~28MB of that total is two deliberate exceptions, and both are the homepage:
 
-- `showreel.mp4` (~46MB) is **1080p at 4.6 Mbps two-pass, cut from the 4K
+- `showreel.mp4` (~25MB) is **1080p at 2.5 Mbps two-pass, cut from the 4K
   master** — the frame the studio is judged on, played full-bleed and scaled
-  1.12, where three rounds of shrinking had taken it to 960x540/418kbps mush. It
-  is High@4.1 rather than the Main profile the rule below asks for; every device
-  made in the last decade hardware-decodes High at that level. Read the note
-  above `homeShowreel` in `data/media.ts` before touching it — where the master
-  lives, why 4.6 and not 7.4, and why it is not offered as AV1.
+  1.12, where three rounds of shrinking had once taken it to 960x540/418kbps
+  mush. It is High@4.1 rather than the Main profile the rule below asks for;
+  every device made in the last decade hardware-decodes High at that level. Read
+  the note above `homeShowreel` in `data/media.ts` before touching it — where the
+  master lives, why 2.5 and not 4.6, and why it is not offered as AV1.
 - `villa-night-scrub.mp4` (3.4MB) is all-intra. See the GOP note below before
   trying to win it back.
+
+**Pick `-b:v` against a throttled trace, not a paused frame.** This slot ran at
+4.6 Mbps for a while, chosen by looking at the image alone. On the deployed site
+over a 4 Mbps link that rate could never buffer ahead of itself, so the reel held
+the connection saturated for the whole visit and everything else queued: the
+header logo took ~3.5s to appear, the hero poster ~4.3s. Measured VMAF against
+the 4K master, so the cost of the fix is on the record:
+
+| `-b:v` | size  | VMAF mean | 5th pct |
+| ------ | ----- | --------- | ------- |
+| 2000k  | 19 MB | 89.1      | 80.7    |
+| 2500k  | 25 MB | 91.7      | 84.9    |
+| 3000k  | 28 MB | 93.4      | 87.6    |
+| 4600k  | 44 MB | 95.9      | 91.8    |
 
 The showreel recipe, for when the cut changes. Both passes read the 4K master;
 only `-b:v` is worth arguing about, and the poster is regenerated with it:
 
 ```bash
 M=source-media/showreel-4k-master.mp4
-V="scale=1920:1080:flags=lanczos"
+# `setparams` is load-bearing: with the scale filter alone, ffmpeg 8 writes only
+# `color_primaries` and leaves transfer and matrix unknown on the two-pass output.
+V="scale=1920:1080:flags=lanczos:out_color_matrix=bt709,\
+setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709"
 X="-c:v libx264 -preset slow -profile:v high -level 4.1 -pix_fmt yuv420p \
-   -b:v 4600k -maxrate 6900k -bufsize 13800k -g 48 \
-   -color_primaries bt709 -color_trc bt709 -colorspace bt709"
-ffmpeg -y -i $M -an -vf "$V" $X -pass 1 -f mp4 /dev/null
+   -b:v 2500k -maxrate 3750k -bufsize 7500k -g 48"
+ffmpeg -y -i $M -an -vf "$V" $X -pass 1 -f null -
 ffmpeg -y -i $M -an -vf "$V" $X -pass 2 -movflags +faststart \
   public/media/generated/showreel.mp4
+```
+
+Confirm all three tags landed — two of the three silently do not, otherwise:
+
+```bash
+ffprobe -v error -show_entries stream=color_primaries,color_transfer,color_space \
+  -of csv=p=0 public/media/generated/showreel.mp4   # want bt709,bt709,bt709
 ```
 
 The target for everything _else_ is not fidelity, it is a site that plays through
@@ -222,15 +245,17 @@ ffprobe -v error -select_streams v:0 -skip_frame nokey \
 Stills split by how they are served. `*-poster.jpg` goes into a `<video poster>`
 attribute, which is a raw URL that `next/image` never touches — those are the
 bytes a visitor on a bad connection actually downloads, so they go to mozjpeg
-q62 capped at 1152px. `showreel-poster.jpg` is the exception, at 1920x1080 / q3
-(~360KB): it is frame 0 standing in for the film during the wipe, and a soft
-poster in front of a sharp film is the pop the poster exists to prevent. Cut it
-from the 4K master, not from the encode, and regenerate it whenever the reel
-changes:
+q62 capped at 1152px. `showreel-poster.jpg` is the exception, at 1920x1080 / q5
+(~245KB): it is frame 0 standing in for the film during the wipe, and a soft
+poster in front of a sharp film is the pop the poster exists to prevent. Move
+`-q:v` with the reel's bitrate — it was q3 to match a 4.6 Mbps film, which in
+front of a 2.5 Mbps one is the same pop inverted, and it is the largest single
+image on the homepage. Cut it from the 4K master, not from the encode, and
+regenerate it whenever the reel changes:
 
 ```bash
 ffmpeg -y -i source-media/showreel-4k-master.mp4 \
-  -vf "select=eq(n\,0),scale=1920:1080:flags=lanczos" -vframes 1 -q:v 3 \
+  -vf "select=eq(n\,0),scale=1920:1080:flags=lanczos" -vframes 1 -q:v 5 \
   -huffman optimal public/media/generated/showreel-poster.jpg
 ```
 
@@ -310,6 +335,25 @@ header and none of the security headers from `next.config.ts`, and the body is a
 can keep parts of the site working for up to the 24h `max-age` after routing has
 already broken, so a domain fault decays gradually and reads convincingly as a
 media or rendering bug. Compare the two URLs first.
+
+**"The logo is missing" is usually not a missing file.** Every asset on the site
+resolves; verified by walking all 11 routes top to bottom against the deployed
+backend, decoding every `<img>` and reading `HTMLMediaElement.error` on every
+`<video>`. When something appears absent it has almost always lost a race, not a
+lookup, and the header lockup loses it first — it is small, it is above the fold,
+and it shares a connection with an 80-second film. Two things decide it:
+
+- **Its cache header.** `/media/:path*` did not match `/brand/`, so the logo
+  files were `max-age=0` and refetched on every view. There is a `/brand/:path*`
+  rule in `next.config.ts` now; if the logo goes back to arriving late on repeat
+  views, check that rule survived.
+- **What the reel is doing to the link.** A hero video whose bitrate exceeds the
+  visitor's bandwidth never stops downloading, so nothing queued behind it ever
+  arrives promptly. See the `-b:v` table above.
+
+Reproduce it before changing anything — headless Chrome, CDP
+`Network.emulateNetworkConditions` at ~4 Mbps, and screenshot at fixed marks.
+On an unthrottled localhost every version of this looks fine.
 
 ## Known follow-ups
 

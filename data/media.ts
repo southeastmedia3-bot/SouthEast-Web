@@ -63,8 +63,8 @@ const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
  *  faststart; the poster is its own first frame, so there is no pop between
  *  still and first played frame. Swap `video`/`poster` to change the reel.
  *
- *  ENCODED FROM THE 4K MASTER: 1920x1080, 4.6 Mbps two-pass, 25fps, H.264
- *  High@4.1, ~46MB, faststart, silent, bt709-tagged.
+ *  ENCODED FROM THE 4K MASTER: 1920x1080, 2.5 Mbps two-pass, 25fps, H.264
+ *  High@4.1, ~25MB, faststart, silent, bt709-tagged.
  *
  *  THE MASTER IS `source-media/showreel-4k-master.mp4` — 3840x2160 at 64 Mbps,
  *  1993 frames, 79.72s. `source-media/` is gitignored, so it is on the machine
@@ -82,13 +82,27 @@ const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
  *  entry, so at those rates the shots it exists to sell — watch faces, label
  *  type, caustics — carried visible blocking in the dark gradients.
  *
- *  WHY 4.6 Mbps AND NOT MORE. The reel is expensive content: CRF 19 off the same
- *  master measures 7.41 Mbps / 74MB, and is indistinguishable from the master in
- *  a 1:1 crop. 4.6 Mbps is the knee — it clears the blocking that prompted this,
- *  at ~1.9x the old bit budget rather than 3x. Two-pass rather than CRF because
- *  the deploy payload should be a number chosen up front, not one discovered
- *  after encoding. If the studio ever decides the hero is worth 74MB, the recipe
- *  is in DEPLOYMENT.md and only the rate changes.
+ *  WHY 2.5 Mbps. This ran at 4.6 Mbps / 46MB, and that number was chosen for the
+ *  frame alone, against a still image of the problem. Measured on the deployed
+ *  site over a 4 Mbps link, it was the wrong trade: an 80-second film that wants
+ *  4.6 Mbps on a 4 Mbps connection can never buffer ahead of itself, so it does
+ *  not merely load slowly — it holds the connection saturated for the entire
+ *  visit, re-buffering, and everything else queues behind it. The header logo
+ *  (10KB) did not decode until ~3.5s; the poster below took ~4.3s; a visitor
+ *  spent the first three seconds looking at a nav bar with no mark on it and a
+ *  black rectangle where the reel goes.
+ *
+ *  2.5 Mbps is the rate at which the reel streams comfortably in real time on
+ *  that link — it buffers at ~1.6x playback, gets ahead, and stops competing —
+ *  and it halves the payload. What it costs is measurable and small: VMAF 91.7
+ *  mean against the 4K master, versus 95.9 at 4.6 Mbps (2.0 Mbps was 89.1, 3.0
+ *  was 93.4). That is nothing like the 418 kbps mush above; it is one step down
+ *  the curve, spent to stop the film starving the page it opens.
+ *
+ *  Two-pass rather than CRF because the deploy payload should be a number chosen
+ *  up front, not one discovered after encoding. The recipe is in DEPLOYMENT.md
+ *  and only `-b:v` is worth arguing about — but argue about it against a
+ *  throttled network trace, not against a paused frame.
  *
  *  Do not fold this file into a bulk re-encode of `public/media/`. The thumbnails
  *  and card loops in the rest of the manifest are small on screen and should stay
@@ -101,12 +115,17 @@ const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
  *  — worse playback than the H.264 every phone of the last decade decodes in
  *  hardware. Same reason it is capped at 1080p/level 4.1 rather than sent up to
  *  1440p: above that the hardware decoder is a gamble on cheap devices.
- *  `preload="metadata"` in the Hero is what keeps the ~46MB off the critical
+ *  `preload="metadata"` in the Hero is what keeps the ~25MB off the critical
  *  path: it is spent on playback, not on first paint.
  *
- *  The poster is the 4K master's own frame 0, lanczos-scaled to 1920x1080 (q3),
- *  so the still a visitor sees during the wipe is as sharp as the film that
- *  replaces it and there is no pop at the handover. Regenerate the two together. */
+ *  The poster is the 4K master's own frame 0, lanczos-scaled to 1920x1080 (q5,
+ *  ~245KB), so the still a visitor sees during the wipe is as sharp as the film
+ *  that replaces it and there is no pop at the handover. It was q3 / ~355KB to
+ *  match a 4.6 Mbps film; against a 2.5 Mbps one that made the poster sharper
+ *  than the reel it stands in for, which is the same pop by the other route —
+ *  and it is the largest single image on the page, so it was also 110KB of the
+ *  delay it exists to cover. Regenerate the two together, and move this quality
+ *  with the bitrate. */
 export const homeShowreel: MediaAsset = {
   video: `${G}/showreel.mp4`,
   poster: `${G}/showreel-poster.jpg`,

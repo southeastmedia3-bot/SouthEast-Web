@@ -125,8 +125,8 @@ const nextConfig: NextConfig = {
       },
       {
         /**
-         * Everything under /public/media — ~81MB of film and several hundred
-         * stills, ~46MB of which is the homepage showreel. That total matters:
+         * Everything under /public/media — ~61MB of film and several hundred
+         * stills, ~25MB of which is the homepage showreel. That total matters:
          * see "Keep the static payload small" in DEPLOYMENT.md before adding to
          * it.
          *
@@ -145,6 +145,33 @@ const nextConfig: NextConfig = {
          * rename the file rather than lengthening this header.
          */
         source: "/media/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=86400, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      {
+        /**
+         * The brand lockup, on the same terms as the media above — and it was
+         * the one asset on the site that had no cache at all.
+         *
+         * `/media/:path*` never matched `/brand/`, so the four logo files fell
+         * through to Next's `public, max-age=0` default and were revalidated on
+         * every single view. Measured against the deployed backend on a 4 Mbps
+         * link: the header mark and wordmark (54KB between them) did not decode
+         * until ~3.5s, because they were queued behind the homepage reel while
+         * it saturated the connection — the bar rendered with its nav links and
+         * an empty space where the logo goes. Every navigation paid it again.
+         *
+         * These are served raw, not through `next/image`: App Hosting's adapter
+         * hands `/brand/*.png` straight to the CDN, so this header is what the
+         * browser actually gets. Same day-fresh / week-stale policy and the same
+         * reason it is not `immutable` — the files are overwritten in place when
+         * the identity changes.
+         */
+        source: "/brand/:path*",
         headers: [
           {
             key: "Cache-Control",
