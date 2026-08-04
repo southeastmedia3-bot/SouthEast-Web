@@ -1,9 +1,9 @@
 import { AnatomyReveal } from "@/components/verticals/anatomy-reveal";
 import { FaqList } from "@/components/verticals/faq-list";
-import { FrameLibrary } from "@/components/verticals/frame-library";
 import { SignatureFrame } from "@/components/verticals/signature-frame";
 import { VerticalHero } from "@/components/verticals/vertical-hero";
 import { VerticalNav, type NavSection } from "@/components/verticals/vertical-nav";
+import { AnatomyLibrary } from "@/components/pharma/anatomy-library";
 import { ClosingManifesto } from "@/components/pharma/closing-manifesto";
 import { FeatureRow } from "@/components/pharma/feature-row";
 import { MolecularSection } from "@/components/pharma/molecular-section";
@@ -116,26 +116,22 @@ export function PharmaVertical({ vertical }: { vertical: Vertical }) {
       {/* Slide 29 — closing manifesto */}
       <ClosingManifesto />
 
-      {/* The remaining deck cutouts the set-pieces above do not already carry —
-          orbital, musculoskeletal, the lung comparison and the body-type range. */}
-      {/* Justified rows, not the uniform grid the other verticals use.
-          This library is the widest spread of shapes on the site — a 0.26:1 liver
-          strip and a 2.97:1 lung comparison in the same set — and no single cell
-          shape can hold that range. A square one held them all whole but sat most
-          of them in a wide margin of empty ground, so the sheet read as renders
-          scattered across the page rather than laid out on it. Justified rows
-          give every frame its own true width at a shared row height: nothing
-          cropped, nothing matted, and the sheet still squares off on both edges.
-          The page is longer for it, which is the right trade on the one page
-          where the work is the argument. */}
-      <FrameLibrary
+      {/* Plates, not a contact sheet — see the note on the component. Every
+          remaining render in the medical library, one per band, each at its own
+          proportions and as large as its master will carry.
+
+          No seam above it: the manifesto closes on black and the library opens
+          on near-black, which is a change of section rather than a change of
+          key. The seam below it is the one that matters — that edge steps from
+          the darkest ground on the page to the lightest. */}
+      <AnatomyLibrary
         id="library"
-        rule="var(--brand-blue)"
         frames={pharmaExtraFrames}
-        layout="justified"
-        heading="More from the anatomy library"
-        lead="Orbital, musculoskeletal, disease comparison and the body-type range — all expert-reviewed, all built to be posed and sectioned."
+        heading="The complete anatomy library"
+        lead="Every remaining frame, shown whole and at size — organs and disease states, musculoskeletal and orofacial, the body-type range, and the molecular work behind a mechanism of action. All expert-reviewed, all built to be posed and sectioned."
       />
+
+      <SectionSeam from="#06070a" to="var(--background)" accent="rgba(25,81,168,0.4)" />
 
       {/* Conversion tail */}
       {vertical.faqs?.length ? <FaqList faqs={vertical.faqs} rule="var(--brand-blue)" /> : null}
