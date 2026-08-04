@@ -28,23 +28,22 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   "/media/pharma/slides/thyroid.jpg": { w: 2400, h: 1350 },
 
   // Atlas — stills. Real file sizes, measured; the deck masters top out at 1280
-  // on the long edge, and most of these are smaller because they are now cropped
-  // to their subject rather than to whatever the slide export gave them (see the
-  // note on `pharmaExtraFrames` in `data/media.ts`). Re-measure after any crop —
-  // the library sizes its plates from these numbers.
-  "/media/pharma/deck/heart.jpg": { w: 657, h: 432 },
-  "/media/pharma/deck/lung.jpg": { w: 1280, h: 426 },
-  "/media/pharma/deck/fetal.jpg": { w: 1276, h: 1044 },
-  "/media/pharma/deck/brain.jpg": { w: 1044, h: 874 },
-  "/media/pharma/deck/liver.jpg": { w: 383, h: 706 },
+  // on the long edge. Heart, liver, stomach and thyroid were re-cut from the
+  // full slides (see the note on `pharmaExtraFrames` in `data/media.ts`), so
+  // these four are the new crops and not the old botched ones.
+  "/media/pharma/deck/heart.jpg": { w: 691, h: 587 },
+  "/media/pharma/deck/lung.jpg": { w: 1280, h: 431 },
+  "/media/pharma/deck/fetal.jpg": { w: 1280, h: 1194 },
+  "/media/pharma/deck/brain.jpg": { w: 1280, h: 946 },
+  "/media/pharma/deck/liver.jpg": { w: 602, h: 709 },
   "/media/pharma/deck/bronchial.jpg": { w: 1280, h: 956 },
-  "/media/pharma/deck/stomach.jpg": { w: 705, h: 698 },
-  "/media/pharma/deck/kidney.jpg": { w: 729, h: 798 },
-  "/media/pharma/deck/orofacial.jpg": { w: 880, h: 1280 },
+  "/media/pharma/deck/stomach.jpg": { w: 717, h: 698 },
+  "/media/pharma/deck/kidney.jpg": { w: 1280, h: 949 },
+  "/media/pharma/deck/orofacial.jpg": { w: 971, h: 1280 },
   "/media/pharma/deck/knee.jpg": { w: 618, h: 1280 },
-  "/media/pharma/deck/hand.jpg": { w: 1218, h: 815 },
+  "/media/pharma/deck/hand.jpg": { w: 1280, h: 815 },
   "/media/pharma/deck/cell.jpg": { w: 1280, h: 1228 },
-  "/media/pharma/deck/thyroid.jpg": { w: 730, h: 216 },
+  "/media/pharma/deck/thyroid.jpg": { w: 768, h: 223 },
 
   // Atlas / molecular / derm — video posters (the box takes the poster's shape)
   "/media/pharma/heart-poster.jpg": { w: 1600, h: 1600 },
@@ -66,23 +65,23 @@ export const pharmaMediaDims: Record<string, { w: number; h: number }> = {
   "/media/pharma/deck/bodytypes-b.jpg": { w: 1486, h: 1601 },
   "/media/pharma/deck/head-cutaway.jpg": { w: 1467, h: 1601 },
   "/media/pharma/deck/head-cross.jpg": { w: 1600, h: 1364 },
-  "/media/pharma/deck/eye-skull.jpg": { w: 1219, h: 1280 },
+  "/media/pharma/deck/eye-skull.jpg": { w: 1525, h: 1601 },
 
   // Library / anatomy
   "/media/pharma/deck/systems.jpg": { w: 1600, h: 829 },
-  "/media/pharma/deck/family.jpg": { w: 845, h: 1280 },
+  "/media/pharma/deck/family.jpg": { w: 1082, h: 1600 },
   "/media/pharma/deck/orbital-eyes.jpg": { w: 850, h: 857 },
 
   // Molecular — stills. `moa-stills` and `moa-pipeline` are the original montage
   // exports, each three panels stacked; the library shows the four single frames
   // cut out of them instead.
-  "/media/pharma/deck/protein.jpg": { w: 756, h: 887 },
+  "/media/pharma/deck/protein.jpg": { w: 762, h: 1152 },
   "/media/pharma/deck/moa-stills.jpg": { w: 1002, h: 1280 },
   "/media/pharma/deck/moa-pipeline.jpg": { w: 1002, h: 1280 },
-  "/media/pharma/deck/moa-vessel.jpg": { w: 916, h: 462 },
-  "/media/pharma/deck/moa-tissue.jpg": { w: 916, h: 484 },
-  "/media/pharma/deck/moa-receptor.jpg": { w: 915, h: 470 },
-  "/media/pharma/deck/moa-membrane.jpg": { w: 916, h: 500 },
+  "/media/pharma/deck/moa-vessel.jpg": { w: 926, h: 462 },
+  "/media/pharma/deck/moa-tissue.jpg": { w: 926, h: 489 },
+  "/media/pharma/deck/moa-receptor.jpg": { w: 926, h: 470 },
+  "/media/pharma/deck/moa-membrane.jpg": { w: 926, h: 509 },
   "/media/pharma/deck/interaction.jpg": { w: 1025, h: 1280 },
   "/media/pharma/molecular.jpg": { w: 1280, h: 720 },
 
