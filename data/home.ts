@@ -2,8 +2,8 @@
  * Homepage content. One module, so copy never hides inside components.
  *
  * The copy here is drawn from the client's Corporate Capability Deck. Figures
- * (100TB, 15 servers, 96GB VRAM, 8K, 20+ years, Bengaluru & Hyderabad) are the
- * deck's own — don't invent new ones.
+ * (100TB, 15 servers, 672GB VRAM across the farm, 8K, 20+ years, Bengaluru &
+ * Hyderabad) are the deck's own — don't invent new ones.
  */
 import { siteConfig } from "@/constants/site";
 
@@ -27,13 +27,21 @@ export const trustBar = {
   eyebrow: "The embedded media partner model",
   statement:
     "We replace the ad-hoc agency model. Southeast Media becomes your outsourced digital infrastructure partner — dedicated resource allocation, on access-controlled servers, for institutions that cannot afford to look uncertain.",
-  /** Rendered as physics bodies you can shove around. Keep labels to 2–3 words. */
+  /**
+   * Rendered as physics bodies you can shove around.
+   *
+   * Each block names the thing, not just the unit — "enterprise render nodes",
+   * not "render nodes" — because the number on its own reads as a statistic and
+   * the pairing is what reads as a capability. Keep labels to 2–3 words: the
+   * block is a square roughly 120px across, and a fourth word wraps to a third
+   * line and starts crowding the figure above it.
+   */
   blocks: [
-    { value: "20+", label: "years of CGI", tone: "blue" },
-    { value: "100TB", label: "secure storage", tone: "sky" },
-    { value: "15", label: "render nodes", tone: "violet" },
-    { value: "8K", label: "max resolution", tone: "gold" },
-    { value: "96GB", label: "VRAM per node", tone: "sky" },
+    { value: "20+", label: "years CGI experience", tone: "blue" },
+    { value: "672GB", label: "total render VRAM", tone: "sky" },
+    { value: "15", label: "enterprise render nodes", tone: "violet" },
+    { value: "100TB", label: "secure RAID storage", tone: "gold" },
+    { value: "8K", label: "master resolution", tone: "sky" },
     { value: "0", label: "margin for error", tone: "blue" },
   ],
 } as const;
