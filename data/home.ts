@@ -107,26 +107,23 @@ export const servicesList = {
  * Scene: the pinned production pipeline.
  *
  * Every stage is a real artifact rather than a finished render standing in for
- * one — the whole point of the section is to show *how* the work is made. Six of
- * the seven are now the studio's own stage artifacts, supplied per stage: the
- * brief document, the storyboard panels, the character turnaround, the lighting
- * render, the VFX plate and the graded delivery frame. Only Previz still uses a
- * frame from the product library, because no previz artifact was supplied.
+ * one — the whole point of the section is to show *how* the work is made. All
+ * seven are now the studio's own stage artifacts, supplied per stage: the brief
+ * document, the storyboard panels, the animatic frame, the character turnaround,
+ * the lighting render, the VFX plate and the graded delivery frame.
  *
- * WITHHELD, still: the earlier source set also included an animatic and a
- * modelling still carrying other artists' watermarks ("© Robert Schlunze 2021"
- * and a "Demon Bust W.I.P." credit). Publishing another artist's work on a
- * cropped-watermark basis is not something to do, so they stay out.
+ * WITHHELD, still: the earlier source set also included a modelling still
+ * carrying another artist's watermark ("© Robert Schlunze 2021", and a "Demon
+ * Bust W.I.P." credit). Publishing another artist's work on a cropped-watermark
+ * basis is not something to do, so it stays out.
  *
- * `w`/`h` are each file's real pixel dimensions, measured from the file. They no
- * longer drive the frame — the scene shows all seven stages in one fixed 3:2 box
- * with `object-contain`, so every artifact is the same size on screen and none of
- * them is cropped (see `FRAME_RATIO` in `components/scenes/pipeline.tsx`). They
- * are kept because they are the record of what each file actually is, and
- * because the range they span is the argument for containing rather than
- * covering: 0.93 for the portrait storyboard up to 2.35 for the delivery frame.
- * Covering one box with that spread would show the middle third of a document.
- * Measure a replacement before swapping it in.
+ * `w`/`h` are each file's real pixel dimensions, measured from the file, and
+ * they DRIVE THE FRAME: the scene sizes each stage's box to that stage's own
+ * aspect ratio, so the artifact fills its box corner to corner with no mat
+ * around it (see `FRAME_SIDE` in `components/scenes/pipeline.tsx`). The set
+ * spans 0.93 for the portrait storyboard up to 2.35 for the delivery frame, so a
+ * wrong pair here is a visibly stretched or matted frame. Measure a replacement
+ * before swapping it in.
  */
 export const pipeline = {
   eyebrow: "How the work gets made",
@@ -150,9 +147,9 @@ export const pipeline = {
       title: "Previz & Animatic",
       detail:
         "Reallusion Character Creator and iClone into Unreal Engine — real-time previews and structural validation before expensive frames are committed.",
-      media: "/media/products/watch-sketch-02.jpg",
-      w: 1080,
-      h: 1080,
+      media: "/media/process/previz-animatic.jpg",
+      w: 639,
+      h: 360,
     },
     {
       title: "Modelling & Look-Dev",

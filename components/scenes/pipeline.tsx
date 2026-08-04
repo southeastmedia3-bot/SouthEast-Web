@@ -24,21 +24,44 @@ const SCROLL_PER_STEP_VH = 40;
 const STAGE_HEIGHT_VH = STEPS.length * SCROLL_PER_STEP_VH + 100;
 
 /**
- * The one frame shape every stage is shown in.
+ * The side of the notional square every stage's frame is sized against.
  *
- * The frame used to take each artifact's own aspect ratio, so the box resized on
- * every step — a portrait storyboard, then a 2.3:1 delivery frame — and the
- * stage visibly reflowed underneath it. Seven artifacts of seven different sizes
- * read as seven unrelated pictures rather than one pipeline.
+ * EVERY FRAME IS ITS OWN SHAPE, AND NOTHING IS MATTED. The box was fixed at 3:2
+ * with the artifact `object-contain`ed inside it, which kept all seven the same
+ * size — at the cost of a band of pale ground around six of them, since only one
+ * file is anywhere near 3:2. On a section this light those bands read as a white
+ * card printed around each photograph. So the box now takes the artifact's own
+ * aspect ratio and the picture fills it corner to corner: no mat, no crop, no
+ * stretch.
  *
- * So the box is fixed at 3:2 and every artifact is `object-contain`ed inside it.
- * Same size for all seven, and no image is cropped or stretched to get there:
- * 3:2 sits in the middle of the range these files actually span (0.93 for the
- * portrait storyboard up to 2.35 for the delivery frame), so nothing is matted
- * heavily on either axis. The source files are untouched — this is purely how
- * they are framed.
+ * What holds the seven together instead is AREA, not height and not width. Given
+ * a ratio r, the box is `FRAME_SIDE * sqrt(r)` wide and `FRAME_SIDE / sqrt(r)`
+ * tall — so every stage covers the same number of square pixels whatever its
+ * shape, and the 0.93 storyboard and the 2.35 delivery frame carry equal visual
+ * weight. Sizing by height alone would make the delivery frame two and a half
+ * times the storyboard's width and overflow the column; sizing by width alone
+ * would reduce it to a strip. The dimensions come from `w`/`h` in `data/home.ts`.
  */
-const FRAME_RATIO = "3 / 2";
+const FRAME_SIDE = "clamp(13rem, 40vh, 24rem)";
+
+/** The box for an artifact of aspect ratio `w / h`, at constant area. */
+function frameBox(w: number, h: number) {
+  const root = Math.sqrt(w / h);
+  return {
+    width: `min(100%, calc(${FRAME_SIDE} * ${root.toFixed(4)}))`,
+    aspectRatio: `${w} / ${h}`,
+  };
+}
+
+/**
+ * The tallest box the set can produce, as a multiple of FRAME_SIDE.
+ *
+ * The pinned stage reserves this height up front and centres the current frame
+ * inside it, so changing shape between steps moves nothing else on the stage —
+ * the detail paragraph under the frame and the list beside it hold still while
+ * the box itself eases from one artifact's proportions to the next.
+ */
+const TALLEST = Math.max(...STEPS.map((s) => Math.sqrt(s.h / s.w)));
 
 /**
  * Scene — the pipeline. A pinned stage the visitor scrolls through: the index
@@ -81,18 +104,17 @@ export function Pipeline() {
           <ol className="flex flex-col gap-16">
             {STEPS.map((step, i) => (
               <li key={step.title} className="grid gap-6 md:grid-cols-2 md:items-center">
-                {/* Same fixed frame as the pinned stage, for the same reason:
-                    seven artifacts at seven different heights read as seven
-                    unrelated pictures. Contained, so none of them is cropped. */}
+                {/* Each artifact at its own shape, same as the pinned stage —
+                    the box is the picture's, so `cover` crops nothing. */}
                 <div
-                  className="relative w-full overflow-hidden rounded-lg bg-foreground/[0.04]"
-                  style={{ aspectRatio: FRAME_RATIO }}
+                  className="relative overflow-hidden rounded-lg"
+                  style={frameBox(step.w, step.h)}
                 >
                   <Image
                     src={step.media}
                     alt={step.title}
                     fill
-                    className="object-contain"
+                    className="object-cover"
                     sizes="(min-width: 768px) 45vw, 92vw"
                   />
                 </div>
@@ -143,36 +165,39 @@ export function Pipeline() {
                 {String(index + 1).padStart(2, "0")}
               </span>
 
-              {/* The frame. One fixed box, identical on every step — see
-                  FRAME_RATIO. Each artifact is contained inside it, so the brief
-                  document, the portrait storyboard and the 2.3:1 delivery frame
-                  are all shown whole at the same frame size; a step change is now
-                  only a crossfade, with no reflow underneath it. */}
+              {/* The frame. It takes the current artifact's own proportions —
+                  see FRAME_SIDE — inside a slot tall enough for the tallest of
+                  them, so the box eases from shape to shape while nothing around
+                  it moves. Settled, the picture reaches all four edges. */}
               <div className={cn("relative", flip && "md:order-1")}>
                 <div
-                  className="relative overflow-hidden rounded-lg bg-foreground/[0.04]"
-                  style={{
-                    aspectRatio: FRAME_RATIO,
-                    width: "min(100%, calc(clamp(14rem, 46vh, 28rem) * 1.5))",
-                  }}
+                  className="flex items-center"
+                  style={{ height: `calc(${FRAME_SIDE} * ${TALLEST.toFixed(4)})` }}
                 >
-                  {STEPS.map((step, i) => (
-                    <Image
-                      key={step.title}
-                      src={step.media}
-                      alt={step.title}
-                      fill
-                      sizes="(min-width: 768px) 36vw, 84vw"
-                      className={cn(
-                        // contain, not cover: the box is one shared shape now, so
-                        // covering it would crop every artifact that isn't 3:2 —
-                        // which is all but none of them.
-                        "object-contain transition-opacity duration-700 ease-out",
-                        i === index ? "opacity-100" : "opacity-0",
-                      )}
-                      priority={i === 0}
-                    />
-                  ))}
+                  <div
+                    className="relative overflow-hidden rounded-lg transition-[width,aspect-ratio] duration-700 ease-out"
+                    style={frameBox(active.w, active.h)}
+                  >
+                    {STEPS.map((step, i) => (
+                      <Image
+                        key={step.title}
+                        src={step.media}
+                        alt={step.title}
+                        fill
+                        sizes="(min-width: 768px) 36vw, 84vw"
+                        className={cn(
+                          // contain, not cover. The box is the *active* frame's
+                          // shape, so for the active image the two are identical
+                          // and it fills the box exactly — but the six fading
+                          // underneath it are not that shape, and covering would
+                          // stretch them across the crossfade.
+                          "object-contain transition-opacity duration-700 ease-out",
+                          i === index ? "opacity-100" : "opacity-0",
+                        )}
+                        priority={i === 0}
+                      />
+                    ))}
+                  </div>
                 </div>
                 <p className="type-body mt-5 max-w-md text-muted">{active.detail}</p>
               </div>
