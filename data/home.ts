@@ -5,6 +5,7 @@
  * (100TB, 15 servers, 96GB VRAM, 8K, 20+ years, Bengaluru & Hyderabad) are the
  * deck's own — don't invent new ones.
  */
+import { siteConfig } from "@/constants/site";
 
 /**
  * The hero carries one line and two buttons, and shows them as a scroll beat —
@@ -13,7 +14,11 @@
  * the same claims are made properly by `trustBar` and the mandate scene.
  */
 export const heroContent = {
-  headline: "Cinematic worlds, built to feel real.",
+  // `siteConfig.projectName`, not a copy of it. The same sentence is already the
+  // studio's positioning line everywhere the site names itself — the page title,
+  // the Open Graph card, the Twitter card — and the hero is where a visitor
+  // reads it rather than a crawler. Two copies of a positioning line drift.
+  headline: siteConfig.projectName,
   primaryCta: { label: "Start a project", href: "/contact" },
   secondaryCta: { label: "Explore our work", href: "/verticals" },
 };

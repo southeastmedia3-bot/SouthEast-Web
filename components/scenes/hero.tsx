@@ -267,7 +267,15 @@ export function Hero() {
       {/* One line, and the two ways in. The eyebrow and the paragraph that used
           to sit around it are gone: over a playing reel they were a wall of type
           on top of the work, and both say what the sections below say properly. */}
-      <h1 className="mx-auto max-w-[18ch] text-balance type-hero text-white">
+      {/* The statement names the two halves of the business, so it is a longer
+          line than the one it replaced and it is set a step down from the full
+          `--font-hero` clamp — at 7.2vw it ran to five lines and filled the reel
+          it is supposed to be sitting on. 20ch holds it to three balanced lines
+          on a desktop and keeps the film visible around them. */}
+      <h1
+        className="mx-auto max-w-[20ch] text-balance type-hero text-white"
+        style={{ fontSize: "clamp(2rem, 4.9vw, 4.75rem)" }}
+      >
         {words.map((word, i) => (
           // The mask must be tall enough for descenders (the "g" in
           // "engineered" was being sheared off). Pad the clip box, then pull
