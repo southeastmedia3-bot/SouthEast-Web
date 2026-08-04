@@ -269,33 +269,88 @@ growing this bundle.
 
 ## Domain status
 
-**As at 2026-07-31.** `www` is live and is the canonical host. The apex is not
-yet bound.
+**As at 2026-08-04. Neither public host serves the site.** The backend itself is
+healthy — `https://southeastmedia--southeastmedia-1f79d.asia-southeast1.hosted.app`
+returns 200 with the full CSP — so everything below is domain wiring, not the app.
 
 ```
-www.southeastmedia.in  → bound to this backend. Valid Google Trust Services
-                         certificate (issued 27 Jul, expires 25 Oct). Serves
-                         this app: all 11 routes 200, `x-fah-adapter` present,
-                         CSP and HSTS present, body byte-identical to the
-                         backend URL.
-southeastmedia.in      → 35.219.201.37, but the TLS handshake is REFUSED — the
-                         certificate covers only www.southeastmedia.in and
-                         *.www.southeastmedia.in, so there is nothing to present
-                         for the bare name. Plain HTTP 301s to
-                         https://southeastmedia.in, which then cannot connect.
-                         A visitor typing the bare domain gets a browser error.
+www.southeastmedia.in  → 35.219.201.37 (App Hosting), valid Google Trust
+                         Services certificate for www.southeastmedia.in and
+                         *.www.southeastmedia.in (27 Jul → 25 Oct). TLS
+                         completes. But EVERY path 404s — /, /contact,
+                         /robots.txt, /brand/logo.svg alike — with `server:
+                         envoy`, `via: 1.1 google`, and NONE of `x-fah-adapter`,
+                         CSP or HSTS. The body is Google's ~10.8KB "Not Found"
+                         page, not this app's 404. The request is not reaching
+                         Next.js: DNS and certificate are fine, the host→backend
+                         mapping is not. Regressed since 2026-07-31, when this
+                         host served all 11 routes.
+southeastmedia.in      → 3.33.130.190 / 15.197.148.33. These are GoDaddy's
+                         forwarding/parking addresses, NOT Firebase. It answers
+                         200 with a GoDaddy-issued certificate (CN=
+                         southeastmedia.in, that SAN only) and a 114-byte body
+                         whose whole content is
+                         `window.location.href="/lander"` — the parking stub
+                         this file warns about below. GoDaddy Domain Forwarding
+                         or parking is still active on `@` and is overriding
+                         DNS, which is also why App Hosting can never issue a
+                         certificate for the apex.
 ```
+
+Both names already carry their App Hosting claim record, so both were added to
+the backend at some point:
+
+```
+southeastmedia.in      TXT  fah-claim=00b-02-099adb04-b13e-45c1-bc74-724e245dce53
+www.southeastmedia.in  TXT  fah-claim=00b-02-9b2e293a-a99a-4ffd-b642-ff39d0cd05b5
+```
+
+Nameservers are `ns17/ns18.domaincontrol.com` — GoDaddy is authoritative, so
+every record change happens there.
+
+The two faults are independent and `www` is the urgent one: it is the canonical
+host baked into all 11 prerendered pages, and it is currently dead. Fix it
+first, then the apex.
+
+There is no CLI for this. `firebase apphosting:backends:*` manages backends,
+secrets and rollouts only — domains exist solely in the Firebase console (or the
+`firebaseapphosting.googleapis.com` REST API). Do not expect to script it.
 
 `NEXT_PUBLIC_SITE_URL` is therefore `https://www.southeastmedia.in` — a host
 that answers when a crawler follows a canonical tag. It does not depend on the
 apex work landing.
 
+### Restoring www
+
+Firebase console → App Hosting → the `southeastmedia` backend → **Domains**, and
+read what `www.southeastmedia.in` says next to it. The certificate is valid and
+the A record is right, so the failure is the binding:
+
+- If the row is **missing**, it was removed — re-add it. The `fah-claim` TXT is
+  already in DNS, so re-verification should be immediate.
+- If it shows **needs setup / pending**, compare the A record Firebase is now
+  asking for against the live `35.219.201.37`. App Hosting can hand out a
+  different address than an earlier mapping used, and a stale A record produces
+  exactly this symptom — correct TLS, edge 404.
+- If it shows **Connected**, the domain is bound to something other than this
+  backend. Check no second backend or classic Hosting site claims the same host.
+
 ### Finishing the apex
 
-Firebase console → App Hosting → the `southeastmedia` backend → **Domains**
-(steps 3 and 4 above). Prefer configuring `southeastmedia.in` to **redirect** to
-`https://www.southeastmedia.in` rather than serving both: one origin serves, the
-other forwards, and there is no duplicate host to reconcile.
+Same screen. The apex is claimed but its A records never left GoDaddy, so
+nothing has ever reached Firebase on that name.
+
+**Delete GoDaddy's forwarding first.** GoDaddy → the domain → **Domain
+Settings** → **Forwarding** → remove the entry on `@`, then in **Manage DNS**
+delete the `A @ 3.33.130.190` and `A @ 15.197.148.33` records. Forwarding
+overrides DNS; leaving it in place means the apex keeps serving the `/lander`
+stub no matter what records are added, and App Hosting's certificate challenge
+never resolves.
+
+Then add the `A @` record(s) the console shows for `southeastmedia.in`. Leave
+the existing `fah-claim` TXT alone. Prefer configuring the apex to **redirect**
+to `https://www.southeastmedia.in` rather than serving both: one origin serves,
+the other forwards, and there is no duplicate host to reconcile.
 
 If both end up serving instead, leave `NEXT_PUBLIC_SITE_URL` alone — the
 canonical tags already name `www`, which is what dedupes them for search
@@ -305,17 +360,30 @@ CDN-served and a cached cross-host redirect is a loop waiting to happen.
 Confirm when it is done:
 
 ```bash
-# Handshake completes and the cert now covers the apex
+# www reaches Next.js again. `x-fah-adapter` is the tell — without it the
+# response came from the Google edge and never touched this app.
+curl -sI https://www.southeastmedia.in/ | grep -iE 'HTTP/|x-fah-adapter|content-security'
+
+# The apex has left GoDaddy. Want Firebase's address, NOT 3.33.130.190 /
+# 15.197.148.33, and no A record Firebase did not ask for.
+curl -s -H 'accept: application/dns-json' \
+  'https://dns.google/resolve?name=southeastmedia.in&type=A'
+
+# Handshake completes on a Google Trust Services cert — issuer matters as much
+# as the SAN, since GoDaddy's parking also presents a valid cert for this name
 echo | openssl s_client -connect southeastmedia.in:443 -servername southeastmedia.in 2>/dev/null \
-  | openssl x509 -noout -ext subjectAltName
+  | openssl x509 -noout -issuer -ext subjectAltName
 
 # Either a 301 to www (preferred) or the real site
 curl -sI https://southeastmedia.in/ | head -3
 ```
 
-A 200 alone is not proof a domain works — this one returned 200 for weeks while
-serving a 114-byte parking stub that redirected to `/lander`. Check the body
-size and look for a real `<title>`.
+A 200 alone is not proof a domain works — this one has returned 200 for weeks
+while serving a 114-byte parking stub that redirects to `/lander`. Check the
+body size and look for a real `<title>`. Equally, a valid certificate is not
+proof: on 2026-08-04 the apex had one and served the stub, while `www` had one
+and 404d. Only `x-fah-adapter` on the response proves the request reached this
+app.
 
 ## Debugging "the media isn't loading"
 

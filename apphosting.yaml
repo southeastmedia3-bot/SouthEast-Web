@@ -23,23 +23,23 @@ env:
   #
   # WHY www AND NOT THE BARE DOMAIN
   #
-  # Verified 2026-07-31: www.southeastmedia.in is bound to this backend, holds a
-  # valid Google Trust Services certificate, and serves this app — same byte
-  # count as the backend URL, with `x-fah-adapter` and the security headers from
-  # next.config.ts on the response. It is a real host, today.
+  # The string here is the origin frozen under every canonical tag, og:image and
+  # sitemap entry at BUILD time, so it must name the host that is meant to
+  # answer when a crawler follows it. `www` is that host: it is bound to this
+  # backend and holds a valid Google Trust Services certificate for
+  # `www.southeastmedia.in` and `*.www.southeastmedia.in`.
   #
-  # The apex, southeastmedia.in, is NOT. DNS aims it at the same Firebase
-  # address, but the TLS handshake is refused outright — the certificate above
-  # covers only `www.southeastmedia.in` and `*.www.southeastmedia.in`, so there
-  # is nothing to present for the bare name. Plain HTTP 301s to
-  # `https://southeastmedia.in`, which then cannot connect at all. Apex binding
-  # is expected shortly; this value does not depend on it landing.
+  # The apex, southeastmedia.in, is not bound. Its A records still point at
+  # GoDaddy's forwarding addresses, so it serves a parking stub and App Hosting
+  # has never been able to issue a certificate for it. Pointing this value there
+  # would bake an origin that does not serve the site into all 11 prerendered
+  # pages.
   #
-  # That asymmetry is the whole reason this is `www`. The string here is the
-  # origin frozen under every canonical tag, og:image and sitemap entry at BUILD
-  # time, so it must name a host that answers when a crawler tries it. Pointing
-  # it at the apex before that host completes a handshake would bake an
-  # unreachable origin into all 11 prerendered pages.
+  # CAUTION — as at 2026-08-04 `www` is itself 404ing at the Google edge: DNS
+  # and certificate are correct but the host→backend mapping is broken, so no
+  # request reaches Next.js. That is a console-side fault, not a wrong value
+  # here; `www` remains the correct canonical and this line should NOT be
+  # changed to work around it. See "Domain status" in DEPLOYMENT.md.
   #
   # ONCE THE APEX IS BOUND, prefer a redirect over a second live host: configure
   # southeastmedia.in → https://www.southeastmedia.in in the Firebase console, so
