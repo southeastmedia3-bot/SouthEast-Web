@@ -1605,49 +1605,66 @@ export const saasLibrary = {
 /**
  * Pharma — the deck cutouts the bespoke page's set-pieces do not already use.
  *
- * `public/media/pharma/slides/` used to hold two more of these. They were the
- * same artwork with a marketing headline baked into the frame, so they are gone
- * rather than shown; `deck/lung.jpg` was trimmed for the same reason. If a new
- * deck export lands, open it before wiring it — see [[pharma-deck-baked-text]].
+ * EVERY `w`/`h` HERE IS THE FILE'S REAL PIXEL SIZE. They used to be a 1600-based
+ * set of numbers that held each file's ratio but not its size — harmless while
+ * the frames were matted into fixed cells, and wrong the moment the library
+ * started sizing plates from them. Measure with sharp before editing a pair;
+ * nothing on this page is 1600 wide, the deck tops out at 1280.
+ *
+ * SEVERAL OF THESE WERE RE-CUT from `public/media/pharma/slides/`, which holds
+ * the full uncropped slide behind each one. The originals shipped here were
+ * botched crops of those slides — the heart lost its left model to the frame
+ * edge and carried a band of dead black, the liver was a 328px-wide ribbon of
+ * two half-organs, the stomach and thyroid still had marketing copy in shot, and
+ * the two MoA frames were montages of three panels sliced through the middle
+ * ones. They are now cut to the render and nothing else, and the MoA montages
+ * are split into the four individual frames they were made of.
+ *
+ * WITHHELD: `pharma/molecular.jpg` has a third party's drug brand set across it
+ * ("Aumolertinib"), positioned over the molecule so no crop removes it without
+ * taking the subject too. It stays on the homepage drum, where it is a
+ * thumbnail, and stays out of the library, where it would be shown a metre wide.
+ * If a clean master arrives, measure it and add it back. Same rule as the two
+ * slides that were dropped for baked headlines — see [[pharma-deck-baked-text]].
  */
 export const pharmaExtraFrames: MediaSlot[] = [
   {
     key: "pharmaFamily",
     src: `/media/pharma/deck/family.jpg`,
-    w: 1082,
-    h: 1600,
+    w: 866,
+    h: 1280,
     alt: "Anatomical figures across ages and body types, standing in a row",
     label: "Body types & age range",
   },
   {
     key: "pharmaEyeSkull",
     src: `/media/pharma/deck/eye-skull.jpg`,
-    w: 1525,
-    h: 1601,
+    w: 1219,
+    h: 1280,
     alt: "Orbital anatomy — eyes seated in the skull, close cutaway",
     label: "Orbital — eye & skull",
   },
   {
     key: "pharmaLungCompare",
     src: `/media/pharma/deck/lung.jpg`,
-    w: 1600,
-    h: 539,
+    w: 1280,
+    h: 431,
     alt: "Four lungs compared — healthy, smoker's, virus-affected and tuberculosis-affected",
     label: "Lung — disease comparison",
   },
   {
     key: "pharmaKnee",
     src: `/media/pharma/deck/knee.jpg`,
-    w: 773,
-    h: 1601,
+    w: 618,
+    h: 1280,
     alt: "Knee joint anatomy — musculoskeletal cutaway",
     label: "Knee — musculoskeletal",
   },
   {
     key: "pharmaLeg",
     src: `/media/pharma/deck/leg.jpg`,
-    w: 721,
-    h: 1601,
+    w: 576,
+    h: 1280,
     alt: "Leg musculature over bone, full length",
     label: "Leg — muscle over bone",
   },
@@ -1656,29 +1673,25 @@ export const pharmaExtraFrames: MediaSlot[] = [
   // so a sheet of the isolated models is complementary rather than a repeat.
   ...(
     [
-      ["heart", 1596, 1601, "Anatomical heart, isolated", "Heart"],
-      ["brain", 1600, 1182, "Brain — neurological structures", "Brain"],
-      ["liver", 410, 1601, "Liver — healthy through to disease", "Liver"],
-      ["kidney", 1600, 1186, "Kidney and pancreas cross-section", "Kidney & pancreas"],
-      ["stomach", 1545, 1601, "Stomach — abnormal tissue growth", "Stomach"],
-      ["thyroid", 1600, 804, "Thyroid — healthy gland through to tumour", "Thyroid"],
-      ["bronchial", 1600, 1195, "Bronchial cells — airway inflammation", "Bronchial"],
-      ["cell", 1600, 1535, "Eukaryotic cell and mitochondria, cross-section", "Cellular"],
-      ["fetal", 1600, 1493, "Fetal development stage", "Fetal development"],
-      ["hand", 1600, 1019, "Hand muscle anatomy", "Hand"],
-      ["orofacial", 1214, 1601, "Oral, dental and jaw structures", "Orofacial"],
+      ["heart", 691, 587, "Anatomical heart, whole and in cross-section", "Heart"],
+      ["brain", 1280, 946, "Brain — neurological structures", "Brain"],
+      ["liver", 602, 709, "Liver — healthy, fatty and cancer-affected", "Liver — disease progression"],
+      ["kidney", 1280, 949, "Kidney and pancreas cross-section", "Kidney & pancreas"],
+      ["stomach", 717, 698, "Stomach — abnormal tissue growth", "Stomach"],
+      ["thyroid", 768, 223, "Thyroid — healthy gland beside a tumour-affected one", "Thyroid"],
+      ["bronchial", 1280, 956, "Bronchial cells — airway inflammation", "Bronchial"],
+      ["cell", 1280, 1228, "Eukaryotic cell and mitochondria, cross-section", "Cellular"],
+      ["fetal", 1280, 1194, "Fetal development stage", "Fetal development"],
+      ["hand", 1280, 815, "Hand muscle anatomy", "Hand"],
+      ["orofacial", 971, 1280, "Oral, dental and jaw structures", "Orofacial"],
       // The molecular section plays these as loops, so its `image` field never
-      // renders — which left four of the best frames in the deck unseen.
-      ["protein", 1402, 1601, "Protein structure — drug–target binding", "Protein structure"],
-      ["moa-stills", 1253, 1601, "Mechanism-of-action sequence stills", "MoA — stills"],
-      ["moa-pipeline", 1253, 1601, "The mechanism-of-action production pipeline", "MoA — pipeline"],
-      [
-        "interaction",
-        1281,
-        1600,
-        "Molecular interaction — receptor activity",
-        "Molecular interaction",
-      ],
+      // renders — which left the best frames in the deck unseen.
+      ["protein", 762, 1152, "Protein structure — drug–target binding", "Protein structure"],
+      ["moa-vessel", 926, 462, "Blood vessel in cross-section through tissue", "MoA — vasculature"],
+      ["moa-tissue", 926, 489, "Tissue architecture with capillary network", "MoA — tissue"],
+      ["moa-receptor", 926, 470, "Drug molecule binding a cell-surface receptor", "MoA — receptor binding"],
+      ["moa-membrane", 926, 509, "Transport across the cell membrane", "MoA — membrane transport"],
+      ["interaction", 1025, 1280, "Molecular interaction — receptor activity", "Molecular interaction"],
     ] as const
   ).map(([slug, w, h, alt, label]) => ({
     key: `pharmaDeck-${slug}`,
@@ -1688,22 +1701,13 @@ export const pharmaExtraFrames: MediaSlot[] = [
     alt,
     label,
   })),
-  // These two used to sit on the homepage reel. The reel now cycles all seven
-  // disciplines rather than alternating two, so they come home to the vertical
-  // they belong to instead of falling out of the site.
-  {
-    key: "pharmaMolecular",
-    src: `/media/pharma/molecular.jpg`,
-    w: 1600,
-    h: 900,
-    alt: "Molecular structure render",
-    label: "Molecular structure",
-  },
+  // Came home from the homepage reel, which now cycles all seven disciplines
+  // rather than alternating two.
   {
     key: "pharmaTumor",
     src: `/media/pharma/tumor.jpg`,
-    w: 1600,
-    h: 900,
+    w: 1280,
+    h: 720,
     alt: "Tumour formation in affected tissue",
     label: "Tumour formation",
   },
