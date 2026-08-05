@@ -8,6 +8,8 @@ import { Mandate } from "@/components/scenes/mandate";
 import { DisciplineWall } from "@/components/scenes/discipline-wall";
 import { Invitation } from "@/components/scenes/invitation";
 import { PageWrapper } from "@/components/layout/page-wrapper";
+import { JsonLd } from "@/components/seo/json-ld";
+import { pageSchema } from "@/lib/schema";
 import { metadataFor } from "@/lib/seo";
 
 /**
@@ -24,9 +26,10 @@ import { metadataFor } from "@/lib/seo";
  * positioning line is still the first thing on the page: `heroContent.headline`
  * reads it straight from `siteConfig.projectName`.
  *
- * The home page needs no `pageSchema()` — the root layout's Organization and
- * WebSite graph is already the schema for this URL, and a one-item breadcrumb
- * would add nothing.
+ * The root layout already carries the Organization and WebSite graph for this
+ * URL, so `pageSchema("/")` adds only what is specific to the page: the WebPage
+ * node and a `VideoObject` for the showreel. It emits no breadcrumb — a one-item
+ * trail reading "Home" is noise.
  */
 export const metadata = metadataFor("/");
 
@@ -39,6 +42,7 @@ export const metadata = metadataFor("/");
 export default function Home() {
   return (
     <PageWrapper>
+      <JsonLd schema={pageSchema("/")} />
       <Hero /> {/* dark — the showreel, wiped open */}
       <TheFilm /> {/* dark — scroll-scrubbed villa footage */}
       <TrustBar /> {/* white */}

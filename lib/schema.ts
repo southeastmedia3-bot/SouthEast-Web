@@ -1,5 +1,7 @@
 import { siteConfig } from "@/constants/site";
-import { routeSeo, studioExpertise, type RouteSeo, type SeoPath } from "@/data/seo";
+import { routeSeo, seoRoutes, studioExpertise, type RouteSeo, type SeoPath } from "@/data/seo";
+import { homeShowreel, verticalHeroes } from "@/data/media";
+import { getVertical } from "@/data/verticals";
 import { absoluteUrl } from "@/lib/seo";
 
 /**
@@ -17,6 +19,8 @@ import { absoluteUrl } from "@/lib/seo";
  * gets the site's rich results suppressed manually. So: no ratings, no review
  * counts, no invented founding date, no `LocalBusiness` until there is a real
  * postal address to put in it (see `siteConfig.cities` for why that is blocked).
+ * Every `FAQPage` below is generated from the questions the page actually
+ * renders, which is the only way to keep that guarantee as the copy changes.
  *
  * THE `@id` DISCIPLINE. Nodes reference each other by `@id` rather than being
  * re-declared inline — one Organization exists at `/#organization`, and every
@@ -44,6 +48,23 @@ const SCHEMA_LOCALE = "en-IN";
 
 /** `areaServed` as schema.org expects it — Places, not bare strings. */
 const areaServed = siteConfig.areaServed.map((name) => ({ "@type": "Place", name }));
+
+/** Routes that sell a service, i.e. the seven vertical pages. */
+const SERVICE_ROUTES: readonly SeoPath[] = [
+  "/pharma",
+  "/real-estate",
+  "/films",
+  "/vfx",
+  "/animation",
+  "/saas",
+  "/enterprise",
+];
+
+function isServiceRoute(path: string): path is SeoPath {
+  return SERVICE_ROUTES.includes(path as SeoPath);
+}
+
+/* ────────────────────────────── the entity ────────────────────────────── */
 
 /**
  * The studio, as one entity.
@@ -74,11 +95,38 @@ function organizationNode() {
     image: absoluteUrl("/brand/og.jpg"),
     areaServed,
     /**
+     * Email only. A `ContactPoint` with a `telephone` is the field that matters
+     * most here and the studio has not published one — see `siteConfig.cities`.
+     */
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      email: siteConfig.contactEmail,
+      areaServed: siteConfig.areaServed.map(String),
+      availableLanguage: ["English"],
+    },
+    /**
      * A machine-readable statement of competence. This is the single field an
      * answer engine is most likely to use when deciding whether this studio is a
      * candidate answer for "3D medical animation company in India".
      */
     knowsAbout: [...studioExpertise],
+    /**
+     * The seven services, as a catalogue hanging off the entity rather than only
+     * as seven unconnected `Service` nodes on seven pages. This is what lets a
+     * consumer that has read *one* page enumerate everything the studio offers
+     * without crawling the rest of the site.
+     */
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: `${siteConfig.name} services`,
+      itemListElement: seoRoutes
+        .filter((route) => route.service)
+        .map((route) => ({
+          "@type": "Offer",
+          itemOffered: { "@id": `${absoluteUrl(route.path)}#service` },
+        })),
+    },
     /**
      * NO `sameAs` YET — and do not wire it to `socialNavigation`.
      *
@@ -120,6 +168,8 @@ export function siteSchema() {
   };
 }
 
+/* ─────────────────────────────── per page ─────────────────────────────── */
+
 export function createBreadcrumbSchema(items: Array<{ name: string; path: string }>) {
   return {
     "@context": "https://schema.org",
@@ -134,22 +184,12 @@ export function createBreadcrumbSchema(items: Array<{ name: string; path: string
 }
 
 /**
- * Routes that sit under the Services hub in the breadcrumb trail.
+ * The breadcrumb trail for a route.
  *
- * These are the seven vertical pages. `/about` and `/contact` hang off the root
- * instead — the trail has to match how the site is actually navigated, or it is
- * a claim about structure that the nav contradicts.
+ * The seven verticals hang off the Services hub; `/about` and `/contact` hang
+ * off the root. The trail has to match how the site is actually navigated, or it
+ * is a claim about structure that the nav contradicts.
  */
-const SERVICE_ROUTES: readonly SeoPath[] = [
-  "/pharma",
-  "/real-estate",
-  "/films",
-  "/vfx",
-  "/animation",
-  "/saas",
-  "/enterprise",
-];
-
 function breadcrumbTrail(seo: RouteSeo) {
   // Annotated, not inferred: `routeSeo` is `as const`, so an unannotated array
   // would take its element type from the first entry and reject every push.
@@ -157,7 +197,7 @@ function breadcrumbTrail(seo: RouteSeo) {
     { name: routeSeo["/"].breadcrumb, path: "/" },
   ];
 
-  if (SERVICE_ROUTES.includes(seo.path as SeoPath)) {
+  if (isServiceRoute(seo.path)) {
     trail.push({ name: routeSeo["/verticals"].breadcrumb, path: "/verticals" });
   }
 
@@ -166,6 +206,53 @@ function breadcrumbTrail(seo: RouteSeo) {
   }
 
   return trail;
+}
+
+function breadcrumbNode(seo: RouteSeo) {
+  return {
+    "@type": "BreadcrumbList",
+    "@id": `${absoluteUrl(seo.path)}#breadcrumb`,
+    itemListElement: breadcrumbTrail(seo).map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}
+
+/**
+ * The page itself.
+ *
+ * `AboutPage` and `ContactPage` are not decoration — they are the two page types
+ * a search engine explicitly looks for when deciding which URL to surface for
+ * "<brand> contact" or "about <brand>", and they are the pages an answer engine
+ * reaches for when asked how to get in touch. `CollectionPage` on the hub says
+ * the same thing about `/verticals`: it is an index, not another service page.
+ */
+function pageTypeFor(path: string) {
+  if (path === "/about") return "AboutPage";
+  if (path === "/contact") return "ContactPage";
+  if (path === "/verticals") return "CollectionPage";
+  return "WebPage";
+}
+
+function webPageNode(seo: RouteSeo) {
+  const video = videoNode(seo);
+
+  return {
+    "@type": pageTypeFor(seo.path),
+    "@id": `${absoluteUrl(seo.path)}#webpage`,
+    url: absoluteUrl(seo.path),
+    name: `${seo.title} | ${siteConfig.name}`,
+    description: seo.description,
+    inLanguage: SCHEMA_LOCALE,
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    // The root gets no breadcrumb — a one-item trail reading "Home" is noise.
+    ...(seo.path === "/" ? {} : { breadcrumb: { "@id": `${absoluteUrl(seo.path)}#breadcrumb` } }),
+    ...(video ? { primaryImageOfPage: video.thumbnailUrl, video: { "@id": video["@id"] } } : {}),
+  };
 }
 
 function serviceNode(seo: RouteSeo) {
@@ -185,30 +272,122 @@ function serviceNode(seo: RouteSeo) {
 }
 
 /**
- * Per-page graph: the breadcrumb trail, plus a `Service` node on the pages that
- * sell one. Returns a single object so a page renders exactly one <script>.
+ * The hero film on this page, as a `VideoObject`.
  *
- * The root is excluded — it carries the site-wide graph already, and a
- * one-item breadcrumb ("Home") is noise.
+ * These films are the product, and a video entry is what makes a page eligible
+ * for video rich results and video search — a channel a CGI studio should not be
+ * leaving on the table. It also gives an answer engine something concrete to
+ * cite: "here is the studio's mechanism-of-action reel" is a better answer than
+ * a link to a page that happens to contain one.
+ *
+ * `uploadDate` is required by Google and is taken from the route's content date
+ * in `data/seo.ts`. That is honest: it is the date the film was published *on
+ * this site*, which is exactly what the field means for a self-hosted video.
+ * `duration` is omitted rather than guessed — it is optional, and a wrong ISO
+ * duration is worse than a missing one.
+ */
+function videoNode(seo: RouteSeo) {
+  const asset = seo.path === "/" ? homeShowreel : verticalHeroes[seo.path.slice(1)];
+  if (!asset?.video || !asset.poster) return null;
+
+  return {
+    "@type": "VideoObject",
+    "@id": `${absoluteUrl(seo.path)}#video`,
+    name: `${seo.title} — ${siteConfig.name}`,
+    description: asset.alt,
+    thumbnailUrl: absoluteUrl(asset.poster),
+    contentUrl: absoluteUrl(asset.video),
+    embedUrl: absoluteUrl(seo.path),
+    uploadDate: seo.lastModified,
+    inLanguage: SCHEMA_LOCALE,
+    isFamilyFriendly: true,
+    publisher: { "@id": ORGANIZATION_ID },
+  };
+}
+
+/**
+ * The page's FAQ, generated from the questions the page renders.
+ *
+ * BE CLEAR ABOUT WHAT THIS BUYS. Google withdrew FAQ rich results for most sites
+ * in 2023 — they now show only for recognised government and health authorities,
+ * so do not expect the accordion to appear under the blue link. The reason it is
+ * here is AEO and GEO: `FAQPage` is still read by Bing, and it is the single
+ * cleanest question-and-answer format an answer engine can lift, which is what
+ * puts the studio inside the response rather than in a citation list under it.
+ *
+ * Generated from `vertical.faqs` rather than written out here, so it cannot drift
+ * from what `FaqList` displays. Schema that claims a Q&A the visitor cannot find
+ * on the page is a guidelines violation, and hand-maintained copies are how that
+ * happens.
+ */
+function faqNode(seo: RouteSeo) {
+  if (!isServiceRoute(seo.path)) return null;
+
+  const faqs = getVertical(seo.path.slice(1))?.faqs;
+  if (!faqs?.length) return null;
+
+  return {
+    "@type": "FAQPage",
+    "@id": `${absoluteUrl(seo.path)}#faq`,
+    isPartOf: { "@id": `${absoluteUrl(seo.path)}#webpage` },
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: { "@type": "Answer", text: faq.a },
+    })),
+  };
+}
+
+/**
+ * The Services hub, as an ordered index of the seven service pages.
+ *
+ * Gives a crawler — and a model — the whole offering from one URL, in the site's
+ * own running order, without having to infer it from a grid of cards.
+ */
+function serviceIndexNode() {
+  return {
+    "@type": "ItemList",
+    "@id": `${absoluteUrl("/verticals")}#services`,
+    name: `${siteConfig.name} services`,
+    numberOfItems: SERVICE_ROUTES.length,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    itemListElement: SERVICE_ROUTES.map((path, index) => {
+      // Widened to `RouteSeo`: `routeSeo` is `as const`, so indexing it with the
+      // whole `SeoPath` union yields a union of literal shapes — and `/` has no
+      // `service` key at all, which makes the optional access a type error.
+      const entry: RouteSeo = routeSeo[path];
+
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        name: entry.service?.name ?? entry.breadcrumb,
+        url: absoluteUrl(path),
+      };
+    }),
+  };
+}
+
+/**
+ * Everything this URL asserts, as one graph.
+ *
+ * One `<script>` per page rather than several: the nodes cross-reference by
+ * `@id`, and splitting them across tags makes the relationships harder for a
+ * consumer to resolve and easier for an edit to break.
  */
 export function pageSchema(path: SeoPath) {
   const seo = routeSeo[path];
-  const service = serviceNode(seo);
 
-  const nodes: Record<string, unknown>[] = [
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${absoluteUrl(seo.path)}#breadcrumb`,
-      itemListElement: breadcrumbTrail(seo).map((item, index) => ({
-        "@type": "ListItem",
-        position: index + 1,
-        name: item.name,
-        item: absoluteUrl(item.path),
-      })),
-    },
+  const nodes: Array<Record<string, unknown> | null> = [
+    webPageNode(seo),
+    path === "/" ? null : breadcrumbNode(seo),
+    serviceNode(seo),
+    videoNode(seo),
+    faqNode(seo),
+    path === "/verticals" ? serviceIndexNode() : null,
   ];
 
-  if (service) nodes.push(service);
-
-  return { "@context": "https://schema.org", "@graph": nodes };
+  return {
+    "@context": "https://schema.org",
+    "@graph": nodes.filter((node): node is Record<string, unknown> => node !== null),
+  };
 }

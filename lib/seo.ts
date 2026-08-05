@@ -1,6 +1,7 @@
 import type { Metadata, MetadataRoute } from "next";
 import { siteConfig } from "@/constants/site";
 import { routeSeo, type SeoPath } from "@/data/seo";
+import { verticalHeroes } from "@/data/media";
 
 type MetadataInput = {
   title?: string;
@@ -81,6 +82,20 @@ export function metadataFor(path: SeoPath, options: { image?: string } = {}): Me
     title: seo.title,
     description: seo.description,
     path: seo.path,
+    /**
+     * The share card defaults to this page's own hero frame, not the site-wide
+     * wordmark card.
+     *
+     * Every vertical previously shared as the same branded `og.jpg`, so seven
+     * different services posted into a chat or a feed as seven identical images
+     * — which is a click-through cost on the one surface where a studio's work
+     * should be doing the selling. `verticalHeroes` already holds the frame the
+     * page opens on, so this cannot drift from what the visitor then sees.
+     *
+     * An explicit `options.image` still wins; `/pharma` uses it to share the
+     * anatomical heart rather than its MoA poster.
+     */
+    image: verticalHeroes[path.slice(1)]?.poster ?? undefined,
     ...options,
   });
 

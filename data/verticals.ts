@@ -418,6 +418,10 @@ const verticalCatalogue: Vertical[] = [
     ],
     faqs: [
       {
+        q: "What is a Mechanism of Action (MoA) animation?",
+        a: "A film showing how a drug works inside the body — target binding, receptor interaction, pathway modulation, cellular response and therapeutic impact — built from the actual biology rather than illustrated as a diagram. It is what makes a mechanism understood in a minute instead of a paper.",
+      },
+      {
         q: "How do you guarantee scientific accuracy?",
         a: "Our anatomy library is expert-reviewed by medical doctors, and it is the base every project is built from rather than a fresh interpretation each time. Reviews are iterative and collaborative: your scientific team signs off on the storyboard before animation begins, and again on the animatic before rendering.",
       },
@@ -436,6 +440,14 @@ const verticalCatalogue: Vertical[] = [
       {
         q: "Can these visuals be used beyond video?",
         a: "Yes. Molecular structures extend into 3D-print-ready models for exhibitions, medical conferences and activation spaces, and the same assets drive AR and VR experiences for product demonstration, medical training and investor showcases through our Unreal Engine pipeline.",
+      },
+      {
+        q: "Do you work with pharmaceutical companies outside Hyderabad?",
+        a: "Yes. The studio works from Hyderabad and Bengaluru and delivers across India, and everything after the brief is digital — storyboards, animatics and review rounds move over access-controlled servers, so where the client sits does not change the process.",
+      },
+      {
+        q: "What determines the cost of a medical animation?",
+        a: "Length, how much has to be modelled from nothing, and how much of the biology is simulated rather than keyframed. Extending our expert-reviewed anatomy library costs a fraction of building and validating a novel structure. We scope it against milestones in the SOW rather than quote a rate card.",
       },
     ],
     proof: {
@@ -643,6 +655,14 @@ const verticalCatalogue: Vertical[] = [
     ],
     faqs: [
       {
+        q: "What is a 3D architectural walkthrough?",
+        a: "A moving camera through a building that does not exist yet, rendered at the same fidelity as a still. It shows scale, circulation and daylight the way a site visit would — which is what a single frame cannot do, because a still cannot show how the spaces connect.",
+      },
+      {
+        q: "What is the difference between a render, a walkthrough and a virtual tour?",
+        a: "A render is one frame from one camera. A walkthrough is a directed film — we choose the route and the pace. A virtual tour is interactive: the viewer moves between positions themselves. Boards usually want the walkthrough; a pre-sales floor usually wants the tour.",
+      },
+      {
         q: "How long does a set of renders take?",
         a: "Most standard render sets are completed within one to two weeks, including review and revisions. Larger or more complex projects receive a tailored timeline.",
       },
@@ -661,6 +681,10 @@ const verticalCatalogue: Vertical[] = [
       {
         q: "Do you work in commercial and mixed-use, not just residential?",
         a: "Yes. Retail outlets, malls, restaurants and cafés, hospitality, offices, public buildings and large-scale mixed-use developments — anything that does not fit a standard residential template.",
+      },
+      {
+        q: "Do you work with developers outside Hyderabad?",
+        a: "Yes. The studio works from Hyderabad and Bengaluru and delivers across India. Everything after the drawings arrive is digital — grey-shader previews, review rounds and the final set all move over access-controlled storage — so the site's location does not change how the work runs.",
       },
     ],
     proof: {
@@ -942,6 +966,10 @@ const verticalCatalogue: Vertical[] = [
     // wall of six simultaneous loops would only play the same files again.
     faqs: [
       {
+        q: "What does corporate video production actually include?",
+        a: "Everything between the brief and the master: the recce, the shoot with its crew and equipment, and the finish — edit, composite and Digital Intermediate colour grade. Here all three happen in one building, which is the difference between a production and a chain of hand-offs.",
+      },
+      {
         q: "Do you actually shoot, or is this CGI with a camera department bolted on?",
         a: "We shoot. The live-action division is in-house and fully equipped — camera systems capable of uncompressed 8K, high-end lighting and grip, and a roster of expert Directors of Photography and cinematographers, plus established connections with top-tier PR and actor coordination agencies. What makes it unusual is the other half: the same building composites and grades what it shoots.",
       },
@@ -964,6 +992,10 @@ const verticalCatalogue: Vertical[] = [
       {
         q: "How is confidentiality handled on a shoot?",
         a: "NDA on the engagement, the same as every other vertical. Footage lands on access-controlled servers in this building and is edited, composited and graded there; we do not push client material through third-party services at any stage.",
+      },
+      {
+        q: "What determines the cost of a corporate or commercial film?",
+        a: "Shoot days, the size of the crew and equipment package, the number of locations, and how much is built in post rather than captured on the day. A single-location facility film and a multi-day commercial with CG integration are different orders of production. Both are scoped against milestones in the SOW.",
       },
     ],
     proof: {
@@ -1061,6 +1093,47 @@ const verticalCatalogue: Vertical[] = [
         src: "/media/saas/creative.mp4",
         poster: "/media/saas/creative-poster.jpg",
         label: "Abstract systems",
+      },
+    ],
+    /**
+     * VFX was the one vertical with no FAQ block, so its page ended without
+     * answering anything — and it is the page most likely to be reached by
+     * someone asking a machine "what does a VFX studio do". Every answer below
+     * is drawn from the capabilities and infrastructure already stated further up
+     * this same entry; nothing new is claimed.
+     */
+    faqs: [
+      {
+        q: "What does a VFX studio actually do?",
+        a: "Two things that usually get confused. It builds what was never in front of a camera — simulation, environments, creatures, products — and it integrates that into footage that was, so the seam does not read. On this pipeline both run through the same Maya, Cinema 4D and Octane chain, which is why they match.",
+      },
+      {
+        q: "What is CGI, and how is it different from VFX?",
+        a: "CGI is the imagery itself — anything generated in 3D rather than photographed. VFX is the craft of making it belong: matching lens, light and grain to a plate so the composite is not detectable. A fully rendered product film is CGI with no VFX in it; a shot with one replaced element is mostly VFX.",
+      },
+      {
+        q: "What software does your 3D and VFX pipeline run on?",
+        a: "Maya and 3ds Max for modelling, rigging and animation; Blender and Cinema 4D through Octane for the final 8K render; X-Particles, Marvelous Designer, EmberGen and LiquiGen for simulation, cloth, volumetric fire and smoke, and fluid dynamics. Previsualisation and interactive work run in Unreal Engine.",
+      },
+      {
+        q: "How much render capacity do you have?",
+        a: "Fifteen servers on RTX 5090-class GPUs with dual enterprise NVIDIA 96GB VRAM cards, behind a 100TB RAID array built for uncompressed 8K. It is owned and run on-site, not rented by the hour — which is what makes an 8K simulation a scheduling question rather than a budget one.",
+      },
+      {
+        q: "Can we see the framing before you spend render hours on it?",
+        a: "Yes, and it is how the pipeline is built. Geometry and framing are signed off as a line pass, where a change costs minutes; materials and lighting come after, where the same change costs render hours. Sequences are also blocked interactively in Unreal before final execution.",
+      },
+      {
+        q: "Can you produce photorealistic product frames, not just effects?",
+        a: "Yes — product visualisation is a large part of what the farm renders. One rigged build can be lit and dressed into dozens of display treatments, which is what makes the eleventh variant cheap after the first one is paid for.",
+      },
+      {
+        q: "What determines the cost of a CGI or VFX project?",
+        a: "Shot count, how much is modelled from nothing, and how much is simulated rather than animated — simulation is the line item that moves most, because it is priced in render hours rather than artist hours. Work is scoped against milestones in the SOW rather than a rate card.",
+      },
+      {
+        q: "How is unreleased material protected?",
+        a: "NDA on the engagement, on access-controlled servers in this building. Nothing is pushed through third-party render services or cloud tools at any stage, which is the practical reason the farm is owned rather than rented.",
       },
     ],
     proof: {
@@ -1312,6 +1385,14 @@ const verticalCatalogue: Vertical[] = [
     // theater at the top of its bespoke page, off `animationAssets.reels` — a
     // second wall of six simultaneous loops would only play the same files again.
     faqs: [
+      {
+        q: "What is the difference between 2D and 3D animation?",
+        a: "2D is drawn and composited in a flat space — fastest for explainers, kinetic typography and anything led by information. 3D is modelled, rigged, lit and rendered in a real space, which is what you need when the thing being shown has to look physically true rather than merely clear.",
+      },
+      {
+        q: "What is an explainer video?",
+        a: "A short film that makes one idea land — what the problem costs, what the thing does, why it matters — usually under two minutes and usually motion-graphics led. It is the format built to survive being watched once, without sound, by someone who did not go looking for it.",
+      },
       {
         q: "How long does an animated film take?",
         a: "It depends on how much has to be built from nothing. A motion-graphics explainer reusing an established look is fastest; a character film with new modelling, rigging and an 8K render is not. We scope it against milestones in the SOW rather than quote a number we would immediately have to caveat.",
@@ -1618,6 +1699,10 @@ const verticalCatalogue: Vertical[] = [
     ],
     faqs: [
       {
+        q: "What is a product explainer video?",
+        a: "A short film that states what the problem costs, what the product does and why the architecture matters — motion-graphics led, built for clarity and pace. It is the one asset a launch page, a sales deck and a paid campaign can all be cut from.",
+      },
+      {
         q: "How long does a product film take?",
         a: "It depends on the build. Existing assets and approved styles move faster; new modelling, simulation and 8K rendering take longer. We define timelines through clear SOW milestones.",
       },
@@ -1909,6 +1994,10 @@ const verticalCatalogue: Vertical[] = [
     // frames a third time.
     faqs: [
       {
+        q: "What is an embedded media partner?",
+        a: "A studio that works as your media division rather than a vendor briefed project by project — assigned artists, reserved render capacity and a standing NDA, billed against milestones. It is a senior production department's output without its headcount on your payroll.",
+      },
+      {
         q: "What does an engagement actually look like?",
         a: "A structured corporate retainer or a milestone-based Statement of Work. The SOW names scope, milestones, deliverables and sign-off gates before work begins, and progress is tracked in Zoho Projects — so procurement can see the programme without asking for a status call.",
       },
@@ -1972,8 +2061,8 @@ const DISCIPLINE_ORDER: VerticalSlug[] = [
   "vfx",
 ];
 
-export const verticals: Vertical[] = DISCIPLINE_ORDER.map(
-  (slug) => verticalCatalogue.find((v) => v.slug === slug)!,
+export const verticals: Vertical[] = DISCIPLINE_ORDER.map((slug) =>
+  verticalCatalogue.find((v) => v.slug === slug)!,
 );
 
 export function getVertical(slug: string): Vertical | undefined {

@@ -48,8 +48,12 @@ they are separate programmes — labelled so.
 3. **No NAP.** No street address and no phone number appear anywhere on the site
    — not in the footer, not on `/contact`. NAP (Name / Address / Phone) consistency
    is a top-3 local ranking factor. Right now there is nothing to be consistent with.
-4. **No question-shaped content.** Nothing on the site is phrased as a question with
-   a short answer under it. AEO has no surface to grab.
+4. ~~**No question-shaped content.**~~ **Corrected — this was wrong.** Six of the
+   seven verticals already carried a written FAQ block (37 questions) rendered by
+   [components/verticals/faq-list.tsx](components/verticals/faq-list.tsx). The
+   content was there and good; what was missing was `FAQPage` schema on it. Only
+   VFX genuinely had none. That made AEO the cheapest win on this list rather
+   than the most expensive one.
 5. **Titles are brand-poetic, not commercial.** `/verticals` is titled "Verticals";
    `/about` is "Who We Are"; `/vfx` renders as "VFX | Southeast Media". Nobody
    searches those.
@@ -368,19 +372,59 @@ wrong data here is worse than none:
 
 Two things worth knowing, found while doing this:
 
-- **`title.template` does not apply to the home page.** It applies to *child*
+- **`title.template` does not apply to the home page.** It applies to _child_
   segments, and `app/page.tsx` is in the same segment as `app/layout.tsx`. The
   homepage shipped its title with no brand name on it until this was caught;
   `metadataFor` now sets `title.absolute` for `/` explicitly.
 - **`socialNavigation` in [config/navigation.ts](config/navigation.ts) is
   placeholders** — bare `instagram.com`, `linkedin.com`, `vimeo.com`. They are
   deliberately NOT wired to `Organization.sameAs`, because `sameAs` asserts
-  identity and would tell a crawler the studio *is* LinkedIn. Real profile URLs
+  identity and would tell a crawler the studio _is_ LinkedIn. Real profile URLs
   belong in §6.
 
-**Phase 2 — once §6 is answered** 8. NAP in footer and `/contact` 9. `LocalBusiness` schema 10. Google Business Profile + citations
+**Phase 3 — content and full schema coverage. SHIPPED 2026-08-05.**
 
-**Phase 3 — content** 11. FAQ sections + `FAQPage` schema on all verticals 12. Comparison blocks as semantic tables 13. `VideoObject` on showreels
+Done out of order, because §0 gap 4 turned out to be wrong and the FAQ content was
+already written — which made this the cheapest remaining work rather than the
+dearest.
+
+- ✅ **`FAQPage` schema on all seven verticals — 57 questions.** Generated from
+  `vertical.faqs` so it cannot drift from what the accordion renders. Verified at
+  build time: every question in the schema is present in the served HTML.
+- ✅ **VFX FAQ written** (8 questions) — it was the one vertical with none, and
+  the page most likely to be reached by someone asking a machine "what does a VFX
+  studio do". Everything in it is drawn from capabilities already stated on that
+  page.
+- ✅ **20 new questions across the other six verticals**, in three shapes that
+  were missing: definitional ("What is a Mechanism of Action animation?"),
+  comparative ("What is the difference between a render, a walkthrough and a
+  virtual tour?"), and cost ("What determines the cost of a corporate film?").
+  These are the three shapes answer engines lift most often.
+- ✅ **`VideoObject`** on the showreel and all seven vertical hero films.
+- ✅ **`WebPage` / `AboutPage` / `ContactPage` / `CollectionPage`** typing per
+  route — the two named types are what a search engine looks for when picking a
+  URL for "<brand> contact" and "about <brand>".
+- ✅ **`ItemList`** on the Services hub, **`OfferCatalog`** and **`ContactPoint`**
+  on the Organization — so a consumer that reads one page can enumerate the whole
+  offering without crawling the rest.
+- ✅ **Per-page share images.** All seven verticals shared the same branded
+  `og.jpg`; each now shares its own hero frame.
+- ✅ **Alt-text audit.** 152 alt strings reviewed. Most were already sound
+  accessibility copy and were left alone — keyword-stuffing alt text is a spam
+  signal and degrades a screen reader. Five were genuine defects: three different
+  character renders all reading "Character animation frame", two different
+  abstract frames both reading "Abstract systems film frame". Rewritten from the
+  actual images.
+
+⬜ **Comparison blocks as semantic tables** is the one Phase 3 item not done. The
+"The usual" / "With Southeast Media" contrast blocks are a real comparison
+rendered as styled divs; a semantic `<table>` with a caption would be directly
+extractable. It is a component change with visual risk, so it wants a design
+review rather than a quiet refactor.
+
+**Phase 2 — still blocked on §6.** NAP in the footer and on `/contact`,
+`LocalBusiness` schema, Google Business Profile and citations. All four need
+facts only the studio has.
 
 **Then** — measure for 8–12 weeks in Search Console before judging anything. Local
 commercial terms in a competitive metro do not move in a fortnight.

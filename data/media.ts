@@ -632,14 +632,14 @@ export const enterpriseAssets: {
       key: "marqueeB4",
       src: `${ANIM}/character-04.jpg`,
       ...SQ,
-      alt: "Character animation frame",
+      alt: "3D character animation frame — a rounded purple character surfacing through a stitched blue landscape, bees overhead",
       label: "Character animation",
     },
     {
       key: "marqueeB5",
       src: `${SAAS}/creative-06.jpg`,
       ...SHOT,
-      alt: "Abstract systems film frame",
+      alt: "Abstract systems film frame — a white sphere resting on a run of magenta capsule forms",
       label: "Abstract systems",
     },
   ],
@@ -848,7 +848,7 @@ export const enterpriseAssets: {
       key: "entCharacter",
       src: `${ANIM}/character-07.jpg`,
       ...SQ,
-      alt: "Character animation frame",
+      alt: "3D character animation frame — a small green character beside an open desktop tower on a lit desk",
       label: "Character animation",
     },
     {
@@ -869,7 +869,7 @@ export const enterpriseAssets: {
       key: "entCreative",
       src: `${SAAS}/creative-11.jpg`,
       ...SHOT,
-      alt: "Abstract systems film frame",
+      alt: "Abstract systems film frame — a red sphere against curved violet planes and fanned ribs",
       label: "Abstract systems",
     },
     {
@@ -1487,7 +1487,7 @@ export const animationAssets: {
       key: "animGalleryCharacter",
       src: `${ANIM}/character-03.jpg`,
       ...SQ,
-      alt: "Character animation frame",
+      alt: "3D character animation frame — two rounded characters side by side in a pastel landscape",
     },
     {
       key: "animGalleryArtwork",
@@ -1687,7 +1687,13 @@ export const pharmaExtraFrames: MediaSlot[] = [
     [
       ["heart", 691, 587, "Anatomical heart, whole and in cross-section", "Heart"],
       ["brain", 1280, 946, "Brain — neurological structures", "Brain"],
-      ["liver", 602, 709, "Liver — healthy, fatty and cancer-affected", "Liver — disease progression"],
+      [
+        "liver",
+        602,
+        709,
+        "Liver — healthy, fatty and cancer-affected",
+        "Liver — disease progression",
+      ],
       ["kidney", 1280, 949, "Kidney and pancreas cross-section", "Kidney & pancreas"],
       ["stomach", 717, 698, "Stomach — abnormal tissue growth", "Stomach"],
       ["thyroid", 768, 223, "Thyroid — healthy gland beside a tumour-affected one", "Thyroid"],
@@ -1701,9 +1707,21 @@ export const pharmaExtraFrames: MediaSlot[] = [
       ["protein", 762, 1152, "Protein structure — drug–target binding", "Protein structure"],
       ["moa-vessel", 926, 462, "Blood vessel in cross-section through tissue", "MoA — vasculature"],
       ["moa-tissue", 926, 489, "Tissue architecture with capillary network", "MoA — tissue"],
-      ["moa-receptor", 926, 470, "Drug molecule binding a cell-surface receptor", "MoA — receptor binding"],
+      [
+        "moa-receptor",
+        926,
+        470,
+        "Drug molecule binding a cell-surface receptor",
+        "MoA — receptor binding",
+      ],
       ["moa-membrane", 926, 509, "Transport across the cell membrane", "MoA — membrane transport"],
-      ["interaction", 1025, 1280, "Molecular interaction — receptor activity", "Molecular interaction"],
+      [
+        "interaction",
+        1025,
+        1280,
+        "Molecular interaction — receptor activity",
+        "Molecular interaction",
+      ],
     ] as const
   ).map(([slug, w, h, alt, label]) => ({
     key: `pharmaDeck-${slug}`,
