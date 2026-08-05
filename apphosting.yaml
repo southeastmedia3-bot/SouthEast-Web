@@ -71,7 +71,7 @@ env:
   #   availability:
   #     - RUNTIME
   # - variable: CONTACT_TO_EMAIL
-  #   value: studio@southeastmedia.in
+  #   value: info@southeastmedia.in
   #   availability:
   #     - RUNTIME
   # - variable: CONTACT_FROM_EMAIL

@@ -55,8 +55,8 @@ export default function GlobalError({
                 exists for the case where the root layout itself threw, so it takes
                 no dependency it does not absolutely need. Keep it in step with
                 `contactEmail` in constants/site.ts. */}
-            <a href="mailto:studio@southeastmedia.in" style={{ color: "#1951a8" }}>
-              studio@southeastmedia.in
+            <a href="mailto:info@southeastmedia.in" style={{ color: "#1951a8" }}>
+              info@southeastmedia.in
             </a>
             .
           </p>

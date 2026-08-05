@@ -79,5 +79,5 @@ export const siteConfig = {
    * `app/global-error.tsx` together — that boundary cannot import this module
    * safely, so it carries its own copy.
    */
-  contactEmail: "studio@southeastmedia.in",
+  contactEmail: "info@southeastmedia.in",
 } as const;
