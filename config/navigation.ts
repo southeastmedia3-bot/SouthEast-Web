@@ -282,22 +282,34 @@ export const footerNavigation = {
   // Both lists follow the site's running order — see `DISCIPLINE_ORDER` in
   // `data/verticals.ts`. Films and VFX come last here for the same reason they
   // come last on the homepage.
+  //
+  // THESE LABELS ARE ANCHOR TEXT, on every page of the site. That is what makes
+  // them worth more than a nav word. The two columns used to be near-duplicates
+  // — "Healthcare" and "Healthcare", "Real Estate" and "Real Estate" — pointing
+  // at the same seven routes with the same one-word anchor, which wastes the
+  // strongest and most repeated internal link the site has.
+  //
+  // They now split the way a buyer actually thinks: `solutions` names the thing
+  // being made, `industries` names who it is made for. Same destinations, two
+  // genuinely different descriptions, and both carry the service phrase rather
+  // than the internal category name. Keep any future label descriptive; if it
+  // reads like a section header rather than a description of the page, it is
+  // doing nothing here.
   solutions: [
-    { label: "Healthcare", href: "/pharma" },
-    { label: "Real Estate", href: "/real-estate" },
-    { label: "SaaS", href: "/saas" },
-    { label: "Animation", href: "/animation" },
-    { label: "Enterprise", href: "/enterprise" },
-    { label: "Films", href: "/films" },
-    { label: "VFX", href: "/vfx" },
+    { label: "Medical & pharma animation", href: "/pharma" },
+    { label: "Architectural visualization", href: "/real-estate" },
+    { label: "Product & SaaS video", href: "/saas" },
+    { label: "3D animation & motion graphics", href: "/animation" },
+    { label: "Enterprise media retainers", href: "/enterprise" },
+    { label: "Corporate & commercial film", href: "/films" },
+    { label: "VFX & CGI production", href: "/vfx" },
   ],
   industries: [
-    { label: "Healthcare", href: "/pharma" },
-    { label: "Real Estate", href: "/real-estate" },
-    { label: "SaaS & Software", href: "/saas" },
-    { label: "Explainer Videos", href: "/animation" },
-    { label: "Enterprise Retainers", href: "/enterprise" },
-    { label: "Film & VFX", href: "/vfx" },
+    { label: "Healthcare & pharmaceutical", href: "/pharma" },
+    { label: "Real estate & property", href: "/real-estate" },
+    { label: "SaaS & software", href: "/saas" },
+    { label: "Brands & agencies", href: "/enterprise" },
+    { label: "Film & advertising", href: "/films" },
   ],
   resources: [
     { label: "All verticals", href: "/verticals" },

@@ -7,19 +7,18 @@ import { LinkButton } from "@/components/ui/link-button";
 import { aboutClose, aboutHero, aboutMetrics, aboutPrinciples, aboutStory } from "@/data/about";
 import { aboutAssets } from "@/data/media";
 import { PageWrapper } from "@/components/layout/page-wrapper";
-import { createMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "Who We Are",
-  description: aboutHero.body,
-  path: "/about",
-});
+export const metadata = metadataFor("/about");
 
 export default function AboutPage() {
   return (
     // PageWrapper renders <main id="main-content"> — the skip link's target and
     // the landmark this page's content belongs inside.
     <PageWrapper>
+      <JsonLd schema={pageSchema("/about")} />
       {/* Hero */}
       <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-[#05070d] pb-16 pt-40">
         <CinematicBackdrop tone="blue" scan />

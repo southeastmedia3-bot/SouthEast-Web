@@ -1,15 +1,18 @@
 import { EnterpriseVertical } from "@/components/verticals/enterprise-vertical";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getVertical } from "@/data/verticals";
-import { createMetadata } from "@/lib/seo";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
 const vertical = getVertical("enterprise")!;
 
-export const metadata = createMetadata({
-  title: vertical.label,
-  description: vertical.summary,
-  path: "/enterprise",
-});
+export const metadata = metadataFor("/enterprise");
 
 export default function EnterprisePage() {
-  return <EnterpriseVertical vertical={vertical} />;
+  return (
+    <>
+      <JsonLd schema={pageSchema("/enterprise")} />
+      <EnterpriseVertical vertical={vertical} />
+    </>
+  );
 }

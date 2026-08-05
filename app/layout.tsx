@@ -3,7 +3,9 @@ import { Geist_Mono, Instrument_Serif, Manrope } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageTransitionLayer } from "@/components/layout/page-transition-layer";
 import { Providers } from "@/components/layout/providers";
+import { JsonLd } from "@/components/seo/json-ld";
 import { siteConfig } from "@/constants/site";
+import { siteSchema } from "@/lib/schema";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -81,6 +83,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       suppressHydrationWarning
     >
       <body className="min-h-full bg-background text-foreground">
+        {/* The Organization and WebSite nodes, declared once for the whole site.
+            Every per-page Service references this Organization by @id rather than
+            restating it — see the note at the top of lib/schema.ts. */}
+        <JsonLd schema={siteSchema()} />
         <Providers>
           <AppShell>
             <PageTransitionLayer>{children}</PageTransitionLayer>

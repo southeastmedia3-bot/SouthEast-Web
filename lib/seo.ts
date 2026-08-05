@@ -1,5 +1,6 @@
 import type { Metadata, MetadataRoute } from "next";
 import { siteConfig } from "@/constants/site";
+import { routeSeo, type SeoPath } from "@/data/seo";
 
 type MetadataInput = {
   title?: string;
@@ -62,18 +63,54 @@ export function createMetadata({
   };
 }
 
-export function createBreadcrumbSchema(items: Array<{ name: string; path: string }>) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: absoluteUrl(item.path),
-    })),
-  };
+/**
+ * The metadata for a known route, taken from `data/seo.ts`.
+ *
+ * Prefer this over calling `createMetadata` with literals. The title and
+ * description are search copy, not page copy — they belong in one module that
+ * the sitemap, `llms.txt` and the Service schema also read, so a route cannot
+ * end up described one way to a crawler and another way to a model.
+ *
+ * `createMetadata` stays exported for the cases this cannot cover: a route that
+ * has no entry yet, or one that needs `noIndex`.
+ */
+export function metadataFor(path: SeoPath, options: { image?: string } = {}): Metadata {
+  const seo = routeSeo[path];
+
+  const metadata = createMetadata({
+    title: seo.title,
+    description: seo.description,
+    path: seo.path,
+    ...options,
+  });
+
+  /**
+   * The home page has to spell out its own suffix.
+   *
+   * `title.template` in the root layout applies to CHILD segments only, and
+   * `app/page.tsx` sits in the *same* segment as `app/layout.tsx` — so the
+   * template never runs on it and its title is emitted verbatim. Left alone the
+   * homepage shipped `<title>Creative & 3D Animation Agency in Hyderabad</title>`
+   * with no brand on it at all, which is the one page where the brand name most
+   * needs to be in the result.
+   *
+   * `absolute` is the escape hatch for exactly this: it opts the value out of any
+   * template rather than relying on one that was never going to apply. The share
+   * cards were already correct — `createMetadata` resolves the suffix itself for
+   * Open Graph and Twitter, because neither runs through the template either.
+   */
+  if (seo.path === "/") {
+    metadata.title = { absolute: `${seo.title} | ${siteConfig.name}` };
+  }
+
+  return metadata;
 }
+
+/**
+ * `createBreadcrumbSchema` used to live here and was never rendered by anything.
+ * It now sits in `lib/schema.ts` alongside the rest of the JSON-LD, and pages
+ * get their trail from `pageSchema()` rather than assembling one by hand.
+ */
 
 export function createRobots(): MetadataRoute.Robots {
   /**
@@ -91,7 +128,47 @@ export function createRobots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: { userAgent: "*", allow: "/" },
+    rules: [
+      { userAgent: "*", allow: "/" },
+      /**
+       * The AI crawlers, named explicitly — and allowed.
+       *
+       * `userAgent: "*"` above already permits every one of these, so this group
+       * changes nothing today. It is here to make the decision visible, because
+       * the default is easy to reverse by accident: a great deal of "block the
+       * AI scrapers" advice circulates, and for a studio that wants to be the
+       * answer when someone asks ChatGPT for a medical animation company in
+       * Hyderabad, blocking them is self-harm. There is nothing behind this site
+       * but marketing copy the studio wants read as widely as possible.
+       *
+       * Two of these are not training crawlers and are worth understanding
+       * separately: `Google-Extended` controls whether the site can be used in
+       * AI Overviews and Gemini grounding, and `OAI-SearchBot` is what backs
+       * ChatGPT's search citations. Disallowing either removes the studio from
+       * the answer, not just from a training set.
+       *
+       * If the studio ever does want to opt out, this is the one place to do it
+       * — and see docs/SEO_GEO_AEO.md §3.2 for what it costs.
+       */
+      {
+        userAgent: [
+          "GPTBot",
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "ClaudeBot",
+          "Claude-User",
+          "Claude-SearchBot",
+          "PerplexityBot",
+          "Perplexity-User",
+          "Google-Extended",
+          "Applebot-Extended",
+          "meta-externalagent",
+          "Bytespider",
+          "CCBot",
+        ],
+        allow: "/",
+      },
+    ],
     sitemap: absoluteUrl("/sitemap.xml"),
   };
 }

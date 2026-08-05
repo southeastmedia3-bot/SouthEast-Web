@@ -2,17 +2,16 @@ import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
 import { Container } from "@/components/common/container";
 import { ContactForm } from "@/components/contact/contact-form";
 import { contactContent } from "@/data/contact";
-import { createMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "Contact",
-  description: contactContent.body,
-  path: "/contact",
-});
+export const metadata = metadataFor("/contact");
 
 export default function ContactPage() {
   return (
     <div>
+      <JsonLd schema={pageSchema("/contact")} />
       <section className="relative overflow-hidden bg-[#05070d] pb-16 pt-40">
         <CinematicBackdrop tone="blue" />
         <Container>

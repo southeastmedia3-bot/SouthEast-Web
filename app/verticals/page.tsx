@@ -7,13 +7,11 @@ import { Container } from "@/components/common/container";
 import { verticals, verticalsOverview } from "@/data/verticals";
 import { verticalHeroes } from "@/data/media";
 import { PageWrapper } from "@/components/layout/page-wrapper";
-import { createMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
-export const metadata = createMetadata({
-  title: "Verticals",
-  description: verticalsOverview.intro,
-  path: "/verticals",
-});
+export const metadata = metadataFor("/verticals");
 
 export default function VerticalsPage() {
   return (
@@ -21,6 +19,7 @@ export default function VerticalsPage() {
     // is both the skip link's target and the landmark this page's content needs
     // to sit inside. Without it the skip link pointed at nothing.
     <PageWrapper>
+      <JsonLd schema={pageSchema("/verticals")} />
       <section className="relative flex min-h-[62vh] items-end overflow-hidden bg-[#05070d] pb-16 pt-40">
         <CinematicBackdrop tone="mixed" scan />
         <Container>

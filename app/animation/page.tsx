@@ -1,15 +1,18 @@
 import { AnimationVertical } from "@/components/verticals/animation-vertical";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getVertical } from "@/data/verticals";
-import { createMetadata } from "@/lib/seo";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
 const vertical = getVertical("animation")!;
 
-export const metadata = createMetadata({
-  title: vertical.label,
-  description: vertical.summary,
-  path: "/animation",
-});
+export const metadata = metadataFor("/animation");
 
 export default function AnimationPage() {
-  return <AnimationVertical vertical={vertical} />;
+  return (
+    <>
+      <JsonLd schema={pageSchema("/animation")} />
+      <AnimationVertical vertical={vertical} />
+    </>
+  );
 }

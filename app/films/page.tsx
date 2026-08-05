@@ -1,15 +1,18 @@
 import { FilmsVertical } from "@/components/verticals/films-vertical";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getVertical } from "@/data/verticals";
-import { createMetadata } from "@/lib/seo";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
 const vertical = getVertical("films")!;
 
-export const metadata = createMetadata({
-  title: vertical.label,
-  description: vertical.summary,
-  path: "/films",
-});
+export const metadata = metadataFor("/films");
 
 export default function FilmsPage() {
-  return <FilmsVertical vertical={vertical} />;
+  return (
+    <>
+      <JsonLd schema={pageSchema("/films")} />
+      <FilmsVertical vertical={vertical} />
+    </>
+  );
 }

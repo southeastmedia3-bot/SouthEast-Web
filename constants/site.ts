@@ -80,4 +80,27 @@ export const siteConfig = {
    * safely, so it carries its own copy.
    */
   contactEmail: "info@southeastmedia.in",
+  /**
+   * Where the studio works from, and who it serves.
+   *
+   * These two feed `Organization.areaServed` in `lib/schema.ts` and are the only
+   * geographic claim the site is currently able to make. Both cities come from
+   * the client's Corporate Capability Deck — the same source as every figure in
+   * `data/home.ts` — so they are safe to assert.
+   *
+   * WHAT IS DELIBERATELY MISSING: a street address and a phone number. A
+   * `LocalBusiness` node needs both, and a `PostalAddress` with invented or
+   * partial values is worse than no node at all — it is a wrong fact published
+   * in a machine-readable format, and Google Business Profile will disagree with
+   * it. See docs/SEO_GEO_AEO.md §6 for the full list of facts the studio still
+   * has to supply before local schema can ship.
+   *
+   * NOTE ALSO that `socialNavigation` in `config/navigation.ts` currently points
+   * at bare `instagram.com` / `linkedin.com` / `vimeo.com` — placeholders, not
+   * the studio's profiles. They must NOT be used for `Organization.sameAs`:
+   * `sameAs` is an identity assertion, and pointing it at a platform's homepage
+   * tells a crawler the studio *is* Instagram.
+   */
+  cities: ["Hyderabad", "Bengaluru"],
+  areaServed: ["Hyderabad", "Bengaluru", "India"],
 } as const;

@@ -8,14 +8,27 @@ import { Mandate } from "@/components/scenes/mandate";
 import { DisciplineWall } from "@/components/scenes/discipline-wall";
 import { Invitation } from "@/components/scenes/invitation";
 import { PageWrapper } from "@/components/layout/page-wrapper";
-import { createMetadata } from "@/lib/seo";
+import { metadataFor } from "@/lib/seo";
 
 /**
- * The home page inherits its title and description from the root layout, but
- * not a canonical URL — without one, the root is reachable and indexable at
- * several addresses (www, trailing slash, query strings) as separate pages.
+ * Title, description and canonical all come from `data/seo.ts`.
+ *
+ * The canonical matters on its own: without one the root is reachable and
+ * indexable at several addresses (www, trailing slash, query strings) as
+ * separate pages.
+ *
+ * The title used to fall through to the root layout's default — "Southeast Media
+ * | Trusted Digital Infrastructure & Immersive Production Studio", 78 characters,
+ * which Google truncated mid-phrase and which contains nothing anybody searches
+ * for. It now carries the studio's primary commercial term instead. The
+ * positioning line is still the first thing on the page: `heroContent.headline`
+ * reads it straight from `siteConfig.projectName`.
+ *
+ * The home page needs no `pageSchema()` — the root layout's Organization and
+ * WebSite graph is already the schema for this URL, and a one-item breadcrumb
+ * would add nothing.
  */
-export const metadata = createMetadata({ path: "/" });
+export const metadata = metadataFor("/");
 
 /**
  * The page breathes dark -> light -> dark. It opens on the showreel — the work

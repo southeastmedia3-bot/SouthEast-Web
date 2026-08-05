@@ -1,15 +1,18 @@
 import { SaasVertical } from "@/components/verticals/saas-vertical";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getVertical } from "@/data/verticals";
-import { createMetadata } from "@/lib/seo";
+import { pageSchema } from "@/lib/schema";
+import { metadataFor } from "@/lib/seo";
 
 const vertical = getVertical("saas")!;
 
-export const metadata = createMetadata({
-  title: vertical.label,
-  description: vertical.summary,
-  path: "/saas",
-});
+export const metadata = metadataFor("/saas");
 
 export default function SaasPage() {
-  return <SaasVertical vertical={vertical} />;
+  return (
+    <>
+      <JsonLd schema={pageSchema("/saas")} />
+      <SaasVertical vertical={vertical} />
+    </>
+  );
 }
