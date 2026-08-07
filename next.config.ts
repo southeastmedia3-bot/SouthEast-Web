@@ -21,11 +21,12 @@ import { PHARMA_LIBRARY_REV } from "./constants/media-rev";
  * not decorative — `base-uri` blocks a `<base>` tag rewriting every relative URL
  * on the page, `form-action` stops an injected form posting the enquiry
  * elsewhere, `object-src` kills plugin embeds, and `connect-src` means injected
- * script cannot exfiltrate anywhere but this origin and Google's analytics
- * endpoints — neither of which will hand the data back to an attacker.
+ * script cannot exfiltrate anywhere but this origin and the Google and Microsoft
+ * analytics endpoints — none of which will hand the data back to an attacker.
  *
- * The allowlist is this tight because the site has exactly one third party:
- * Google Analytics 4 (see `gaMeasurementId` in constants/site.ts). No tag
+ * The allowlist is this tight because the site has exactly two third parties:
+ * Google Analytics 4 (see `gaMeasurementId` in constants/site.ts) and Microsoft
+ * Clarity (`clarityProjectId`, same file). No tag
  * manager, no embeds, no iframes, no remote images. Fonts are self-hosted by
  * `next/font`, every film and still is served from `public/media`, and the only
  * client-side fetch of our own is same-origin to /api/contact. `api.resend.com`
@@ -87,23 +88,71 @@ const GA_CONNECT_HOSTS = [
   "https://*.analytics.google.com",
   "https://www.googletagmanager.com",
 ];
+
+/**
+ * The hosts Microsoft Clarity needs, split by directive.
+ *
+ * Kept as its own set of constants for the same reason as the GA lists above:
+ * if session replay is ever dropped, deleting these three and their references
+ * is the whole job.
+ *
+ * DO NOT TRIM THIS BACK TO MICROSOFT'S PUBLISHED POLICY. Their CSP page
+ * (learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-csp) lists
+ * only `script-src https://www.clarity.ms` plus the two `connect-src` entries,
+ * and that is not enough to make the current tag work. Read what the tag
+ * actually does — `curl https://www.clarity.ms/tag/<projectId>` returns ~700
+ * bytes of readable JavaScript, and as at 2026-08-08 it:
+ *
+ *   1. loads the real library from `https://scripts.clarity.ms/<version>/clarity.js`,
+ *      NOT from www — so www alone blocks Clarity entirely;
+ *   2. fires `new Image().src = "https://c.clarity.ms/c.gif"` on window load,
+ *      which is an `img-src` fetch, a directive Microsoft's page never mentions;
+ *   3. uploads to `https://k.clarity.ms/collect`.
+ *
+ * (1) is the dangerous one. The snippet still loads, `window.clarity` still
+ * exists, the page is completely normal — and nothing is ever recorded, because
+ * the library that does the recording never ran. The only symptom is a CSP
+ * error in the console and an empty dashboard.
+ *
+ * The subdomains are ENUMERATED rather than wildcarded, per the rule at the top
+ * of this file. Only the upload host is wildcarded, and it is the same
+ * justification as GA4's regional collectors: `k.clarity.ms` is one of a
+ * regional set chosen by the visitor's location, so a literal would silently
+ * drop sessions from every other region — invisible, since the page works and
+ * only the dashboard is short.
+ *
+ * `c.bing.com` is Clarity's Bing/UET integration endpoint, and this project has
+ * that integration live — note the `_uetmsclkid` and `_uetvid` cookies in the
+ * tag's own config. `connect-src` only: nothing is executed from it.
+ *
+ * IF MICROSOFT MOVES THE LIBRARY to another subdomain, this breaks exactly as
+ * described above. Re-run the curl and compare before assuming the dashboard is
+ * at fault.
+ */
+const CLARITY_SCRIPT_HOSTS = ["https://www.clarity.ms", "https://scripts.clarity.ms"];
+// The `c.gif` sync beacon, fired through `new Image()` — so it is an image
+// request, not a fetch, and connect-src does not cover it.
+const CLARITY_IMG_HOSTS = ["https://c.clarity.ms"];
+const CLARITY_CONNECT_HOSTS = ["https://*.clarity.ms", "https://c.bing.com"];
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   // See the note above: 'unsafe-inline' is Next's inline bootstrap, and the
   // price of keeping all 16 routes statically prerendered.
-  `script-src 'self' 'unsafe-inline' ${GA_SCRIPT_HOSTS.join(" ")}`,
+  `script-src 'self' 'unsafe-inline' ${GA_SCRIPT_HOSTS.join(" ")} ${CLARITY_SCRIPT_HOSTS.join(" ")}`,
   // GSAP, Lenis and Framer Motion all animate by writing inline styles.
   "style-src 'self' 'unsafe-inline'",
   // `data:` covers next/image's inline blur placeholders; `blob:` covers canvas
   // readback in the particle/physics scenes.
-  `img-src 'self' data: blob: ${GA_IMG_HOSTS.join(" ")}`,
+  `img-src 'self' data: blob: ${GA_IMG_HOSTS.join(" ")} ${CLARITY_IMG_HOSTS.join(" ")}`,
   // Every film is local. No CDN, no Vimeo.
   "media-src 'self'",
   // next/font self-hosts Geist, Manrope and Instrument Serif at build time, so
   // nothing is fetched from fonts.gstatic.com at runtime.
   "font-src 'self'",
-  // POST /api/contact is same-origin; the rest is where GA4 sends its hits.
-  `connect-src 'self' ${GA_CONNECT_HOSTS.join(" ")}`,
+  // POST /api/contact is same-origin; the rest is where GA4 and Clarity send
+  // their hits and recordings.
+  `connect-src 'self' ${GA_CONNECT_HOSTS.join(" ")} ${CLARITY_CONNECT_HOSTS.join(" ")}`,
   "worker-src 'self' blob:",
   "manifest-src 'self'",
   // The site embeds nothing.

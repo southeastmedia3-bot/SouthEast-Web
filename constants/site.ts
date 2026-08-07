@@ -143,6 +143,30 @@ export const siteConfig = {
    * DEPLOYMENT.md stops being true for EU/UK visitors.
    */
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",
+  /**
+   * Microsoft Clarity project ID, e.g. `xytc24b20t`.
+   *
+   * The single source of this string for the whole site, on exactly the terms as
+   * `gaMeasurementId` above: the root layout is the only reader, it mounts
+   * `<MicrosoftClarity>` ONLY when this is non-empty, and leaving it unset is a
+   * complete supported state — no clarity.ms request, no cookie, nothing.
+   *
+   * `NEXT_PUBLIC_` is mandatory and BUILD availability is what counts, for the
+   * same reason as GA: the value is inlined into the client bundle by
+   * `next build`, so a RUNTIME-only value arrives after the bundle is written
+   * and the tag silently never loads. Set it in apphosting.yaml.
+   *
+   * NOT A SECRET — the ID is published in the page's own HTML by design, and it
+   * is the URL of a public tag file (clarity.ms/tag/<id>). It grants no access
+   * to the dashboard, which is behind a Microsoft account.
+   *
+   * WHAT COMES WITH IT: Clarity writes first-party `_clck` and `_clsk` cookies
+   * and records session replays. That is the same consent threshold GA already
+   * crossed — see the cookie note in DEPLOYMENT.md. Clarity masks text and
+   * inputs by default, so the enquiry form's contents are not captured unless
+   * someone turns masking off in the dashboard. Leave it on.
+   */
+  clarityProjectId: process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? "",
 } as const;
 
 /* ───────────────────────── business profile (NAP) ───────────────────────── */

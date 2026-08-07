@@ -1,6 +1,7 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Instrument_Serif, Manrope } from "next/font/google";
+import { MicrosoftClarity } from "@/components/analytics/microsoft-clarity";
 import { AppShell } from "@/components/layout/app-shell";
 import { PageTransitionLayer } from "@/components/layout/page-transition-layer";
 import { Providers } from "@/components/layout/providers";
@@ -109,7 +110,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </AppShell>
         </Providers>
         {/**
-         * Google Analytics 4, and the ONLY analytics tag on the site.
+         * Google Analytics 4 — the only MEASUREMENT tag on the site. (Clarity
+         * sits below it and does a different job; see the note there.)
          *
          * `GoogleAnalytics` renders exactly two scripts — an inline `gtag('config',
          * …)` bootstrap and gtag.js itself — both through `next/script` at its
@@ -133,6 +135,24 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
          * without those entries the tag is blocked and reports nothing.
          */}
         {siteConfig.gaMeasurementId ? <GoogleAnalytics gaId={siteConfig.gaMeasurementId} /> : null}
+        {/**
+         * Microsoft Clarity — session replay and heatmaps, and the site's only
+         * other third party. Same shape as the GA mount above and for the same
+         * reasons: one mount, covering all 17 routes, rendered only when the ID
+         * is set, injected after hydration by `next/script` so the prerendered
+         * HTML never changes.
+         *
+         * DO NOT ADD A SECOND TAG. Clarity counts sessions from the tag, so a
+         * duplicate snippet on a page would double them and split the replays.
+         * `next/script` dedupes on the `id` this component passes, which makes
+         * the single mount safe across client navigations — but it will not save
+         * you from a hand-pasted snippet in another file.
+         *
+         * The hosts it needs are allowlisted in the CSP in next.config.ts.
+         */}
+        {siteConfig.clarityProjectId ? (
+          <MicrosoftClarity projectId={siteConfig.clarityProjectId} />
+        ) : null}
       </body>
     </html>
   );

@@ -447,3 +447,10 @@ Deliberately not in the launch build:
   and none is implemented. **Still open.** Two ways out when it matters —
   add a consent-mode banner, or unset the variable, which removes the tag
   entirely without a code change.
+
+  Microsoft Clarity now ships on the same terms (root layout, gated on
+  `NEXT_PUBLIC_CLARITY_PROJECT_ID`) and raises the same question a step further:
+  it writes `_clck` and `_clsk` cookies **and** records session replays. Clarity
+  masks text and form inputs by default, so the enquiry form's contents are not
+  captured — leave that masking on in the dashboard. The off switch is identical:
+  unset the variable and no clarity.ms request is made at all.

@@ -78,6 +78,20 @@ env:
       - BUILD
       - RUNTIME
 
+  # Microsoft Clarity project ID — session replay and heatmaps.
+  #
+  # Everything said about the GA measurement ID above applies here unchanged:
+  # BUILD is the availability that matters because `NEXT_PUBLIC_` values are
+  # inlined into the client bundle by `next build`, a plain `value:` is correct
+  # because the ID is published in the site's own HTML by design, removing the
+  # variable is the supported off switch, and changing it needs a redeploy
+  # rather than a restart.
+  - variable: NEXT_PUBLIC_CLARITY_PROJECT_ID
+    value: xytc24b20t
+    availability:
+      - BUILD
+      - RUNTIME
+
   # ─── Contact form delivery — add when the Resend account is ready ──────────
   #
   # Until one of these is set the enquiry form still accepts submissions, but
