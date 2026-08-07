@@ -440,5 +440,10 @@ Deliberately not in the launch build:
   falling back to `NODE_ENV`. On Firebase that means any App Hosting build is
   treated as production and is crawlable. If a staging backend is added later,
   give it `Disallow: /` explicitly.
-- **Analytics** — nothing is installed. No consent banner is required as things
-  stand; adding analytics will likely change that.
+- **Analytics consent.** Google Analytics 4 now ships (root layout, gated on
+  `NEXT_PUBLIC_GA_MEASUREMENT_ID` — see `apphosting.yaml`), and gtag.js writes a
+  first-party `_ga` cookie. That is the thing the old note here anticipated: for
+  EU/UK visitors this is the point at which a consent banner becomes required,
+  and none is implemented. **Still open.** Two ways out when it matters —
+  add a consent-mode banner, or unset the variable, which removes the tag
+  entirely without a code change.

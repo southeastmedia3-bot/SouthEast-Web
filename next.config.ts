@@ -20,37 +20,90 @@ import { PHARMA_LIBRARY_REV } from "./constants/media-rev";
  * resort. What it *does* do is close every other injection route, and those are
  * not decorative — `base-uri` blocks a `<base>` tag rewriting every relative URL
  * on the page, `form-action` stops an injected form posting the enquiry
- * elsewhere, `object-src` kills plugin embeds, and `connect-src 'self'` means
- * injected script cannot exfiltrate to an attacker's host.
+ * elsewhere, `object-src` kills plugin embeds, and `connect-src` means injected
+ * script cannot exfiltrate anywhere but this origin and Google's analytics
+ * endpoints — neither of which will hand the data back to an attacker.
  *
- * The allowlist is this tight because the site genuinely has no third parties:
- * no analytics, no tag manager, no embeds, no iframes, no remote images. Fonts
- * are self-hosted by `next/font`, every film and still is served from
- * `public/media`, and the only client-side fetch is same-origin to
- * /api/contact. `api.resend.com` is called from the route handler — server
- * side, so no CSP applies.
+ * The allowlist is this tight because the site has exactly one third party:
+ * Google Analytics 4 (see `gaMeasurementId` in constants/site.ts). No tag
+ * manager, no embeds, no iframes, no remote images. Fonts are self-hosted by
+ * `next/font`, every film and still is served from `public/media`, and the only
+ * client-side fetch of our own is same-origin to /api/contact. `api.resend.com`
+ * is called from the route handler — server side, so no CSP applies.
  *
- * IF YOU ADD A THIRD PARTY (analytics, a Vimeo embed, a font CDN) it will be
- * blocked and the console will name the directive. Add the host to that
- * directive; do not reach for a wildcard.
+ * IF YOU ADD A THIRD PARTY (a Vimeo embed, a font CDN) it will be blocked and
+ * the console will name the directive. Add the host to that directive; do not
+ * reach for a wildcard.
  */
+
+/**
+ * The hosts Google Analytics 4 needs, split by directive.
+ *
+ * Named here rather than inlined below so the GA surface is one readable list:
+ * if analytics is ever removed, deleting these three constants and their
+ * references is the whole job.
+ *
+ * `www.googletagmanager.com` is spelled out rather than wildcarded because that
+ * is the only tag-manager host gtag.js is ever fetched from — see the `src` in
+ * @next/third-parties' GoogleAnalytics component.
+ *
+ * The analytics collection hosts are the one place a wildcard is justified.
+ * GA4 posts hits to a REGIONAL endpoint chosen by the visitor's location —
+ * `region1.google-analytics.com` through `region14.` and counting — so an
+ * enumerated list would silently drop hits from whichever region Google adds
+ * next. That failure is invisible: the page works, the numbers are just wrong.
+ * `*.analytics.google.com` is the same story for Google Signals.
+ *
+ * ONE GA REQUEST IS DELIBERATELY BLOCKED, and it logs a CSP error in the
+ * console on every page load. Do not "fix" it by adding the host.
+ *
+ * gtag.js also fires a second copy of each hit at `https://www.google.<TLD>/g/collect`.
+ * That is an ADVERTISING FEATURES endpoint — remarketing audiences, demographics
+ * and interests — not measurement. Every `page_view`, session and event still
+ * reaches `www.google-analytics.com` and every report a brochure site reads is
+ * complete; verified against a real browser, including page views across App
+ * Router client navigations. Blocking it costs the demographics/interests
+ * reports and nothing else.
+ *
+ * It stays blocked because allowing it properly is not possible. CSP forbids a
+ * wildcard on the right of a hostname, so `*.google.<TLD>` is not a pattern a
+ * browser accepts — Google's own CSP guide says each Google top-level domain
+ * "must be specified individually". Covering an audience that resolves to
+ * google.co.in, google.com, google.co.uk and the rest means enumerating Google's
+ * ccTLD list by hand and re-checking it forever, to hand an ads endpoint data
+ * the site does not use. See docs at developers.google.com/tag-platform/security/guides/csp.
+ *
+ * IF GOOGLE ADS IS EVER LINKED to this property, that changes: add the ccTLDs
+ * the audience actually uses, plus `https://*.g.doubleclick.net`, to both
+ * `img-src` and `connect-src`.
+ */
+const GA_SCRIPT_HOSTS = ["https://www.googletagmanager.com"];
+// gtag.js falls back to an image beacon when `navigator.sendBeacon` is
+// unavailable or the page is unloading, so the collection hosts are needed here
+// too — not only in connect-src.
+const GA_IMG_HOSTS = ["https://www.googletagmanager.com", "https://*.google-analytics.com"];
+const GA_CONNECT_HOSTS = [
+  "https://*.google-analytics.com",
+  "https://*.analytics.google.com",
+  "https://www.googletagmanager.com",
+];
 const contentSecurityPolicy = [
   "default-src 'self'",
   // See the note above: 'unsafe-inline' is Next's inline bootstrap, and the
   // price of keeping all 16 routes statically prerendered.
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline' ${GA_SCRIPT_HOSTS.join(" ")}`,
   // GSAP, Lenis and Framer Motion all animate by writing inline styles.
   "style-src 'self' 'unsafe-inline'",
   // `data:` covers next/image's inline blur placeholders; `blob:` covers canvas
   // readback in the particle/physics scenes.
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob: ${GA_IMG_HOSTS.join(" ")}`,
   // Every film is local. No CDN, no Vimeo.
   "media-src 'self'",
   // next/font self-hosts Geist, Manrope and Instrument Serif at build time, so
   // nothing is fetched from fonts.gstatic.com at runtime.
   "font-src 'self'",
-  // The only client fetch is POST /api/contact, same-origin.
-  "connect-src 'self'",
+  // POST /api/contact is same-origin; the rest is where GA4 sends its hits.
+  `connect-src 'self' ${GA_CONNECT_HOSTS.join(" ")}`,
   "worker-src 'self' blob:",
   "manifest-src 'self'",
   // The site embeds nothing.

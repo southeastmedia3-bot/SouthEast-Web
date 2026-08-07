@@ -119,6 +119,30 @@ export const siteConfig = {
    * proves awkward. See docs/SEO_OFFSITE_CHECKLIST.md §2.1.
    */
   googleSiteVerification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "",
+  /**
+   * Google Analytics 4 measurement ID, e.g. `G-XXXXXXXXXX`.
+   *
+   * The single source of this string for the whole site. The root layout is the
+   * only reader, and it mounts `<GoogleAnalytics>` ONLY when this is non-empty —
+   * so leaving it unset is a complete, supported state: no gtag.js request, no
+   * cookie, no third-party contact at all. That is what makes local development
+   * and any preview build analytics-free without a code change.
+   *
+   * `NEXT_PUBLIC_` is mandatory and BUILD availability is what counts: the value
+   * is inlined into the client bundle by `next build`, so a RUNTIME-only value
+   * arrives after the bundle is already written and GA silently never loads. Set
+   * it in apphosting.yaml alongside NEXT_PUBLIC_SITE_URL.
+   *
+   * NOT A SECRET — a measurement ID is published in the page's own HTML by
+   * design, which is why it sits here as a plain value rather than in Secret
+   * Manager. It is read from the environment for the same reason as the
+   * verification token above: so the deployment owns it, not the repository.
+   *
+   * If you set this, note what comes with it: gtag.js writes a first-party `_ga`
+   * cookie, which is the point at which the "no consent banner required" note in
+   * DEPLOYMENT.md stops being true for EU/UK visitors.
+   */
+  gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "",
 } as const;
 
 /* ───────────────────────── business profile (NAP) ───────────────────────── */

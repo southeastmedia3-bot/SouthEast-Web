@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Instrument_Serif, Manrope } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
@@ -107,6 +108,31 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <PageTransitionLayer>{children}</PageTransitionLayer>
           </AppShell>
         </Providers>
+        {/**
+         * Google Analytics 4, and the ONLY analytics tag on the site.
+         *
+         * `GoogleAnalytics` renders exactly two scripts — an inline `gtag('config',
+         * …)` bootstrap and gtag.js itself — both through `next/script` at its
+         * default `afterInteractive` strategy, so they are injected client-side
+         * after hydration and cannot cause a mismatch. Nothing about the
+         * prerendered HTML changes, which is why this does not cost the static
+         * rendering that the CSP note in next.config.ts is built around.
+         *
+         * DO NOT ADD A SECOND TAG. A hand-rolled gtag.js snippet, a GTM container
+         * configured with this same property, or a copy of this component on a
+         * page would each fire their own `page_view` and double every number in
+         * the reports. This one mount covers all 17 routes.
+         *
+         * PAGE VIEWS ON CLIENT NAVIGATION need no wiring: GA4's enhanced
+         * measurement listens for History API changes, which is exactly how the
+         * App Router navigates, so route changes are counted automatically.
+         *
+         * Rendered only when the ID is set, so an unconfigured deployment loads no
+         * third-party script at all — see `gaMeasurementId` in constants/site.ts.
+         * The hosts this needs are allowlisted in the CSP in next.config.ts;
+         * without those entries the tag is blocked and reports nothing.
+         */}
+        {siteConfig.gaMeasurementId ? <GoogleAnalytics gaId={siteConfig.gaMeasurementId} /> : null}
       </body>
     </html>
   );

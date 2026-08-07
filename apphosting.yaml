@@ -57,6 +57,27 @@ env:
       - BUILD
       - RUNTIME
 
+  # Google Analytics 4 measurement ID.
+  #
+  # BUILD is the availability that matters, for the same reason as the value
+  # above: `NEXT_PUBLIC_` variables are inlined into the client bundle by
+  # `next build`. Declared RUNTIME as well only so a running container reports
+  # the same value it was built with.
+  #
+  # A plain `value:` and not a secret — a measurement ID is published in the
+  # site's own HTML by design, so Secret Manager would protect nothing while
+  # making the build fail on a missing grant. The API key below IS a secret; do
+  # not use this entry as the pattern for it.
+  #
+  # Removing this variable is the supported off switch: the root layout mounts
+  # nothing when it is empty, so no gtag.js request is made at all. Changing it
+  # requires a redeploy, not a restart — the prerender is where it gets baked.
+  - variable: NEXT_PUBLIC_GA_MEASUREMENT_ID
+    value: G-9QCPZJG800
+    availability:
+      - BUILD
+      - RUNTIME
+
   # ─── Contact form delivery — add when the Resend account is ready ──────────
   #
   # Until one of these is set the enquiry form still accepts submissions, but
