@@ -192,7 +192,7 @@ constants/site.ts             # + business block (address, phone, geo, sameAs)
 | Schema                                  | Where                        | Why                                                                                                                 |
 | --------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `Organization` + `WebSite`              | `app/layout.tsx` (site-wide) | Establishes the entity. Feeds Knowledge Panel and every AI's entity graph.                                          |
-| `ProfessionalService` / `LocalBusiness` | `/contact` + site-wide       | The local-pack and "near me" signal. Needs real address + phone.                                                    |
+| `LocalBusiness`                         | site-wide (same node)        | The local-pack and "near me" signal. Needs real address + phone. NOT `ProfessionalService` — schema.org deprecated it for clashing with `Service`, which this site publishes seven of. |
 | `Service`                               | each vertical page           | Names the service, its `areaServed`, its `provider`. This is what an LLM reads to answer "who does X in Hyderabad". |
 | `BreadcrumbList`                        | every non-root page          | Builder already exists at [lib/seo.ts:65](lib/seo.ts#L65) — just render it.                                         |
 | `FAQPage`                               | each vertical page           | The AEO workhorse.                                                                                                  |

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { siteConfig } from "@/constants/site";
+import { businessProfile, formattedAddress, siteConfig } from "@/constants/site";
 
 export const projectTypes = [
   "Medical & Pharma",
@@ -37,10 +37,66 @@ export const contactSchema = z.object({
 
 export type ContactValues = z.infer<typeof contactSchema>;
 
+/**
+ * The details list beside the enquiry form.
+ *
+ * Built rather than written out, because the top of it is NAP — the studio's
+ * address, phone and hours — and none of those exist yet in
+ * `constants/site.ts`. Each is pushed only when it is real, so the list is
+ * correct today and grows into a full contact block the moment the facts are
+ * supplied, with no placeholder ever reaching the page.
+ *
+ * ORDER MATTERS. Address, phone and email come first because they are what a
+ * visitor scanning for a way to get in touch is looking for; the process lines
+ * that used to lead are still here, underneath. `/contact` is also the URL
+ * Google surfaces for "<brand> contact", which makes it the second most
+ * important place after the footer for these strings to appear.
+ */
+function contactDetails() {
+  const details: Array<{ label: string; value: string }> = [];
+
+  const address = formattedAddress();
+  if (address) details.push({ label: "Studio", value: address });
+
+  if (businessProfile.telephone) {
+    details.push({ label: "Telephone", value: businessProfile.telephone });
+  }
+
+  details.push({ label: "Enquiries", value: siteConfig.contactEmail });
+
+  if (businessProfile.openingHours?.length) {
+    details.push({
+      label: "Hours",
+      value: businessProfile.openingHours
+        .map((slot) => {
+          const range =
+            slot.days.length > 1
+              ? `${slot.days[0]}–${slot.days[slot.days.length - 1]}`
+              : (slot.days[0] ?? "");
+          return `${range} ${slot.opens}–${slot.closes}`;
+        })
+        .join(" · "),
+    });
+  }
+
+  details.push(
+    { label: "Response", value: "Within 2 business days" },
+    { label: "Engagement", value: "NDA-bound, milestone-tracked" },
+  );
+
+  return details;
+}
+
 export const contactContent = {
   eyebrow: "Initiate Vendor Protocol",
   headline: "Secure your production slot.",
-  body: "Tell us what has to be true about the frame. We operate under NDA, on secure servers — every enquiry is treated as confidential. We'll respond within two business days.",
+  /**
+   * The closing clause names the cities. Contact is where a visitor decides
+   * whether the studio is reachable and where it is, and the page said neither —
+   * it carried "Hyderabad" in its title and its JSON-LD and nowhere on the page.
+   * The claim is the same one `siteConfig.cities` already makes.
+   */
+  body: "Tell us what has to be true about the frame. We operate under NDA, on secure servers — every enquiry is treated as confidential, and we'll respond within two business days. The studio works from Hyderabad and Bengaluru, and delivers across India.",
   aside: {
     title: "What to expect",
     points: [
@@ -49,9 +105,5 @@ export const contactContent = {
       "Delivery through our in-house, physically accurate 8K pipeline.",
     ],
   },
-  details: [
-    { label: "Enquiries", value: siteConfig.contactEmail },
-    { label: "Response", value: "Within 2 business days" },
-    { label: "Engagement", value: "NDA-bound, milestone-tracked" },
-  ],
+  details: contactDetails(),
 };

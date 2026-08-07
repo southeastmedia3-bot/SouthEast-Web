@@ -317,8 +317,24 @@ export const footerNavigation = {
   ],
 } as const;
 
-export const socialNavigation = [
-  { label: "Instagram", href: "https://instagram.com" },
-  { label: "LinkedIn", href: "https://linkedin.com" },
-  { label: "Vimeo", href: "https://vimeo.com" },
-] as const;
+/**
+ * The studio's social profiles, for the footer.
+ *
+ * NOT DEFINED HERE ANY MORE. This used to be three hard-coded links pointing at
+ * `https://instagram.com`, `https://linkedin.com` and `https://vimeo.com` — the
+ * platforms' own homepages rather than the studio's accounts. They shipped in the
+ * footer of every page, so the only social links the site offered sent visitors
+ * to Instagram's front door.
+ *
+ * The single source is now `socialProfiles` in `constants/site.ts`, because the
+ * same URLs are also `Organization.sameAs` in the JSON-LD and the two must not be
+ * able to disagree — the schema is an identity assertion, and it would be wrong
+ * for the footer to link one account while the structured data names another.
+ *
+ * It is currently an empty array, which renders no social links at all. That is
+ * the correct state until the real URLs arrive; add them in `constants/site.ts`
+ * and both surfaces pick them up together.
+ *
+ * Import `socialProfiles` from `@/constants/site` directly — there is
+ * deliberately no re-export here, so the codebase has one name for one thing.
+ */

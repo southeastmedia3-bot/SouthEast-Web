@@ -55,6 +55,21 @@ export const metadata: Metadata = {
     images: ["/brand/og.jpg"],
   },
   /**
+   * Google Search Console verification, and only when there is a token to state.
+   *
+   * The value lives in `siteConfig` (sourced from
+   * `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`) rather than being written here, so
+   * the token can be set on the deployment without editing the layout.
+   *
+   * Spread conditionally because an empty string is not equivalent to omitting
+   * the key: Next would emit `<meta name="google-site-verification" content="">`
+   * on all 17 prerendered pages, which is a malformed verification claim rather
+   * than a harmless blank, and Search Console reads it as a failed attempt.
+   */
+  ...(siteConfig.googleSiteVerification
+    ? { verification: { google: siteConfig.googleSiteVerification } }
+    : {}),
+  /**
    * No `robots` key here on purpose, and it must stay that way.
    *
    * Every real page sets its own via `createMetadata`, so this entry only ever

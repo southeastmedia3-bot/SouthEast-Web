@@ -1,4 +1,9 @@
-import { siteConfig } from "@/constants/site";
+import {
+  businessProfile,
+  hasPostalAddress,
+  siteConfig,
+  socialProfiles,
+} from "@/constants/site";
 import { routeSeo, seoRoutes, studioExpertise, type RouteSeo, type SeoPath } from "@/data/seo";
 import { homeShowreel, verticalHeroes } from "@/data/media";
 import { getVertical } from "@/data/verticals";
@@ -18,7 +23,9 @@ import { absoluteUrl } from "@/lib/seo";
  * asserts something the visitor cannot see is a Google guidelines violation and
  * gets the site's rich results suppressed manually. So: no ratings, no review
  * counts, no invented founding date, no `LocalBusiness` until there is a real
- * postal address to put in it (see `siteConfig.cities` for why that is blocked).
+ * postal address to put in it. That last one is now enforced rather than merely
+ * intended — the local fields come from `businessProfile` in `constants/site.ts`
+ * and every one of them is omitted while it is `null`.
  * Every `FAQPage` below is generated from the questions the page actually
  * renders, which is the only way to keep that guarantee as the copy changes.
  *
@@ -66,21 +73,91 @@ function isServiceRoute(path: string): path is SeoPath {
 
 /* ────────────────────────────── the entity ────────────────────────────── */
 
+/* ─────────────────── local-business fields, when they exist ─────────────────── */
+
+/**
+ * The studio's postal address, or nothing.
+ *
+ * Gated on `hasPostalAddress` — street AND postcode together. A `PostalAddress`
+ * carrying only `addressLocality: "Hyderabad"` is not a partial address that
+ * Google fills in later; it is a claim that the business is located at the centre
+ * of Hyderabad, which is false and machine-readable.
+ */
+function postalAddressNode() {
+  if (!hasPostalAddress) return null;
+
+  return {
+    "@type": "PostalAddress",
+    streetAddress: businessProfile.streetAddress,
+    addressLocality: businessProfile.addressLocality,
+    addressRegion: businessProfile.addressRegion,
+    postalCode: businessProfile.postalCode,
+    addressCountry: businessProfile.addressCountry,
+  };
+}
+
+/**
+ * Opening hours as `OpeningHoursSpecification`, not the legacy `openingHours`
+ * string.
+ *
+ * The string form ("Mo-Fr 09:00-18:00") is still parsed, but the specification
+ * form is what Google documents, it survives a day set that is not a contiguous
+ * range, and it is far harder to typo into something that silently means nothing.
+ */
+function openingHoursNode() {
+  const hours = businessProfile.openingHours;
+  if (!hours?.length) return null;
+
+  return hours.map((slot) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: [...slot.days],
+    opens: slot.opens,
+    closes: slot.closes,
+  }));
+}
+
+function geoNode() {
+  const geo = businessProfile.geo;
+  if (!geo) return null;
+
+  return {
+    "@type": "GeoCoordinates",
+    latitude: geo.latitude,
+    longitude: geo.longitude,
+  };
+}
+
 /**
  * The studio, as one entity.
  *
- * Typed `Organization` rather than `ProfessionalService` on purpose.
- * `ProfessionalService` is a `LocalBusiness` subtype, and a LocalBusiness
- * without `address` and `telephone` is an incomplete node — Google reports it as
- * an error rather than treating the missing fields as unstated. When the studio
- * supplies its address and phone (docs/SEO_GEO_AEO.md §6), change the `@type` to
- * `ProfessionalService` and add `address`, `geo`, `telephone` and `openingHours`
- * here; nothing else in this file has to move, because everything already
- * references this node by `@id`.
+ * THE `@type` IS CHOSEN BY THE DATA, not written down. While there is no street
+ * address this is a plain `Organization`; the moment `businessProfile` carries a
+ * real address and phone it becomes `LocalBusiness`, which is the type that makes
+ * the studio eligible for local results at all.
+ *
+ * NOT `ProfessionalService`, though it is the obvious-looking fit and an earlier
+ * note in this file recommended it. schema.org deprecated that type — "the
+ * general ProfessionalService type for local businesses was deprecated due to
+ * confusion with Service" — and this site is exactly where that confusion would
+ * bite, because it already publishes seven genuine `Service` nodes. Google's
+ * guidance is to use the most specific `LocalBusiness` subtype that applies;
+ * there is none for a video and animation studio, so the base type is correct.
+ *
+ * It is gated rather than simply declared because a `LocalBusiness` without
+ * `address` is not treated by Google as a business whose address is unstated: it
+ * is reported as an error, and an erroring node is worth less than the honest
+ * `Organization` it replaced. So the promotion happens when, and only when, the
+ * node can be complete. Nothing else in this file has to change when it does —
+ * every other node already references this one by `@id`.
  */
 function organizationNode() {
+  const address = postalAddressNode();
+  const openingHoursSpecification = openingHoursNode();
+  const geo = geoNode();
+
   return {
-    "@type": "Organization",
+    // See above: the local type is earned by having the fields it requires.
+    "@type": hasPostalAddress && businessProfile.telephone ? "LocalBusiness" : "Organization",
     "@id": ORGANIZATION_ID,
     name: siteConfig.name,
     url: absoluteUrl("/"),
@@ -95,13 +172,30 @@ function organizationNode() {
     image: absoluteUrl("/brand/og.jpg"),
     areaServed,
     /**
-     * Email only. A `ContactPoint` with a `telephone` is the field that matters
-     * most here and the studio has not published one — see `siteConfig.cities`.
+     * The local fields, each present only when it is real. Spread rather than
+     * assigned so an unsupplied value leaves the key off the node entirely —
+     * `"telephone": null` is a published claim that the studio has no phone,
+     * which is not the same thing as saying nothing.
+     */
+    ...(businessProfile.legalName ? { legalName: businessProfile.legalName } : {}),
+    ...(address ? { address } : {}),
+    ...(businessProfile.telephone ? { telephone: businessProfile.telephone } : {}),
+    ...(geo ? { geo } : {}),
+    ...(openingHoursSpecification ? { openingHoursSpecification } : {}),
+    ...(businessProfile.foundingYear
+      ? { foundingDate: String(businessProfile.foundingYear) }
+      : {}),
+    /**
+     * `telephone` appears here too once it exists, and that is not a duplicate
+     * worth tidying: the field above is the business's number, this is the
+     * contact route for sales enquiries, and a consumer reading the contact point
+     * should not have to walk back up to the parent to find how to call.
      */
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "sales",
       email: siteConfig.contactEmail,
+      ...(businessProfile.telephone ? { telephone: businessProfile.telephone } : {}),
       areaServed: siteConfig.areaServed.map(String),
       availableLanguage: ["English"],
     },
@@ -128,14 +222,19 @@ function organizationNode() {
         })),
     },
     /**
-     * NO `sameAs` YET — and do not wire it to `socialNavigation`.
+     * `sameAs` — "this URL is another identity of this same entity".
      *
-     * Those hrefs are placeholders pointing at `instagram.com`, `linkedin.com`
-     * and `vimeo.com` themselves. `sameAs` means "this URL is another identity
-     * of this same entity", so publishing those would assert that Southeast
-     * Media is LinkedIn. Add the real profile URLs here when they exist; it is
-     * one of the strongest entity-disambiguation signals there is.
+     * Fed from `socialProfiles` in `constants/site.ts`, which is empty until the
+     * studio supplies real URLs, so the key is omitted rather than published
+     * empty. It used to be wired to nothing at all for a specific reason worth
+     * keeping in mind while filling that array in: the site's social links were
+     * `instagram.com` and `linkedin.com` — the platforms' own homepages — and
+     * `sameAs` on those would have asserted that Southeast Media *is* LinkedIn.
+     *
+     * Only ever list profiles the studio controls. It is one of the strongest
+     * entity-disambiguation signals available.
      */
+    ...(socialProfiles.length ? { sameAs: socialProfiles.map((profile) => profile.href) } : {}),
   };
 }
 

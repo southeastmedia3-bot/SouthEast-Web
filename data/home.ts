@@ -25,8 +25,19 @@ export const heroContent = {
 
 export const trustBar = {
   eyebrow: "The embedded media partner model",
+  /**
+   * The opening clause names the studio, the discipline and the city.
+   *
+   * The homepage carried "Hyderabad" in its `<title>` and its structured data
+   * and nowhere a visitor could read it, which is the one shape of keyword gap
+   * that is worth closing: a page whose own metadata claims a location its copy
+   * never supports is weaker for it, and every term on the client's list ends in
+   * that city name. This is the same fix already applied to the five vertical
+   * `intro`s in `data/verticals.ts` — see the note there — and it is deliberately
+   * one clause, not a rewrite. The rest of the statement is untouched.
+   */
   statement:
-    "We replace the ad-hoc agency model. Southeast Media becomes your outsourced digital infrastructure partner — dedicated resource allocation, on access-controlled servers, for institutions that cannot afford to look uncertain.",
+    "Southeast Media is a creative, CGI and video production studio in Hyderabad, working with institutions across India. We replace the ad-hoc agency model and become your outsourced digital infrastructure partner — dedicated resource allocation, on access-controlled servers, for institutions that cannot afford to look uncertain.",
   /**
    * Rendered as physics bodies you can shove around.
    *
