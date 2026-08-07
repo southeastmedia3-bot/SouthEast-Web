@@ -4,6 +4,51 @@ import { seoRoutes } from "@/data/seo";
 import { homeShowreel, verticalHeroes } from "@/data/media";
 
 /**
+ * XML-escape a string before it reaches the sitemap.
+ *
+ * NEXT DOES NOT DO THIS FOR YOU, and the omission is not obvious. Next 16's
+ * sitemap serializer (`resolve-route-data.js`) builds the XML by raw template
+ * interpolation — `` `<video:title>${video.title}</video:title>` `` — with no
+ * escaping on any field. So a single `&` in a title emits a bare ampersand,
+ * which is not legal XML.
+ *
+ * That is exactly what happened here. Four route titles in `data/seo.ts` contain
+ * one: "Creative & 3D Animation Agency in Hyderabad", "VFX Studio & CGI
+ * Production", "3D Animation & Motion Graphics Studio", "Product & SaaS Video
+ * Production". The served sitemap.xml failed to parse at the first of them, and
+ * a malformed sitemap is rejected *whole* — Search Console reports a parse error
+ * and submits none of the URLs, not just the four broken entries.
+ *
+ * Applied to `title` and `description` only. The URLs are built by `new URL()`
+ * and are already percent-encoded; `lastModified` is an ISO date. If a future
+ * field carries free text, escape it here too.
+ *
+ * One pass, not five sequential `.replace()` calls — chaining them would rewrite
+ * the `&` introduced by an earlier substitution and produce `&amp;lt;`.
+ */
+/**
+ * Keyed by a union rather than `string`, so the lookup below returns `string`
+ * and not `string | undefined` — the project runs `noUncheckedIndexedAccess`,
+ * and a `?? char` fallback would be the wrong answer in an escaping function
+ * anyway: it would silently emit the raw character it was asked to escape.
+ */
+type XmlSpecial = "&" | "<" | ">" | '"' | "'";
+
+const XML_ENTITIES: Record<XmlSpecial, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&apos;",
+};
+
+function escapeXml(value: string) {
+  // The cast is discharged by the character class: the regex matches exactly the
+  // five keys above, so every `char` handed to the callback is an `XmlSpecial`.
+  return value.replace(/[&<>"']/g, (char) => XML_ENTITIES[char as XmlSpecial]);
+}
+
+/**
  * The hero film on each vertical page, for the sitemap's `videos` entries.
  *
  * Video sitemaps are worth the few lines here: these films are the product, and
@@ -48,8 +93,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
             images: [new URL(media.poster, siteConfig.url).toString()],
             videos: [
               {
-                title: `${seo.title} — ${siteConfig.name}`,
-                description: seo.description,
+                // Escaped — see `escapeXml` above. Next emits these raw.
+                title: escapeXml(`${seo.title} — ${siteConfig.name}`),
+                description: escapeXml(seo.description),
                 thumbnail_loc: new URL(media.poster, siteConfig.url).toString(),
                 content_loc: new URL(media.video, siteConfig.url).toString(),
               },
