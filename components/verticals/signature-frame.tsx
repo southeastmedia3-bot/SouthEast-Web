@@ -52,7 +52,14 @@ export function SignatureFrame({
   return (
     <Container className="py-16 md:py-20">
       <div ref={ref}>
-        <motion.div style={reducedMotion ? undefined : { clipPath, scale }}>
+        {/* `clipPath: "none"` is stated rather than left off. Reduced motion is
+            only known after mount, so the first client render is the animated
+            branch and Framer writes a `clip-path: inset(12% round 40px)` to the
+            node. Dropping the style prop unbinds the motion value but never
+            unwrites what it last painted, and the frame stays masked — over the
+            foot of the film, where the native controls are. Naming the resting
+            value gives React something to overwrite it with. */}
+        <motion.div style={reducedMotion ? { clipPath: "none" } : { clipPath, scale }}>
           <MediaFrame
             tone={tone}
             ratio="wide"
