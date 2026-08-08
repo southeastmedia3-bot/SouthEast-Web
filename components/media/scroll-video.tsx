@@ -8,6 +8,7 @@ import { setupGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 import { useMotionEffect } from "@/hooks/use-motion-effect";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useVideoSource } from "@/hooks/use-video-source";
 
 type Cta = { label: string; href: string };
 
@@ -21,6 +22,10 @@ type ScrollVideoProps = {
   /** Compressed, scrub-ready mp4 under /public. When absent, the cinematic
    *  backdrop + title sequence stand in — no visual gap. */
   video?: string;
+  /** Smaller encode of the same footage for narrow viewports. Must be
+   *  frame-for-frame identical in duration and equally all-intra — the scrub
+   *  reads `duration` off whichever one loaded. */
+  videoMobile?: string;
   poster?: string;
   tone?: "blue" | "sky" | "violet" | "mixed";
   /**
@@ -51,11 +56,13 @@ export function ScrollVideo({
   primaryCta,
   secondaryCta,
   video,
+  videoMobile,
   poster,
   tone = "blue",
   scrollLength = 1.8,
 }: ScrollVideoProps) {
   const reducedMotion = useReducedMotion();
+  const videoSrc = useVideoSource(video, videoMobile);
   const rootRef = useRef<HTMLDivElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const mediaRef = useRef<HTMLDivElement | null>(null);
@@ -290,9 +297,13 @@ export function ScrollVideo({
                   playsInline
                   preload="auto"
                   poster={poster}
-                >
-                  <source src={video} type="video/mp4" />
-                </video>
+                  // Client-resolved, and deliberately not in the prerendered
+                  // HTML — see useVideoSource. It matters more here than in the
+                  // Hero: `preload="auto"` means the preload scanner would pull
+                  // the *whole* desktop file on a phone before hydration could
+                  // choose the mobile one.
+                  src={videoSrc}
+                />
                 <div
                   className="absolute inset-0"
                   style={{

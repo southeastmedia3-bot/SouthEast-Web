@@ -6,6 +6,38 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const SESSION_KEY = "sem-threshold-seen";
 
+/**
+ * sessionStorage, but it can never take the page down with it.
+ *
+ * `window.sessionStorage` is a *getter*, and reading it throws — not returns
+ * null — whenever the origin is denied storage: Chrome with third-party cookies
+ * blocked and the site framed, Safari in Lockdown Mode, Firefox's "block all
+ * cookies", a managed browser policy, or simply a private window whose quota is
+ * exhausted. This component renders inside the root AppShell, so an unhandled
+ * SecurityError here does not lose an intro animation, it takes the whole site
+ * to the error boundary.
+ *
+ * Failing open is the right answer for both directions: an unreadable store
+ * means "not seen yet" (the visitor gets the intro, every visit), and an
+ * unwritable one means the dismissal simply is not remembered. Neither is worth
+ * a blank page.
+ */
+function readSessionFlag(key: string): string | null {
+  try {
+    return window.sessionStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function writeSessionFlag(key: string, value: string): void {
+  try {
+    window.sessionStorage.setItem(key, value);
+  } catch {
+    // Storage denied or over quota — nothing to do but carry on.
+  }
+}
+
 const panels = [
   { color: "var(--brand-violet)", width: "4.2rem", from: -48 },
   { color: "var(--brand-blue)", width: "3.4rem", from: 48 },
@@ -23,7 +55,7 @@ export function Threshold() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined" || window.sessionStorage.getItem(SESSION_KEY)) {
+    if (typeof window === "undefined" || readSessionFlag(SESSION_KEY)) {
       return;
     }
     // One-time read of a browser-only API (sessionStorage) unavailable during
@@ -47,7 +79,7 @@ export function Threshold() {
   function dismiss() {
     setVisible(false);
     if (typeof window !== "undefined") {
-      window.sessionStorage.setItem(SESSION_KEY, "1");
+      writeSessionFlag(SESSION_KEY, "1");
     }
   }
 

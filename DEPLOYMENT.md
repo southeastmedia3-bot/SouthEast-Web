@@ -45,7 +45,8 @@ after that and changes nothing — the site would ship canonicals reading
 `http://localhost:3000`. The build logs a loud warning if the variable is
 missing; if you see it, the deploy is wrong.
 
-Contact delivery is deliberately not configured yet — see step 6.
+Contact delivery is not configured yet, and the enquiry form is refused until it
+is — see step 6.
 
 ## 3. Custom domain
 
@@ -120,8 +121,12 @@ submit the contact form.
 
 ## 6. After launch — contact delivery
 
-Until this is done the form accepts enquiries and writes them to Cloud Logging
-only. **Nobody is notified.** Treat it as the first post-launch task.
+**Until this is done the enquiry form does not work.** With no transport
+configured `/api/contact` answers 502 and the visitor is shown the studio email
+instead of a confirmation; the brief is written to Cloud Logging so it can still
+be recovered, but nobody is notified. That is deliberate — the alternative is a
+form that looks like it works and silently loses every lead. Do this before
+sending anyone to the site.
 
 ```bash
 firebase apphosting:secrets:set RESEND_API_KEY
@@ -138,8 +143,10 @@ endpoint alone does not prove delivery.
 ## Keep the static payload small
 
 `public/` was ~145MB of film and stills, which made every uncached view expensive
-and the whole bundle slow to ship. It is now ~61MB, re-encoded from the masters —
-no path, aspect ratio or crop changed, so `data/media.ts` was untouched.
+and the whole bundle slow to ship. It is now ~67MB, re-encoded from the masters —
+no path, aspect ratio or crop changed. (~61MB of that, plus the 5.6MB of mobile
+encodes described below; those are additive on disk and subtractive over the
+wire, since no visitor downloads both.)
 
 ~28MB of that total is two deliberate exceptions, and both are the homepage:
 
@@ -152,6 +159,42 @@ no path, aspect ratio or crop changed, so `data/media.ts` was untouched.
   master lives, why 2.5 and not 4.6, and why it is not offered as AV1.
 - `villa-night-scrub.mp4` (3.4MB) is all-intra. See the GOP note below before
   trying to win it back.
+
+Neither exception is served to a phone. Both films have a mobile encode
+alongside them, and `useVideoSource` (`hooks/use-video-source.ts`) hands it to
+any viewport ≤768px — so a 390px visitor downloads 5.6MB where they used to
+download 28MB:
+
+| Slot        | ≥769px                         | ≤768px                                |
+| ----------- | ------------------------------ | ------------------------------------- |
+| Hero reel   | `showreel.mp4` 25MB 1080p High | `showreel-mobile.mp4` 4.2MB 540p Main |
+| Scroll film | `villa-night-scrub.mp4` 3.4MB  | `villa-night-scrub-mobile.mp4` 1.4MB  |
+
+Re-cut the pair together or not at all — a mobile encode of a stale cut is worse
+than none, and the scrub pair must stay frame-for-frame identical (both are
+11.625s / 279 frames) because the scrub reads `duration` off whichever loaded.
+The mobile encodes, from the same masters as their desktop siblings:
+
+```bash
+# hero reel — house rule for a full-bleed hero: 960 long edge, CRF 33, Main@3.1
+ffmpeg -y -i source-media/showreel-4k-master.mp4 -an \
+  -vf "scale=960:540:flags=lanczos:out_color_matrix=bt709,\
+setparams=color_primaries=bt709:color_trc=bt709:colorspace=bt709" \
+  -c:v libx264 -preset slow -profile:v main -level 3.1 -pix_fmt yuv420p \
+  -crf 33 -maxrate 900k -bufsize 1800k -g 48 -movflags +faststart \
+  public/media/generated/showreel-mobile.mp4
+
+# scroll film — all-intra, same flags as its desktop sibling, half the raster
+ffmpeg -y -i source-media/villa-night.mov -an -vf "scale=640:360:flags=lanczos,fps=24" \
+  -c:v libx264 -profile:v main -level 3.1 -pix_fmt yuv420p \
+  -g 1 -keyint_min 1 -sc_threshold 0 -bf 0 \
+  -crf 30 -preset slow -movflags +faststart \
+  public/media/generated/villa-night-scrub-mobile.mp4
+```
+
+The all-intra check below applies to the mobile scrub too: 279 frames, 279
+keyframes. A GOP'd mobile encode would save a megabyte and hand the phone
+exactly the seek lag the desktop file exists to avoid.
 
 **Pick `-b:v` against a throttled trace, not a paused frame.** This slot ran at
 4.6 Mbps for a while, chosen by looking at the image alone. On the deployed site

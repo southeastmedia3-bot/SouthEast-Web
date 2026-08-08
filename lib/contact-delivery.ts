@@ -15,12 +15,19 @@ import { siteConfig } from "@/constants/site";
  *       POSTs the brief as JSON. Works as-is with a Slack or Teams incoming
  *       webhook (both accept a `text` field) and with anything custom.
  *
- * Set either, or both. With neither configured the route still accepts the
- * submission and logs it — that keeps the form working on day one instead of
- * showing every visitor an error, but the enquiry exists only in the runtime
- * logs. `isDeliveryConfigured()` is what the route uses to say so loudly.
+ * Set either, or both. With NEITHER configured there is nowhere for an enquiry
+ * to go, and `deliverEnquiry()` reports that as a failure so the route answers
+ * 502 and the visitor is sent to the studio email instead of being shown a
+ * confirmation for a brief nobody will ever read. An unconfigured transport is
+ * a deployment fault, not a degraded mode: the earlier behaviour returned
+ * success and left the enquiry in the Cloud Logging stream, which reads exactly
+ * like a working form and silently loses every lead.
  */
 
+/**
+ * Whether at least one transport can actually deliver. False means every
+ * submission will be refused — see the note above.
+ */
 export function isDeliveryConfigured(): boolean {
   return resendConfigured() || Boolean(process.env.CONTACT_WEBHOOK_URL);
 }
@@ -101,18 +108,22 @@ async function sendViaWebhook(values: ContactValues): Promise<void> {
 }
 
 /**
- * Attempt every configured transport. Resolves `false` when a transport was
- * configured but failed, so the route can return an error and the visitor is
- * told to email instead of being shown a false confirmation.
+ * Attempt every configured transport. Resolves `false` when the brief reached
+ * nobody — because no transport is configured, or because every configured one
+ * failed — so the route can return an error and the visitor is told to email
+ * instead of being shown a false confirmation.
  */
 export async function deliverEnquiry(values: ContactValues): Promise<boolean> {
   if (!isDeliveryConfigured()) {
-    console.warn(
+    // Logged at error level, and the brief is logged with it: the enquiry is
+    // still recoverable from Cloud Logging by whoever fixes the configuration,
+    // but the visitor is NOT told it was received.
+    console.error(
       "[contact] No delivery transport configured (set RESEND_API_KEY + CONTACT_TO_EMAIL, " +
-        "or CONTACT_WEBHOOK_URL). Enquiry recorded in logs only:",
+        "or CONTACT_WEBHOOK_URL). Enquiry REFUSED and recorded in logs only:",
       { ...values, message: values.message.slice(0, 200) },
     );
-    return true;
+    return false;
   }
 
   // Only the transports that are actually configured — an absent transport

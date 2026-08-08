@@ -37,8 +37,11 @@ provider for production.
 | `RESEND_API_KEY` + `CONTACT_TO_EMAIL` | one transport, yes | Emails each enquiry. `CONTACT_FROM_EMAIL` must sit on a Resend-verified domain.                                                                            |
 | `CONTACT_WEBHOOK_URL`                 | one transport, yes | POSTs each enquiry as JSON; Slack/Teams-compatible.                                                                                                        |
 
-With no transport configured the form still works, but enquiries land only in
-the runtime logs — see [lib/contact-delivery.ts](lib/contact-delivery.ts).
+With no transport configured the form does not work: `/api/contact` answers 502,
+the visitor is pointed at the studio email, and the brief is written to the
+runtime logs for recovery only — see
+[lib/contact-delivery.ts](lib/contact-delivery.ts). One of the two groups above
+is genuinely required in production.
 
 ## Deployment
 

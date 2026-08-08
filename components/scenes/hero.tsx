@@ -7,6 +7,7 @@ import { heroContent } from "@/data/home";
 import { homeShowreel } from "@/data/media";
 import { setupGsap } from "@/lib/gsap";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { useVideoSource } from "@/hooks/use-video-source";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 // A firm in-out for the wipe — slow at the seam's edges, quick through the
@@ -58,6 +59,9 @@ function clamp(value: number, min: number, max: number) {
  */
 export function Hero() {
   const reducedMotion = useReducedMotion();
+  // Resolved client-side, so a phone never starts the 25MB desktop master.
+  // `undefined` until the viewport is known — see the hook.
+  const reelSrc = useVideoSource(homeShowreel.video, homeShowreel.videoMobile);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const scrimRef = useRef<HTMLDivElement | null>(null);
@@ -86,7 +90,9 @@ export function Hero() {
    */
   useEffect(() => {
     const video = videoRef.current;
-    if (reducedMotion || !video) return;
+    // Waits for the source: an observer armed against a video with nothing to
+    // play would spend its one intersection on a `play()` that cannot start.
+    if (reducedMotion || !video || !reelSrc) return;
 
     const io = new IntersectionObserver(
       ([entry]) => {
@@ -97,7 +103,7 @@ export function Hero() {
     );
     io.observe(video);
     return () => io.disconnect();
-  }, [reducedMotion]);
+  }, [reducedMotion, reelSrc]);
 
   /* The statement's arrival and departure, tied to the scroll gesture. */
   useEffect(() => {
@@ -211,9 +217,13 @@ export function Hero() {
           // which is what keeps the stills below the fold arriving on time.
           preload="metadata"
           poster={homeShowreel.poster}
-        >
-          <source src={homeShowreel.video} type="video/mp4" />
-        </motion.video>
+          // Not a <source> child, and absent from the prerendered HTML on
+          // purpose: the preload scanner would otherwise start the desktop
+          // master on a phone before hydration could pick the mobile encode,
+          // and an in-flight download cannot be taken back. The poster covers
+          // the one commit it costs.
+          src={reelSrc}
+        />
         <motion.div
           className="absolute inset-0 bg-[#0a0a0f]"
           initial={reducedMotion ? false : { x: "0%" }}

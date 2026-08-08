@@ -27,6 +27,14 @@ export type MediaAsset = {
   src?: string;
   /** Optional short loop / scrub-ready mp4 path under /public. */
   video?: string;
+  /**
+   * Optional smaller encode of the SAME footage for narrow viewports, resolved
+   * by `useVideoSource`. Same duration, same frame count, same framing — only
+   * the resolution and bitrate differ, so nothing that reads the timeline (a
+   * scrub, a loop) can tell which one it got. Omit it and every viewport takes
+   * `video`.
+   */
+  videoMobile?: string;
   /** Poster still shown before the video loads and as reduced-motion fallback. */
   poster?: string;
   alt: string;
@@ -128,8 +136,18 @@ const BOARD = { w: 1157, h: 806 } as const; // storyboard cells
  *  and it is the largest single image on the page, so it was also 110KB of the
  *  delay it exists to cover. Regenerate the two together, and move this quality
  *  with the bitrate. */
+/*  THE MOBILE ENCODE IS NOT AN AFTERTHOUGHT — it is what makes the exemption
+ *  above affordable. A 390px phone was downloading the full 1080p master, ~25MB
+ *  of it, to paint a background film behind three lines of type on a screen
+ *  that cannot resolve a tenth of it. `showreel-mobile.mp4` is the same cut at
+ *  960x540 / CRF 33 / maxrate 900k from the same 4K master — 4.2MB, ~417kbps,
+ *  Main@3.1 (the desktop file is High@4.1; Main is what a cheap Android
+ *  hardware-decodes) — and `useVideoSource` hands it to anything ≤768px wide.
+ *  Both files are 79.72s at 25fps, so the loop is frame-identical either way.
+ *  Re-cut them together: a mobile encode of the wrong cut is worse than none. */
 export const homeShowreel: MediaAsset = {
   video: `${G}/showreel.mp4`,
+  videoMobile: `${G}/showreel-mobile.mp4`,
   poster: `${G}/showreel-poster.jpg`,
   alt: "Southeast Media showreel — a run of the studio's CGI work across disciplines",
   tone: "violet",
@@ -156,8 +174,16 @@ export const homeShowreel: MediaAsset = {
  *
  *  Encode recipe and the ffprobe check that proves it is all-intra are in
  *  DEPLOYMENT.md, "Keep the static payload small". */
+/*  villa-night-scrub-mobile.mp4 (1.4MB) is the third encode of this one shot,
+ *  and it exists for the same reason the scrub file does: all-intra at 640x360,
+ *  CRF 30, cut from the same ProRes master with the same `fps=24`, so it is 279
+ *  frames of 11.625s exactly like its desktop sibling and the scrub arithmetic
+ *  cannot tell them apart. `useVideoSource` serves it below 768px. Keep the
+ *  all-intra flags if it is ever re-cut — a GOP'd mobile encode would save a
+ *  megabyte and give the phone the seek lag this whole file exists to avoid. */
 export const heroFilm: MediaAsset = {
   video: `${G}/villa-night-scrub.mp4`,
+  videoMobile: `${G}/villa-night-scrub-mobile.mp4`,
   poster: `${G}/villa-poster.jpg`,
   alt: "Southeast Media reel — night-lit villa exterior, cinematic render",
   tone: "blue",

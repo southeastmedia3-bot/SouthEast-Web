@@ -91,9 +91,12 @@ export async function POST(request: Request) {
   const delivered = await deliverEnquiry(parsed.data);
 
   if (!delivered) {
-    // Every configured transport failed. Say so rather than showing a
-    // confirmation for a brief that reached nobody — the client surfaces the
-    // studio email as a fallback.
+    // The brief reached nobody — either no transport is configured, or every
+    // configured one failed. Say so rather than showing a confirmation for an
+    // enquiry that will never be read; the client surfaces the studio email as
+    // a fallback. The reason stays in the server logs: which transport is
+    // missing or misconfigured is not the visitor's business, and naming it
+    // would advertise the gap.
     return json({ ok: false, error: "Delivery failed" }, 502);
   }
 

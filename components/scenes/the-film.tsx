@@ -19,6 +19,7 @@ export function TheFilm() {
         primaryCta={filmContent.primaryCta}
         secondaryCta={filmContent.secondaryCta}
         video={heroFilm.video}
+        videoMobile={heroFilm.videoMobile}
         poster={heroFilm.poster}
         tone="blue"
       />

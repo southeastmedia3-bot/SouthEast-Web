@@ -92,10 +92,14 @@ env:
       - BUILD
       - RUNTIME
 
-  # ─── Contact form delivery — add when the Resend account is ready ──────────
+  # ─── Contact form delivery — REQUIRED. Add when the Resend account is ready ─
   #
-  # Until one of these is set the enquiry form still accepts submissions, but
-  # they reach only the Cloud Logging stream. See lib/contact-delivery.ts.
+  # THE ENQUIRY FORM DOES NOT WORK UNTIL ONE TRANSPORT HERE IS SET. With none
+  # configured there is nowhere for a brief to go, so /api/contact answers 502
+  # and the visitor is shown the studio email instead of a confirmation — the
+  # enquiry is written to Cloud Logging for recovery, but nobody is told it
+  # arrived. That is deliberate: reporting success for a brief that reached
+  # no one loses every lead silently. See lib/contact-delivery.ts.
   #
   # Plain values go here as `value:`. The API key must NOT: put it in Secret
   # Manager (`firebase apphosting:secrets:set RESEND_API_KEY`) and reference it

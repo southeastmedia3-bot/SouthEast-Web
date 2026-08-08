@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
@@ -8,28 +8,104 @@ import { primaryNavigation } from "@/config/navigation";
 import { useLockBodyScroll } from "@/hooks/use-lock-body-scroll";
 import { cn } from "@/lib/utils";
 
+/** Everything the browser will hand focus to, in document order. */
+const FOCUSABLE =
+  'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  /** Distinguishes "closed because it was dismissed" from "closed on mount",
+   *  so the very first render does not steal focus onto the hamburger. */
+  const wasOpen = useRef(false);
 
   useLockBodyScroll(open);
 
+  /*
+   * Modal keyboard behaviour, hand-rolled — the whole of it is the ~40 lines
+   * below, which is not worth a dependency.
+   *
+   * The panel covers the viewport, so without a trap Tab walks straight off its
+   * last link and into the page behind it: the visitor is then driving links
+   * they cannot see, under an overlay they cannot tell they are still inside.
+   * `aria-modal` tells a screen reader to ignore that background, and this makes
+   * the same true for the keyboard.
+   */
   useEffect(() => {
+    if (!open) {
+      if (wasOpen.current) {
+        wasOpen.current = false;
+        // Back where they were. Without this, dismissing the menu drops focus
+        // on <body> and the next Tab restarts at the top of the document.
+        triggerRef.current?.focus();
+      }
+      return;
+    }
+
+    wasOpen.current = true;
+
+    // The container, not its first link: it reads the dialog's name before its
+    // contents, and one Tab still lands on the first item. `preventScroll`
+    // because the panel animates in from x:100% and focusing mid-travel would
+    // otherwise ask the browser to scroll to where it currently is.
+    panelRef.current?.focus({ preventScroll: true });
+
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const panel = panelRef.current;
+      if (!panel) {
+        return;
+      }
+
+      // Re-read every time: submenus mount and unmount as they expand.
+      const items = Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+        (element) => element.getClientRects().length > 0,
+      );
+
+      const active = document.activeElement;
+      const inside = active instanceof Node && panel.contains(active);
+
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (!first || !last) {
+        event.preventDefault();
+        panel.focus({ preventScroll: true });
+        return;
+      }
+
+      if (event.shiftKey) {
+        // The panel itself is the wrap point going backwards, since it holds
+        // focus on open.
+        if (!inside || active === first || active === panel) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (!inside || active === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [open]);
 
   const closeMenu = () => setOpen(false);
 
   return (
     <div className="lg:hidden">
       <button
+        ref={triggerRef}
         type="button"
         className="relative z-[75] inline-flex size-11 items-center justify-center rounded-md border border-border bg-white/70 text-foreground backdrop-blur-xl"
         aria-label={open ? "Close navigation" : "Open navigation"}
@@ -73,11 +149,16 @@ export function MobileNav() {
             />
             <motion.div
               id="mobile-navigation"
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Site navigation"
+              tabIndex={-1}
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-border bg-white p-6 pt-24 shadow-[0_24px_60px_rgba(0,0,0,0.5)]"
+              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-border bg-white p-6 pt-24 shadow-[0_24px_60px_rgba(0,0,0,0.5)] focus:outline-none"
             >
               <nav aria-label="Mobile navigation" className="flex flex-col">
                 {primaryNavigation.map((item, index) => {
