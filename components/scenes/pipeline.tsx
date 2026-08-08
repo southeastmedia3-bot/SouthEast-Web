@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { Container } from "@/components/common/container";
 import { pipeline } from "@/data/home";
 import { setupGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
+import { useMotionEffect } from "@/hooks/use-motion-effect";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 const STEPS = pipeline.steps;
@@ -75,8 +76,8 @@ export function Pipeline() {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-    if (reducedMotion || !rootRef.current || !stageRef.current) return;
+  useMotionEffect(() => {
+    if (!rootRef.current || !stageRef.current) return;
 
     const { ScrollTrigger } = setupGsap();
 
@@ -93,7 +94,7 @@ export function Pipeline() {
     });
 
     return () => trigger.kill();
-  }, [reducedMotion]);
+  });
 
   if (reducedMotion) {
     return (

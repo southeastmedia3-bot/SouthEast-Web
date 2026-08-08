@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
 import { setupGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
+import { useMotionEffect } from "@/hooks/use-motion-effect";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 
 type Cta = { label: string; href: string };
@@ -62,8 +63,8 @@ export function ScrollVideo({
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (reducedMotion || !rootRef.current || !stageRef.current) {
+  useMotionEffect(() => {
+    if (!rootRef.current || !stageRef.current) {
       return;
     }
 
@@ -213,7 +214,7 @@ export function ScrollVideo({
       videoEl?.removeEventListener("seeked", applySeek);
       trigger.kill();
     };
-  }, [reducedMotion]);
+  });
 
   const overlay = (
     <div className="relative z-20 mx-auto flex max-w-4xl flex-col items-center px-6 text-center">

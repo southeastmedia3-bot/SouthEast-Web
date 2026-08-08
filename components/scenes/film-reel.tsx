@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { LinkButton } from "@/components/ui/link-button";
 import { filmReel } from "@/data/home";
 import { setupGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
+import { useMotionEffect } from "@/hooks/use-motion-effect";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useVisibleRaf } from "@/hooks/use-visible-raf";
 
@@ -77,8 +78,8 @@ export function FilmReel() {
      slowly means most frames only genuinely change a handful of them. */
   const lastShade = useRef<number[]>([]);
 
-  useEffect(() => {
-    if (reducedMotion || !rootRef.current || !stageRef.current) return;
+  useMotionEffect(() => {
+    if (!rootRef.current || !stageRef.current) return;
 
     const { ScrollTrigger } = setupGsap();
 
@@ -99,7 +100,7 @@ export function FilmReel() {
     });
 
     return () => trigger.kill();
-  }, [reducedMotion]);
+  });
 
   /*
    * The drum's idle turn. Gated on the drum being on screen — it used to run
