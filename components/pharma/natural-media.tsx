@@ -77,6 +77,7 @@ export function NaturalMedia({
       poster={ratioSrc}
       className={imgClassName}
       priority={eager || priority}
+      aria-label={alt}
     />
   ) : (
     <Image

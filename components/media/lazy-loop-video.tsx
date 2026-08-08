@@ -1,6 +1,7 @@
 "use client";
 
 import { useInViewPlay } from "@/hooks/use-in-view-play";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /**
@@ -11,8 +12,12 @@ import { cn } from "@/lib/utils";
  * IntersectionObserver. `MediaFrame` is a server component and cannot hold the
  * observer itself, which is why this exists as a separate client leaf.
  *
- * Under reduced motion the hook never starts it, so the poster stands in — and
- * `controls` appear so a visitor can still choose to watch.
+ * Under reduced motion the hook never starts it, so the poster stands in. Where
+ * the film is the content, that alone would put it out of reach, so native
+ * `controls` appear and the visitor chooses when to watch. A `decorative` loop —
+ * background texture behind a link, a plate under a title — opts out: it is
+ * scenery, and scenery must not hand a visitor a play button, still less a
+ * focusable one inside an `aria-hidden` subtree.
  *
  * `priority` is the deliberate exception to all of the above, for the one film
  * per page that carries the pitch: it fetches its header up front and starts a
@@ -28,17 +33,21 @@ export function LazyLoopVideo({
   src,
   poster,
   className,
-  controlsWhenStill = false,
+  decorative = false,
   priority = false,
+  "aria-label": ariaLabel,
 }: {
   src: string;
   poster?: string;
   className?: string;
-  /** Offer controls when autoplay is suppressed, so the film is still reachable. */
-  controlsWhenStill?: boolean;
+  /** Scenery rather than content: hidden from assistive tech, never given controls. */
+  decorative?: boolean;
   /** Fetch the header up front and start early. For a page's signature film only. */
   priority?: boolean;
+  /** Accessible name for the film. Supplied by the caller — never invented here. */
+  "aria-label"?: string;
 }) {
+  const reducedMotion = useReducedMotion();
   const ref = useInViewPlay(true, priority ? "900px" : "100px");
 
   return (
@@ -50,7 +59,9 @@ export function LazyLoopVideo({
       playsInline
       preload={priority ? "metadata" : "none"}
       poster={poster}
-      controls={controlsWhenStill || undefined}
+      controls={reducedMotion && !decorative}
+      aria-label={ariaLabel}
+      aria-hidden={decorative ? "true" : undefined}
     >
       <source src={src} type="video/mp4" />
     </video>

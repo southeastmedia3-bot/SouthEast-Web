@@ -151,7 +151,7 @@ export function AnimationAnamorphic({
                         }
                   }
                 >
-                  <LazyLoopVideo src={slot.video} poster={slot.src} />
+                  <LazyLoopVideo src={slot.video} poster={slot.src} aria-label={slot.note} />
                   {/* Panel falloff. It darkens toward the seam — the far edge of
                       each plane — because that is the edge turned away from the
                       light. Shaded the other way round it reads as two panels lit

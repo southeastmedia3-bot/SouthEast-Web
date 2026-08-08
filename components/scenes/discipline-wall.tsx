@@ -68,6 +68,7 @@ export function DisciplineWall() {
                     <LazyLoopVideo
                       src={tile.video}
                       poster={tile.media}
+                      decorative
                       className="transition-[transform,opacity] duration-700 ease-out group-hover:scale-[1.04] group-hover:opacity-0 group-focus-visible:opacity-0"
                     />
                   ) : (

@@ -44,7 +44,9 @@ const ACCENT = "in the same building.";
  * clipped mask, the film dollies at half scroll speed behind it, and the slate
  * line along the foot states the format in the same mono the rest of the site
  * uses for technical fact. Under reduced motion the gate is simply open, the film
- * holds on its poster with controls, and nothing moves.
+ * holds on its poster, and nothing moves. The plate stays decorative and offers
+ * no controls even then: it sits in an `aria-hidden` wrapper under the title, and
+ * the same film is a first-class, playable item in `FilmsScreeningRoom` below.
  */
 export function FilmsTitleCard({ vertical }: { vertical: Vertical }) {
   const reducedMotion = useReducedMotion();
@@ -86,7 +88,7 @@ export function FilmsTitleCard({ vertical }: { vertical: Vertical }) {
         style={reducedMotion ? undefined : { y: filmY, scale: filmScale }}
         aria-hidden="true"
       >
-        <LazyLoopVideo src={HERO.video} poster={HERO.src} priority />
+        <LazyLoopVideo src={HERO.video} poster={HERO.src} priority decorative />
       </motion.div>
 
       {/* Two graded veils, not one flat scrim: the picture keeps its light in the

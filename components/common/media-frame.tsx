@@ -62,7 +62,7 @@ export function MediaFrame({
       {video ? (
         // Deliberately not an inline <video autoPlay>. That fetched the file on
         // mount, so every loop on a page downloaded before anyone scrolled to it.
-        <LazyLoopVideo src={video} poster={poster} priority={priority} />
+        <LazyLoopVideo src={video} poster={poster} priority={priority} aria-label={alt} />
       ) : src ? (
         <Image
           src={src}
@@ -83,7 +83,11 @@ export function MediaFrame({
           }}
         />
       )}
-      <div className="grain absolute inset-0" />
+      {/* Painted over the picture, so it must not be in the way of it: under
+          reduced motion the video below carries native controls, and a grain
+          layer that swallows the pointer is a play button that cannot be
+          pressed. */}
+      <div className="grain pointer-events-none absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.08),transparent_38%)]" />
     </div>
   );
