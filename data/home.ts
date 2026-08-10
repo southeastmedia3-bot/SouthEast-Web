@@ -128,13 +128,25 @@ export const servicesList = {
  * Bust W.I.P." credit). Publishing another artist's work on a cropped-watermark
  * basis is not something to do, so it stays out.
  *
- * `w`/`h` are each file's real pixel dimensions, measured from the file, and
- * they DRIVE THE FRAME: the scene sizes each stage's box to that stage's own
- * aspect ratio, so the artifact fills its box corner to corner with no mat
- * around it (see `FRAME_SIDE` in `components/scenes/pipeline.tsx`). The set
- * spans 0.93 for the portrait storyboard up to 2.35 for the delivery frame, so a
- * wrong pair here is a visibly stretched or matted frame. Measure a replacement
- * before swapping it in.
+ * ALL SEVEN ARE 1600x900. The set used to arrive at seven different shapes, from
+ * a 0.93 portrait storyboard to a 2.35 delivery frame, and the scene sized each
+ * box to its own artifact so nothing was matted — which meant the frame changed
+ * proportions at every step. They are now one uniform 16:9, so the frame holds a
+ * single shape the whole way down, and 16:9 is the studio's own delivery format.
+ * Getting there cost a centre crop of 5-18% on each; the `-16x9` suffix is what
+ * distinguishes them from the originals they replace.
+ *
+ * `w`/`h` are each file's real pixel dimensions and they DRIVE THE FRAME: the
+ * scene sizes each stage's box to that stage's aspect ratio, so the artifact
+ * fills its box corner to corner with no mat around it (see `FRAME_SIDE` in
+ * `components/scenes/pipeline.tsx`). A wrong pair here is a visibly stretched or
+ * matted frame. Measure a replacement before swapping it in — and match 1600x900
+ * unless you mean to reintroduce the shifting frame.
+ *
+ * A replacement also needs A NEW FILENAME. `/media/:path*` is served with a
+ * one-day hard cache (see `next.config.ts`), so overwriting one of these in
+ * place reaches nobody who has already loaded the page, and reads exactly like
+ * the change never shipped.
  */
 export const pipeline = {
   eyebrow: "How the work gets made",
@@ -143,53 +155,53 @@ export const pipeline = {
     {
       title: "Brief & Discovery",
       detail: "Scope, stakes and success criteria, agreed under NDA before a pixel moves.",
-      media: "/media/process/creative-brief.jpg",
-      w: 1400,
-      h: 1002,
+      media: "/media/process/creative-brief-16x9.jpg",
+      w: 1600,
+      h: 900,
     },
     {
       title: "Script & Storyboard",
       detail: "The argument the visuals have to make, drawn frame by frame.",
-      media: "/media/process/storyboard-frames.jpg",
-      w: 1200,
-      h: 1294,
+      media: "/media/process/storyboard-frames-16x9.jpg",
+      w: 1600,
+      h: 900,
     },
     {
       title: "Previz & Animatic",
       detail:
         "Reallusion Character Creator and iClone into Unreal Engine — real-time previews and structural validation before expensive frames are committed.",
-      media: "/media/process/previz-animatic.jpg",
-      w: 639,
-      h: 360,
+      media: "/media/process/previz-animatic-16x9.jpg",
+      w: 1600,
+      h: 900,
     },
     {
       title: "Modelling & Look-Dev",
       detail: "Autodesk Maya and 3ds Max: modelling, rigging and physically based materials.",
-      media: "/media/process/modelling-turnaround.jpg",
+      media: "/media/process/modelling-turnaround-16x9.jpg",
       w: 1600,
       h: 900,
     },
     {
       title: "Lighting & Rendering",
       detail: "Blender and Cinema 4D through Octane — 8K on a 15-server farm with 96GB VRAM nodes.",
-      media: "/media/process/lighting-render.jpg",
+      media: "/media/process/lighting-render-16x9.jpg",
       w: 1600,
-      h: 682,
+      h: 900,
     },
     {
       title: "VFX & Simulation",
       detail:
         "X-Particles, Marvelous Designer, EmberGen and LiquiGen — CG integrated into plates until the seam is gone.",
-      media: "/media/process/vfx-plate.jpg",
+      media: "/media/process/vfx-plate-16x9.jpg",
       w: 1600,
-      h: 790,
+      h: 900,
     },
     {
       title: "Final Delivery",
       detail: "Conformed, Digital Intermediate graded, and mastered to every format you need.",
-      media: "/media/process/final-frame.jpg",
+      media: "/media/process/final-frame-16x9.jpg",
       w: 1600,
-      h: 686,
+      h: 900,
     },
   ],
 } as const;

@@ -27,21 +27,23 @@ const STAGE_HEIGHT_VH = STEPS.length * SCROLL_PER_STEP_VH + 100;
 /**
  * The side of the notional square every stage's frame is sized against.
  *
- * EVERY FRAME IS ITS OWN SHAPE, AND NOTHING IS MATTED. The box was fixed at 3:2
- * with the artifact `object-contain`ed inside it, which kept all seven the same
- * size — at the cost of a band of pale ground around six of them, since only one
- * file is anywhere near 3:2. On a section this light those bands read as a white
- * card printed around each photograph. So the box now takes the artifact's own
- * aspect ratio and the picture fills it corner to corner: no mat, no crop, no
- * stretch.
+ * THE BOX TAKES THE ARTIFACT'S OWN SHAPE, AND NOTHING IS MATTED. It was once
+ * fixed at 3:2 with the artifact `object-contain`ed inside it, which kept all
+ * seven the same size — at the cost of a band of pale ground around six of them,
+ * since only one file was anywhere near 3:2. On a section this light those bands
+ * read as a white card printed around each photograph. So the box takes the
+ * artifact's aspect ratio instead and the picture fills it corner to corner: no
+ * mat, no crop, no stretch.
  *
- * What holds the seven together instead is AREA, not height and not width. Given
- * a ratio r, the box is `FRAME_SIDE * sqrt(r)` wide and `FRAME_SIDE / sqrt(r)`
- * tall — so every stage covers the same number of square pixels whatever its
- * shape, and the 0.93 storyboard and the 2.35 delivery frame carry equal visual
- * weight. Sizing by height alone would make the delivery frame two and a half
- * times the storyboard's width and overflow the column; sizing by width alone
- * would reduce it to a strip. The dimensions come from `w`/`h` in `data/home.ts`.
+ * The seven are all 16:9 as of the current set, so in practice the box now holds
+ * one shape the whole way down and none of this is visible. It is kept because
+ * it is what makes a non-16:9 replacement degrade gracefully rather than arrive
+ * matted or stretched: what holds the set together is AREA, not height and not
+ * width. Given a ratio r, the box is `FRAME_SIDE * sqrt(r)` wide and
+ * `FRAME_SIDE / sqrt(r)` tall — so every stage covers the same number of square
+ * pixels whatever its shape. Sizing by height alone would let a 2.35 delivery
+ * frame overflow the column; sizing by width alone would reduce it to a strip.
+ * The dimensions come from `w`/`h` in `data/home.ts`.
  */
 const FRAME_SIDE = "clamp(13rem, 40vh, 24rem)";
 
@@ -189,9 +191,10 @@ export function Pipeline() {
                         className={cn(
                           // contain, not cover. The box is the *active* frame's
                           // shape, so for the active image the two are identical
-                          // and it fills the box exactly — but the six fading
-                          // underneath it are not that shape, and covering would
-                          // stretch them across the crossfade.
+                          // and it fills the box exactly. With a uniform set the
+                          // six fading underneath match too; contain is what
+                          // keeps a future odd-shaped one from being stretched
+                          // across the crossfade rather than fading in whole.
                           "object-contain transition-opacity duration-700 ease-out",
                           i === index ? "opacity-100" : "opacity-0",
                         )}
