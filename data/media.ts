@@ -49,6 +49,9 @@ export type MediaAsset = {
 import { PHARMA_LIBRARY_REV } from "@/constants/media-rev";
 
 const G = "/media/generated";
+/** The medical library's root. `G_PHARMA` below is only its `anat/` subfolder —
+ *  the two are not interchangeable, and most of the pharma frames live here. */
+const PHARMA = "/media/pharma";
 const G_PHARMA = "/media/pharma/anat";
 const PROD = "/media/products";
 const SAAS = "/media/saas";
@@ -1829,6 +1832,66 @@ export const aboutAssets: MediaAsset[] = [
     alt: "Finished product render — wearable displays in magenta light",
   },
 ];
+
+/**
+ * The /about hero backdrop — a drifting wall of the studio's own frames.
+ *
+ * DECORATIVE, AND DELIBERATELY SO. These carry no alt text and the whole wall is
+ * `aria-hidden`. The argument they make — one pipeline made all of this — is made
+ * in words by the headline sitting on top of them, and a screen reader walking
+ * eighteen unlabelled render stills before reaching the h1 would be handed noise
+ * in place of the page. Every frame here is also published somewhere it *is* the
+ * content, with real alt text, which is where it can be read properly.
+ *
+ * PATHS RATHER THAN `MediaAsset`s, for the same reason: an asset object invites a
+ * caption, and nothing here is captioned.
+ *
+ * ORDERED SO NO TWO ADJACENT FRAMES SHARE A LIBRARY. The columns are dealt from
+ * this list in turn, so a run of four interiors would stack a whole column of
+ * architecture and quietly turn the wall into an argument about real estate. Keep
+ * the rotation if you add to it, and keep the count a multiple of the column
+ * count (four) so the columns stay the same length — a short column loops faster
+ * than its neighbours and the seam becomes visible.
+ *
+ * SIXTEEN IS A BUDGET, not a shape that needs filling. Each frame is a real
+ * network request on the page's first screen; the wall is doubled per column for
+ * the loop, but the second copy re-uses the same URLs, so this list is exactly
+ * how many images the hero costs. Adding a fifth round would be four more.
+ */
+export const aboutMosaic: string[] = [
+  `${G}/exterior-02.jpg`,
+  `${PROD}/serum-04.jpg`,
+  `${PHARMA}/moa-poster.jpg`,
+  `${SAAS}/creative-09.jpg`,
+  `${G}/interior-11.jpg`,
+  `${PROD}/ribbon-03.jpg`,
+  `${ANIM}/character-05.jpg`,
+  `${ENT}/minimal-style-poster.jpg`,
+  `${G}/exterior-05.jpg`,
+  `${PROD}/horse-04.jpg`,
+  `${PHARMA}/brain.jpg`,
+  `${SAAS}/infograph-03.jpg`,
+  `${G}/interior-04.jpg`,
+  `${PROD}/watch-06.jpg`,
+  `${PHARMA}/heart-poster.jpg`,
+  `${ANIM}/character-09.jpg`,
+];
+
+/**
+ * The bed behind the /about infrastructure band.
+ *
+ * A live simulation loop, 320KB, and the one piece of footage on the site that
+ * shows the farm doing what the numbers over it describe. It is scenery here —
+ * scrimmed to near-black and `decorative`, so it is never given controls and
+ * never announced.
+ */
+export const aboutInfrastructureBed: MediaAsset = {
+  src: `${PROD}/turbulence-poster.jpg`,
+  video: `${PROD}/turbulence.mp4`,
+  poster: `${PROD}/turbulence-poster.jpg`,
+  tone: "violet",
+  alt: "Simulation running on the studio's own pipeline",
+};
 
 /* ---------------------------------------------------------------------------
    The studio's own process, as artifacts.

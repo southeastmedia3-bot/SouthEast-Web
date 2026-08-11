@@ -316,6 +316,38 @@ p {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Vertical frame columns — the /about hero wall.
+
+   Each column renders its frames TWICE and travels exactly one copy, so what
+   leaves the top is already entering from the bottom and the seam never arrives.
+
+   THE ARITHMETIC ONLY WORKS IF THE GAP IS INSIDE THE ITEMS. `gap` between n
+   items contributes (n-1) gaps to one copy but (2n-1) to the doubled track, so
+   -50% of the track is no longer one copy's height and the loop visibly jumps
+   every pass. The columns therefore use no `gap` at all: every frame carries its
+   own bottom padding, which makes one copy exactly n*(frame+pad) and the halves
+   identical. Do not "tidy" this into a `gap`.
+
+   Direction is chosen per column with `--column-direction`, so alternating
+   columns drift against each other; the whole wall is transform-only, which
+   keeps it on the compositor.
+   --------------------------------------------------------------------------- */
+.frame-column {
+  animation: sm-column var(--column-duration, 64s) linear infinite;
+  animation-direction: var(--column-direction, normal);
+  will-change: transform;
+}
+
+@keyframes sm-column {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
 /* Perspective stage for the image tower. */
 .tower-stage {
   perspective: 1600px;
@@ -377,7 +409,8 @@ p {
 
   .cine-blob,
   .cine-scan::before,
-  .marquee-track {
+  .marquee-track,
+  .frame-column {
     animation: none !important;
   }
 }

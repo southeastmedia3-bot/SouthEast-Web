@@ -1,11 +1,13 @@
 import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
-import { MediaFrame } from "@/components/common/media-frame";
 import { Container } from "@/components/common/container";
-import { AnimatedCounter } from "@/components/common/animated-counter";
+import { Reveal } from "@/components/common/reveal";
+import { FrameWall } from "@/components/about/frame-wall";
+import { InfrastructureBand } from "@/components/about/infrastructure-band";
+import { RangeBand } from "@/components/about/range-band";
+import { StageTriptych } from "@/components/about/stage-triptych";
 import { StudioFlow } from "@/components/scenes/studio-flow";
 import { LinkButton } from "@/components/ui/link-button";
-import { aboutClose, aboutHero, aboutMetrics, aboutPrinciples, aboutStory } from "@/data/about";
-import { aboutAssets } from "@/data/media";
+import { aboutClose, aboutHero, aboutPrinciples, aboutStory } from "@/data/about";
 import { PageWrapper } from "@/components/layout/page-wrapper";
 import { JsonLd } from "@/components/seo/json-ld";
 import { pageSchema } from "@/lib/schema";
@@ -13,57 +15,76 @@ import { metadataFor } from "@/lib/seo";
 
 export const metadata = metadataFor("/about");
 
+/**
+ * The page runs dark → light → dark → light → dark, and every dark beat now
+ * carries real footage rather than a gradient standing in for it.
+ *
+ *   1  Hero              the studio's own frames, drifting
+ *   2  Story + stages    one job, sketch to render
+ *   3  Range             seven disciplines, one band
+ *   4  Infrastructure    the four numbers, and the sentence that states them
+ *   5  Studio flow       the two charts jobs are actually routed against
+ *   6  Principles        the standards underneath
+ *   7  Close             the invitation
+ *
+ * The metrics used to sit between 5 and 7 as a plain row on white — the hardest
+ * evidence on the page in its quietest possible setting. They are now beat 4, on
+ * black, immediately after the range band has shown what the machines produce.
+ */
 export default function AboutPage() {
   return (
     // PageWrapper renders <main id="main-content"> — the skip link's target and
     // the landmark this page's content belongs inside.
     <PageWrapper>
       <JsonLd schema={pageSchema("/about")} />
-      {/* Hero */}
-      <section className="relative flex min-h-[80vh] items-end overflow-hidden bg-[#05070d] pb-16 pt-40">
-        <CinematicBackdrop tone="blue" scan />
-        <Container>
-          <p className="type-label mb-6 text-[color:var(--brand-ice)]/70">{aboutHero.eyebrow}</p>
-          <h1 className="type-h1 max-w-4xl text-balance text-[var(--ink-frame-foreground)]">
-            {aboutHero.headline}
-          </h1>
-          <p className="type-body-lg mt-8 max-w-2xl text-[color:var(--brand-ice)]/75">
-            {aboutHero.body}
-          </p>
+
+      {/* Hero — the wall of work, with the studio named on top of it. */}
+      <section className="relative flex min-h-[88vh] items-end overflow-hidden bg-[#05070d] pb-20 pt-[calc(var(--header-h)+7rem)] md:min-h-[92vh]">
+        <FrameWall />
+        {/* Lifted above the wall. The wall is a positioned child at the default
+            level, and non-positioned in-flow content paints below positioned
+            siblings — without this the headline would be behind the frames. */}
+        <Container className="relative z-10">
+          <Reveal>
+            <p className="type-label mb-6 text-[color:var(--brand-ice)]/70">{aboutHero.eyebrow}</p>
+          </Reveal>
+          <Reveal delay={0.06}>
+            <h1 className="type-h1 max-w-4xl text-balance text-[var(--ink-frame-foreground)]">
+              {aboutHero.headline}
+            </h1>
+          </Reveal>
+          <Reveal delay={0.14}>
+            <p className="type-body-lg mt-8 max-w-2xl text-[color:var(--brand-ice)]/80">
+              {aboutHero.body}
+            </p>
+          </Reveal>
         </Container>
       </section>
 
-      {/* Story */}
+      {/* Story, and the three stages of one job underneath it. */}
       <Container className="py-24 md:py-32">
         <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
-          <div>
+          <Reveal>
             <p className="type-label mb-6 text-accent-ink">{aboutStory.eyebrow}</p>
             <h2 className="type-h2 text-balance text-foreground">{aboutStory.title}</h2>
-          </div>
+          </Reveal>
           <div className="space-y-6">
-            {aboutStory.paragraphs.map((p, i) => (
-              <p key={i} className="type-body-lg text-muted">
-                {p}
-              </p>
+            {aboutStory.paragraphs.map((paragraph, i) => (
+              <Reveal key={i} delay={i * 0.06}>
+                <p className="type-body-lg text-muted">{paragraph}</p>
+              </Reveal>
             ))}
           </div>
         </div>
 
-        {/* Atmosphere strip */}
-        <div className="mt-20 grid grid-cols-2 gap-5 md:grid-cols-3">
-          {aboutAssets.map((asset, i) => (
-            <MediaFrame
-              key={i}
-              tone={asset.tone}
-              ratio={asset.ratio ?? "portrait"}
-              src={asset.src}
-              alt={asset.alt}
-              className={i === 1 ? "md:mt-10" : undefined}
-              sizes="(min-width: 768px) 30vw, 46vw"
-            />
-          ))}
-        </div>
+        <StageTriptych />
       </Container>
+
+      {/* The claim the story ends on — "seven disciplines" — shown. */}
+      <RangeBand />
+
+      {/* The machines, and the sentence that states what they are. */}
+      <InfrastructureBand />
 
       {/* The org chart and the pipeline chart, published as-is. */}
       <StudioFlow />
@@ -76,37 +97,21 @@ export default function AboutPage() {
           </h2>
           <div className="grid gap-x-12 gap-y-12 md:grid-cols-2">
             {aboutPrinciples.map((principle, i) => (
-              <div key={principle.label} className="flex gap-6 border-t border-border pt-6">
-                <span className="type-index text-accent-ink">{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <h3 className="type-h4 text-foreground">{principle.label}</h3>
-                  <p className="type-body mt-2 text-muted">{principle.detail}</p>
+              <Reveal key={principle.label} delay={(i % 2) * 0.08}>
+                <div className="flex gap-6 border-t border-border pt-6">
+                  <span className="type-index text-accent-ink" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="type-h4 text-foreground">{principle.label}</h3>
+                    <p className="type-body mt-2 text-muted">{principle.detail}</p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </Container>
       </section>
-
-      {/* Metrics */}
-      <Container className="py-24 md:py-32">
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-12 lg:grid-cols-4">
-          {aboutMetrics.map((m) => (
-            // min-w-0: a grid column's default `min-width: auto` refuses to be
-            // narrower than its content, so an oversized figure silently ran out
-            // over its neighbour instead of being contained.
-            <div key={m.label} className="min-w-0 border-t border-border pt-5">
-              {/* type-h2, not type-display. At four columns a display-scale
-                  figure is wider than the column it sits in — "100TB" was
-                  overlapping the "15" beside it on any desktop width. */}
-              <dt className="type-h2 text-foreground tabular-nums">
-                <AnimatedCounter value={m.value} suffix={m.suffix} />
-              </dt>
-              <dd className="type-caption mt-3 uppercase tracking-[0.1em] text-muted">{m.label}</dd>
-            </div>
-          ))}
-        </dl>
-      </Container>
 
       {/* Close */}
       <section className="relative overflow-hidden bg-[#0a0a0d] py-28 text-center md:py-36">

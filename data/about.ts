@@ -46,6 +46,58 @@ export const aboutPrinciples = [
   },
 ];
 
+/**
+ * The three frames under the story, given their stages.
+ *
+ * The images have always been there — `aboutAssets` in `data/media.ts` carries
+ * them with the labels "The sketch", "The simulation", "The render" — but the
+ * page rendered them as three unlabelled squares, so the sequence they describe
+ * was invisible. These lines name what each stage is *for*. Order matches
+ * `aboutAssets`; the labels come from there and are not repeated here.
+ *
+ * NOTHING HERE DESCRIBES A CLIENT OR AN OUTCOME. It is the studio's own process,
+ * which is the one thing this page can assert without a sign-off.
+ */
+export const aboutStages = [
+  "Form, angle and light are settled by hand, while changing them is still cheap. Nothing is modelled until the drawing is right.",
+  "Physics does what a keyframe cannot. Cloth, fluid and particle behaviour are solved rather than posed, so the motion is a consequence and not a guess.",
+  "The finished frame — materials, lighting and grade resolved to the same standard every discipline here is held to.",
+];
+
+/**
+ * The studio's range, as one band of frames.
+ *
+ * The story ends on "one pipeline, one standard, seven disciplines", which the
+ * page then asked the reader to take on trust. This is the evidence, and it is
+ * deliberately a drifting band rather than a grid of cards: `/verticals` is
+ * already the card grid, and repeating it here would be the same page twice.
+ */
+export const aboutRange = {
+  eyebrow: "The range",
+  title: "Seven disciplines, one pipeline.",
+  body: "Medical, architectural, product, brand, character, commercial and effects work — all of it through the same modelling, lighting and colour chain, on the same machines.",
+  cta: { label: "See all seven disciplines", href: "/verticals" },
+};
+
+/**
+ * The infrastructure, stated twice: as numbers a visitor scans, and as one
+ * sentence a machine can quote.
+ *
+ * THE SENTENCE IS NOT DECORATION. `docs/SEO_GEO_AEO.md` §3.2 makes the case: a
+ * `<div>` reading "100TB" next to a caption reading "RAID storage" is a figure an
+ * answer engine cannot lift, because there is no claim in it — only two fragments
+ * that happen to sit near each other. The same fact written as a complete
+ * declarative sentence, with the studio as its subject, is quotable verbatim.
+ * Every number in it is one of `aboutMetrics` below; if a number changes, change
+ * both or the page contradicts itself.
+ */
+export const aboutInfrastructure = {
+  eyebrow: "Built in-house",
+  title: "The machines are ours, and so is the standard they hold.",
+  statement:
+    "Southeast Media operates a 15-server render farm carrying 672GB of VRAM and 100TB of RAID-configured storage, delivering physically accurate imagery at up to 8K — modelled, lit, rendered, composited and graded inside one building.",
+};
+
 export const aboutMetrics = [
   { value: 20, suffix: "+", label: "years combined CGI experience" },
   { value: 100, suffix: "TB", label: "secure RAID-configured storage" },
