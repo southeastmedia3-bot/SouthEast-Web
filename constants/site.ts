@@ -83,20 +83,16 @@ export const siteConfig = {
   /**
    * Where the studio works from, and who it serves.
    *
-   * These two feed `Organization.areaServed` in `lib/schema.ts` and are the only
-   * geographic claim the site is currently able to make. Both cities come from
-   * the client's Corporate Capability Deck — the same source as every figure in
-   * `data/home.ts` — so they are safe to assert.
+   * These two feed `Organization.areaServed` in `lib/schema.ts`. Both cities come
+   * from the client's Corporate Capability Deck — the same source as every figure
+   * in `data/home.ts` — so they are safe to assert.
    *
-   * WHAT IS DELIBERATELY MISSING: a street address and a phone number. A
-   * `LocalBusiness` node needs both, and a `PostalAddress` with invented or
-   * partial values is worse than no node at all — it is a wrong fact published
-   * in a machine-readable format, and Google Business Profile will disagree with
-   * it. See docs/SEO_GEO_AEO.md §6 for the full list of facts the studio still
-   * has to supply before local schema can ship.
-   *
-   * Those fields now have a home: `businessProfile` below. It is the one place to
-   * fill them in, and the schema, the footer and the contact page all read it.
+   * `areaServed` IS NOT AN ADDRESS, and the distinction now matters: the studio's
+   * one postal address is in Hyderabad (`businessProfile` below, which is what
+   * makes the schema a `LocalBusiness`), while these are the places it works in
+   * and delivers to. Bengaluru appears here and in the copy but has no address of
+   * its own; if it is ever staffed as a second office it needs its own Business
+   * Profile listing, not a second address in this file.
    */
   cities: ["Hyderabad", "Bengaluru"],
   areaServed: ["Hyderabad", "Bengaluru", "India"],
@@ -174,28 +170,27 @@ export const siteConfig = {
 /**
  * The studio's real-world identity: Name, Address, Phone, hours, coordinates.
  *
- * EVERY FIELD HERE IS `null` UNTIL THE STUDIO SUPPLIES IT, and that is the whole
- * design of this module. Consumers — `lib/schema.ts`, the footer, the contact
- * page — all test for `null` and render nothing when it is absent, so the site
- * stays honest on its own rather than relying on someone remembering to strip a
- * placeholder before launch.
+ * SUPPLIED BY THE STUDIO 2026-08-11 and populated below. Every field was `null`
+ * before that, and the `null`-gating stays: consumers — `lib/schema.ts`, the
+ * footer, the contact page — all test for `null` and render nothing when a value
+ * is absent, so the one field still outstanding (`geo`) costs nothing and no
+ * placeholder can ever reach a page.
  *
- * DO NOT FILL THESE IN WITH ANYTHING PLAUSIBLE. A postal address is not
- * decorative copy: published as `LocalBusiness` JSON-LD it is a machine-readable
- * factual claim, it will be compared against the Google Business Profile, and a
- * wrong one is materially worse than an absent one — it makes Google trust both
- * records less. The same goes for a phone number nobody answers.
+ * DO NOT EDIT THESE TO ANYTHING PLAUSIBLE. A postal address is not decorative
+ * copy: published as `LocalBusiness` JSON-LD it is a machine-readable factual
+ * claim, it will be compared against the Google Business Profile, and a wrong one
+ * is materially worse than an absent one — it makes Google trust both records
+ * less. The same goes for a phone number nobody answers. Change anything here
+ * only when the studio says so, and change it on the Business Profile and every
+ * directory listing in the same sitting — see docs/SEO_OFFSITE_CHECKLIST.md §0.
  *
- * WHAT HAPPENS AUTOMATICALLY once `streetAddress`, `postalCode` and `telephone`
- * are all set: `lib/schema.ts` promotes the Organization node to
- * `LocalBusiness` and attaches `address`,
- * `telephone`, `geo` and `openingHoursSpecification`. Nothing else has to move,
- * because every other node already references the organization by `@id`. That
- * promotion is deliberately gated on the address being real: a `LocalBusiness`
- * missing `address` is reported by Google as an error, not treated as unstated.
- *
- * The facts still outstanding are listed in docs/SEO_GEO_AEO.md §6 and in
- * "SEM optimization" §2.2.
+ * WHAT THIS NOW SWITCHES ON, automatically, because `streetAddress`, `postalCode`
+ * and `telephone` are all set: `lib/schema.ts` promotes the Organization node to
+ * `LocalBusiness` and attaches `address`, `telephone` and
+ * `openingHoursSpecification`. Nothing else had to move, because every other node
+ * already references the organization by `@id`. That promotion is gated on the
+ * address being real: a `LocalBusiness` missing `address` is reported by Google
+ * as an error, not treated as unstated.
  */
 export type OpeningHours = {
   /** schema.org `DayOfWeek` short names, e.g. ["Monday", "Tuesday"]. */
@@ -206,40 +201,89 @@ export type OpeningHours = {
 };
 
 export type BusinessProfile = {
-  /** Registered legal name, if it differs from the trading name. TODO: supply. */
+  /**
+   * Registered legal name, only when it differs from the trading name.
+   *
+   * `null` on purpose: the studio confirmed the registered name is exactly
+   * "Southeast Media" — no Pvt Ltd, no LLP suffix — so it is already carried by
+   * `siteConfig.name`. Repeating it as `legalName` would publish the same string
+   * twice in one node and imply a distinction that does not exist.
+   */
   legalName: string | null;
-  /** TODO: supply — street and building, as one line. */
+  /** Street and building, as one line. */
   streetAddress: string | null;
   addressLocality: string;
   addressRegion: string;
-  /** TODO: supply — six-digit PIN. */
+  /** Six-digit PIN. */
   postalCode: string | null;
   /** ISO 3166-1 alpha-2. */
   addressCountry: string;
-  /** TODO: supply — E.164, e.g. "+914012345678". One number, kept forever. */
+  /**
+   * The one published number, with its country code.
+   *
+   * Stored in the exact form it should be *read* in, because the footer and the
+   * contact page print this string verbatim and `Organization.telephone` carries
+   * it as-is — NAP matching compares the strings a human and a crawler both see,
+   * so there must be only one of them. The `tel:` href strips the separators, so
+   * spacing costs nothing on a phone.
+   */
   telephone: string | null;
-  /** TODO: supply — from the Google Business Profile pin once it is verified. */
+  /** From the Google Business Profile pin once it is verified. */
   geo: { latitude: number; longitude: number } | null;
-  /** TODO: supply — the hours shown on the Business Profile. */
+  /** The hours shown on the Business Profile. */
   openingHours: readonly OpeningHours[] | null;
-  /** TODO: supply — the year the studio was founded. */
+  /** The year the studio was founded. */
   foundingYear: number | null;
 };
 
 export const businessProfile: BusinessProfile = {
+  // See the type above — the registered name is the trading name.
   legalName: null,
-  streetAddress: null,
-  // The two city names are safe to state: they come from the client's Corporate
-  // Capability Deck, the same source as every figure in `data/home.ts`. It is the
-  // street-level detail below them that nobody has supplied.
+  /**
+   * Word for word as the studio wrote it, including the order of the building
+   * and the door number. It reads oddly — the flat number sits third — but this
+   * is the string that has to go on the Google Business Profile and on every
+   * directory listing unchanged, and "tidying" it here is exactly how one
+   * business becomes two in a citation index.
+   */
+  streetAddress: "B Block, Asian Sun City, 309, Kondapur, Forest Dept Colony",
   addressLocality: "Hyderabad",
   addressRegion: "Telangana",
-  postalCode: null,
+  postalCode: "500084",
   addressCountry: "IN",
-  telephone: null,
+  telephone: "+91 72079 30735",
+  /**
+   * Still `null`, and correctly so. Coordinates should be read off the Business
+   * Profile pin once that listing is verified, not guessed from a map search —
+   * a `GeoCoordinates` node that disagrees with the pin is a contradiction
+   * between two things Google reads about the same business. `LocalBusiness` is
+   * complete without it; see docs/SEO_OFFSITE_CHECKLIST.md §1.
+   */
   geo: null,
-  openingHours: null,
-  foundingYear: null,
+  /**
+   * One slot, spelled out day by day rather than as a range, because
+   * `OpeningHoursSpecification` takes a list of `DayOfWeek` values and the footer
+   * renders "first–last" from it. Saturday and Sunday are absent, which is how
+   * schema.org says "closed" — do not add a zero-length slot for them.
+   */
+  openingHours: [
+    {
+      days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "10:00",
+      closes: "19:00",
+    },
+  ],
+  /**
+   * 2025 — the studio is genuinely new. That is not in tension with the "20+
+   * years combined CGI experience" figure on `/about`: the number counts the
+   * team's experience, not the company's age, which is why it is labelled
+   * "combined" in `data/about.ts`. The `/about` title and description used to
+   * blur the two ("Twenty years of CGI from a Hyderabad … studio"), and were
+   * corrected when this date arrived — a `foundingDate` of 2025 sitting in the
+   * same page's JSON-LD as a claim of twenty years' trading is a contradiction a
+   * machine can see.
+   */
+  foundingYear: 2025,
 };
 
 /**
@@ -267,32 +311,33 @@ export function formattedAddress(): string | null {
 /**
  * The studio's own profiles on other platforms.
  *
- * EMPTY ON PURPOSE, and an empty array is the correct current state rather than
- * an unfinished one. `config/navigation.ts` previously carried three links
- * pointing at `instagram.com`, `linkedin.com` and `vimeo.com` — the platforms'
- * own homepages, not the studio's accounts. Those shipped in the footer, where
- * they sent visitors to Instagram's front door, and they were deliberately kept
- * out of `Organization.sameAs`, because `sameAs` asserts *identity*: publishing
- * them would have told every crawler that Southeast Media and LinkedIn are the
- * same entity.
+ * These are read twice over: the footer renders them as links, and `lib/schema.ts`
+ * publishes them as `Organization.sameAs` — "these accounts are the same entity as
+ * this website", one of the strongest signals available for establishing that a
+ * business is a single, real, identifiable thing. That signal matters
+ * disproportionately to the generative engines. See docs/SEO_OFFSITE_CHECKLIST.md §5.
  *
- * Add the real profile URLs here and two things happen at once — the footer
- * renders them, and they enter `sameAs` in the JSON-LD, which is one of the
- * strongest signals available for establishing that a business is a single, real,
- * identifiable entity. That signal matters disproportionately to the generative
- * engines. See docs/SEO_OFFSITE_CHECKLIST.md §5.
+ * WHY THIS LIST WAS EMPTY UNTIL NOW, and the rule it leaves behind:
+ * `config/navigation.ts` used to carry three links pointing at `instagram.com`,
+ * `linkedin.com` and `vimeo.com` — the platforms' own homepages, not the studio's
+ * accounts. They shipped in the footer of every page, sending visitors to
+ * Instagram's front door, and they were deliberately kept out of `sameAs`, because
+ * publishing them would have asserted that Southeast Media *is* LinkedIn.
  *
- * One rule: every URL must be a profile the studio actually controls. Never a
+ * So: every URL here must be a profile the studio actually controls. Never a
  * platform homepage, never a search result, never a third-party directory page
- * about the studio.
+ * about the studio. Both below were supplied by the studio on 2026-08-11.
  */
 export type SocialProfile = { label: string; href: string };
 
 export const socialProfiles: readonly SocialProfile[] = [
-  // TODO: supply the real URLs, then uncomment. Examples of the shape expected:
-  // { label: "LinkedIn", href: "https://www.linkedin.com/company/southeast-media" },
-  // { label: "YouTube", href: "https://www.youtube.com/@southeastmedia" },
-  // { label: "Instagram", href: "https://www.instagram.com/southeastmedia" },
-  // { label: "Behance", href: "https://www.behance.net/southeastmedia" },
-  // { label: "Vimeo", href: "https://vimeo.com/southeastmedia" },
+  // Note the hyphenation: the LinkedIn slug is `south-east-media`, which does not
+  // match the brand's own one-word spelling. It is the account that exists, so it
+  // is the one that goes in `sameAs`; do not "correct" it to `southeast-media`.
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/south-east-media" },
+  // Likewise the trailing `03` — it is the real handle.
+  { label: "YouTube", href: "https://www.youtube.com/@SouthEastMedia03" },
+  // Instagram is coming; the studio said it would follow. Add it here when it
+  // arrives and both the footer and `sameAs` pick it up together. Behance and
+  // Vimeo are still worth creating — see the checklist §5.
 ];

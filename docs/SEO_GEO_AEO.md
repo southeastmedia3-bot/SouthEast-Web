@@ -45,9 +45,13 @@ they are separate programmes — labelled so.
    never rendered by any component — dead code. No Organization, no LocalBusiness,
    no Service, no FAQPage, no VideoObject. This is the single biggest lever for
    both GEO and AEO.
-3. **No NAP.** No street address and no phone number appear anywhere on the site
-   — not in the footer, not on `/contact`. NAP (Name / Address / Phone) consistency
-   is a top-3 local ranking factor. Right now there is nothing to be consistent with.
+3. ~~**No NAP.**~~ **Fixed 2026-08-11.** No street address and no phone number
+   appeared anywhere on the site — not in the footer, not on `/contact` — because
+   nobody outside the studio knew them. NAP (Name / Address / Phone) consistency
+   is a top-3 local ranking factor, and there was nothing to be consistent with.
+   The studio supplied them (§6); they are in `constants/site.ts` and render in
+   both places. What is still missing is the other half of consistency: a Google
+   Business Profile and directory citations carrying the same strings.
 4. ~~**No question-shaped content.**~~ **Corrected — this was wrong.** Six of the
    seven verticals already carried a written FAQ block (37 questions) rendered by
    [components/verticals/faq-list.tsx](components/verticals/faq-list.tsx). The
@@ -189,15 +193,15 @@ constants/site.ts             # + business block (address, phone, geo, sameAs)
 
 ### Schema types, per page
 
-| Schema                                  | Where                        | Why                                                                                                                 |
-| --------------------------------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `Organization` + `WebSite`              | `app/layout.tsx` (site-wide) | Establishes the entity. Feeds Knowledge Panel and every AI's entity graph.                                          |
-| `LocalBusiness`                         | site-wide (same node)        | The local-pack and "near me" signal. Needs real address + phone. NOT `ProfessionalService` — schema.org deprecated it for clashing with `Service`, which this site publishes seven of. |
-| `Service`                               | each vertical page           | Names the service, its `areaServed`, its `provider`. This is what an LLM reads to answer "who does X in Hyderabad". |
-| `BreadcrumbList`                        | every non-root page          | Builder already exists at [lib/seo.ts:65](lib/seo.ts#L65) — just render it.                                         |
-| `FAQPage`                               | each vertical page           | The AEO workhorse.                                                                                                  |
-| `VideoObject`                           | pages with showreels         | Video rich results + video search.                                                                                  |
-| `ImageObject`                           | render libraries             | Image search.                                                                                                       |
+| Schema                     | Where                        | Why                                                                                                                                                                                    |
+| -------------------------- | ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Organization` + `WebSite` | `app/layout.tsx` (site-wide) | Establishes the entity. Feeds Knowledge Panel and every AI's entity graph.                                                                                                             |
+| `LocalBusiness`            | site-wide (same node)        | The local-pack and "near me" signal. Needs real address + phone. NOT `ProfessionalService` — schema.org deprecated it for clashing with `Service`, which this site publishes seven of. |
+| `Service`                  | each vertical page           | Names the service, its `areaServed`, its `provider`. This is what an LLM reads to answer "who does X in Hyderabad".                                                                    |
+| `BreadcrumbList`           | every non-root page          | Builder already exists at [lib/seo.ts:65](lib/seo.ts#L65) — just render it.                                                                                                            |
+| `FAQPage`                  | each vertical page           | The AEO workhorse.                                                                                                                                                                     |
+| `VideoObject`              | pages with showreels         | Video rich results + video search.                                                                                                                                                     |
+| `ImageObject`              | render libraries             | Image search.                                                                                                                                                                          |
 
 `Organization` needs, at minimum: `name`, `url`, `logo`, `description`,
 `foundingDate`, `address` (PostalAddress), `telephone`, `email`, `sameAs` (array of
@@ -328,20 +332,47 @@ None of this is code, and skipping it caps everything above:
 
 ---
 
-## 6. Facts needed before schema can ship
+## 6. Facts needed before schema can ship — SUPPLIED 2026-08-11
 
 `LocalBusiness` / `Organization` JSON-LD cannot be written with placeholders —
-wrong data here is worse than none:
+wrong data here is worse than none. The studio supplied the list on 2026-08-11
+and it is all in `constants/site.ts`:
 
-1. Full registered legal name (Pvt Ltd?)
-2. Hyderabad street address with PIN
-3. Bengaluru address — real office or a presence?
-4. Public phone number(s)
-5. Social profile URLs (LinkedIn, Instagram, YouTube, Behance, Vimeo)
-6. Founding year
-7. Business hours
-8. Whether a Google Business Profile already exists
-9. Whether the studio will publish a price range
+1. ✅ Registered legal name — **Southeast Media**, no corporate suffix. Identical
+   to the trading name, so `businessProfile.legalName` stays `null` rather than
+   publishing the same string twice in one node.
+2. ✅ Hyderabad street address with PIN — B Block, Asian Sun City, 309, Kondapur,
+   Forest Dept Colony, Hyderabad, Telangana 500084
+3. ⬜ **Bengaluru — still unanswered.** The studio named Hyderabad as the primary
+   office city and gave one address. Bengaluru stays in `areaServed` and in the
+   copy, where it is a claim about where the studio _works_, not a second postal
+   address. If it is ever a staffed office it needs its own Business Profile
+   listing; if it is a virtual address, do not list it — a failed verification
+   poisons the main listing.
+4. ✅ Phone — +91 72079 30735. Stored in exactly the form it is displayed in, so
+   the string a human reads and the string a crawler reads cannot diverge.
+5. ⬜ Social profiles — **LinkedIn and YouTube supplied** and now in `sameAs` and
+   the footer. Instagram promised, not yet given. Behance and Vimeo do not exist.
+6. ✅ Founding year — **2025**. See the note below.
+7. ✅ Business hours — Monday–Friday, 10:00–19:00.
+8. ✅ Google Business Profile — **does not exist yet.** This is now the single
+   biggest outstanding item on the whole programme; see SEO_OFFSITE_CHECKLIST §1.
+9. ⬜ Price range — not supplied. `priceRange` is omitted rather than guessed.
+
+**The founding year forced a copy correction.** `/about` was titled "About the
+Studio — 20 Years in CGI" and described as "Twenty years of CGI from a Hyderabad
+and Bengaluru studio". Those read as twenty years of _trading_, which a 2025
+founding date published in the same page's JSON-LD directly contradicts. The
+underlying figure was never the company's age — `data/about.ts` labels it "years
+combined CGI experience", i.e. an aggregate over the team, which is an ordinary
+and defensible claim for a new studio of veterans. The title, description and
+`llms.txt` blurb in `data/seo.ts` now say so, and the two pasteable descriptions
+in the off-site checklist were corrected to match.
+
+Still to collect, and only obtainable later: the **map pin coordinates**, which
+should be read off the Business Profile once it is verified rather than looked up
+on a map. `businessProfile.geo` is `null` until then; `LocalBusiness` is complete
+and valid without it.
 
 ---
 
@@ -422,9 +453,32 @@ rendered as styled divs; a semantic `<table>` with a caption would be directly
 extractable. It is a component change with visual risk, so it wants a design
 review rather than a quiet refactor.
 
-**Phase 2 — still blocked on §6.** NAP in the footer and on `/contact`,
-`LocalBusiness` schema, Google Business Profile and citations. All four need
-facts only the studio has.
+**Phase 2 — SHIPPED 2026-08-11**, the day §6 was answered.
+
+Almost nothing had to be built. Phase 1 left every consumer written and gated on
+`businessProfile` / `socialProfiles` in `constants/site.ts`, so supplying the
+facts was the change:
+
+- ✅ **NAP in the footer of every page** — address, phone, email, hours and the
+  canonical host, in an `<address>` element. `components/footer/site-footer.tsx`
+  already rendered each line conditionally.
+- ✅ **NAP at the top of `/contact`**, above the process lines, built by
+  `contactDetails()` in `data/contact.ts`.
+- ✅ **The Organization node promoted itself to `LocalBusiness`**, carrying
+  `address`, `telephone` and `openingHoursSpecification`. `lib/schema.ts` picks
+  the type from the data — no edit was needed there. Every other node already
+  referenced the organization by `@id`, so all seven `Service` nodes, the
+  `OfferCatalog` and the `ContactPoint` inherited it.
+- ✅ **`foundingDate: 2025`**, and the `/about` copy corrected to match — see §6.
+- ✅ **`sameAs`** — LinkedIn and YouTube, live in the schema and rendering as the
+  footer's first real social links.
+
+⬜ **Google Business Profile and citations are the remaining work, and they are
+off-site.** The studio has no listing yet. That is now the largest single lever
+left on the whole programme — the map pack sits above the blue links for every
+"in Hyderabad" term on the keyword list, and only verified profiles appear in it.
+Everything the website can do for local search is done; the rest is
+`docs/SEO_OFFSITE_CHECKLIST.md` §1.
 
 **Then** — measure for 8–12 weeks in Search Console before judging anything. Local
 commercial terms in a competitive metro do not move in a fortnight.

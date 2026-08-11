@@ -191,13 +191,28 @@ export const routeSeo = {
   },
   "/about": {
     path: "/about",
-    title: "About the Studio — 20 Years in CGI",
+    /**
+     * THE TWENTY YEARS BELONG TO THE TEAM, NOT THE COMPANY. These three strings
+     * used to read "About the Studio — 20 Years in CGI" and "Twenty years of CGI
+     * from a Hyderabad and Bengaluru studio", which says the studio has been
+     * trading since ~2006. It has not: the studio was founded in 2025, and the
+     * figure on the page is labelled "years combined CGI experience" in
+     * `data/about.ts` — an aggregate over the people, which is a normal and
+     * defensible claim for a new firm of veterans.
+     *
+     * The distinction became load-bearing the moment `businessProfile.foundingYear`
+     * arrived, because `lib/schema.ts` publishes it as `Organization.foundingDate`
+     * on every page. A page whose own JSON-LD says 2025 while its title claims
+     * twenty years is not a matter of tone — it is two contradictory facts about
+     * one entity, served together, to a reader that checks.
+     */
+    title: "About the Team — 20 Years of CGI",
     description:
-      "Twenty years of CGI from a Hyderabad and Bengaluru studio — 15 render nodes, 100TB of RAID storage and an 8K pipeline built and run entirely in-house.",
+      "Southeast Media is a Hyderabad CGI studio founded in 2025 by a team with 20+ years of combined experience, running a 15-server render farm and an 8K pipeline.",
     breadcrumb: "About",
     blurb:
-      "Who Southeast Media is: over twenty years of CGI experience, a 15-server render farm with 672GB of VRAM and 100TB of RAID storage, and an 8K pipeline operated in-house across Hyderabad and Bengaluru.",
-    lastModified: "2026-08-05",
+      "Who Southeast Media is: a Hyderabad and Bengaluru studio founded in 2025 by a team carrying over twenty years of combined CGI experience, running a 15-server render farm with 672GB of VRAM and 100TB of RAID storage, and an 8K pipeline operated in-house.",
+    lastModified: "2026-08-11",
   },
   "/contact": {
     path: "/contact",

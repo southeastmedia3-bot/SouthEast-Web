@@ -9,28 +9,33 @@ wrong is starting at step 4 and having to redo steps 1–3.
 
 ---
 
-## 0. Do this first, once — decide the NAP
+## 0. Do this first, once — the NAP block
 
 NAP = **N**ame, **A**ddress, **P**hone. Every ranking system for local search
 works by matching these three strings across the internet and counting how
 consistently they agree. "Suite 4" in one place and "Ste. 4" in another are read
 as two different businesses, and the confidence in both drops.
 
-So: write the canonical version down **once**, and copy-paste it everywhere
-after. Never retype it.
-
-Fill this in and keep it somewhere you can copy from:
+**This is now settled and live on the site.** Copy-paste it everywhere below.
+Never retype it, and never reformat it — not the word order, not the
+punctuation, not the spacing in the phone number.
 
 ```
 Name:     Southeast Media
-Address:  ____________________________________
-          ____________________________________
-          Hyderabad, Telangana ______ (PIN)
+Address:  B Block, Asian Sun City, 309, Kondapur, Forest Dept Colony
+          Hyderabad, Telangana 500084
           India
-Phone:    +91 __________
+Phone:    +91 72079 30735
 Email:    info@southeastmedia.in
 Website:  https://www.southeastmedia.in
+Hours:    Monday–Friday, 10:00–19:00
+Founded:  2025
 ```
+
+Every one of those strings is published by the site as of 2026-08-11 — in the
+footer of every page, on `/contact`, and as `LocalBusiness` JSON-LD. So the site
+is now the reference copy: if any of it is wrong, tell me and I will change it
+there **first**, before it goes on a listing.
 
 Three rules for that block:
 
@@ -38,14 +43,15 @@ Three rules for that block:
    Company in Hyderabad". Putting keywords in a Google Business Profile name
    violates their guidelines and is one of the few things that gets a listing
    suspended outright. It is also the most common bad advice you will be given.
-2. **Pick one address format and freeze it.** Same abbreviations, same order,
-   same punctuation, every single time.
-3. **One phone number**, and ideally a local landline or a number you keep
-   forever. Changing it later means updating every listing you have made.
+2. **The address format is frozen**, exactly as written above. The door number
+   sitting third ("Asian Sun City, 309") looks like a typo and is not — it is
+   how the studio wrote it, so it is what goes everywhere.
+3. **One phone number.** Changing it later means updating every listing made
+   below, so if a landline is coming, use that from the start instead.
 
-**Send me the finished block** — the site currently publishes no address or phone
-at all, and I need it to add the footer NAP and the `LocalBusiness` schema. That
-schema is the thing that connects everything below back to the website.
+**One field still outstanding:** the map pin coordinates. Those should be read
+off the Google Business Profile once §1 is verified — I will add them then. The
+schema is complete and valid without them.
 
 ---
 
@@ -65,7 +71,17 @@ Go to <https://business.google.com>.
 - Search for "Southeast Media" first. If a listing already exists (Google
   sometimes auto-creates them from other data), **claim it** rather than making a
   second one. Duplicate listings compete with each other and both get suppressed.
-- Enter the NAP block from §0 exactly.
+  (The studio has confirmed it has not created one, so expect to be starting fresh
+  — but check anyway, because auto-created listings are common.)
+- Enter the NAP block from §0 exactly, hours included: **Monday–Friday,
+  10:00–19:00**, with Saturday and Sunday left closed. Those are the same hours
+  the site's footer and `LocalBusiness` schema now publish, and Google compares
+  the two.
+- Set the opening date to **2025**. It matches the `foundingDate` in the site's
+  structured data.
+- **Once verified, send me the map pin's coordinates** (open the listing on Google
+  Maps, right-click the pin, copy the lat/long). It is the last field missing from
+  the schema.
 
 **Expect video verification.** For service businesses in India, Google now
 usually asks for a short unedited video walkthrough rather than a postcard. Be
@@ -118,14 +134,20 @@ Each service should link to its page on the site
 
 ### 1.4 Business description (750 char limit)
 
-Paste this. Every claim in it is already on the website, and it is 722
+Paste this. Every claim in it is already on the website, and it is 742
 characters — the field cuts off hard at 750, so if you edit it, count again.
+
+Note the phrasing "twenty years of **combined** CGI experience". That word is
+load-bearing now that the profile carries a 2025 opening date: the twenty years
+are the team's, not the company's, and saying it the other way puts a claim on the
+profile that the website's own structured data contradicts.
 
 > Southeast Media is a creative, CGI and video production studio in Hyderabad,
 > working across medical and pharmaceutical animation, architectural
 > visualization, live-action film, VFX, motion graphics and product video. Over
-> twenty years of CGI, on our own infrastructure: a 15-server GPU render farm
-> with 672GB of VRAM and 100TB of RAID storage, an 8K delivery pipeline, and
+> twenty years of combined CGI experience, on our own infrastructure: a 15-server
+> GPU render farm with 672GB of VRAM and 100TB of RAID storage, an 8K delivery
+> pipeline, and
 > in-house Digital Intermediate colour grading — so a project is shot, built,
 > composited and graded in one building rather than passed between vendors. We
 > produce Mechanism of Action films for pharma, pre-construction walkthroughs for
@@ -267,25 +289,36 @@ schema.org's way of saying "these accounts are the same entity as this website",
 which is one of the strongest signals for a search engine trying to work out
 whether Southeast Media is a real, single, identifiable business.
 
-Create or claim, in this order:
+**Two are live and now published by the site** — they appear in the footer of
+every page and in `Organization.sameAs`, as of 2026-08-11:
 
-1. **LinkedIn company page** — the highest-authority one, and the first result
-   many people see for a company name. Fill it in completely: description, logo,
-   cover, location, website link, specialties.
-2. **YouTube channel** — upload the showreel and the best films. Title them for
-   search: "3D Medical Animation — Mechanism of Action | Southeast Media", not
-   "Reel_final_v3". Write real descriptions and link back to the matching page.
-3. **Instagram** — where visual studios get found. Post work, not office photos.
-4. **Behance** — genuinely good for CGI discovery, and it ranks.
-5. **Vimeo** — the industry-standard portfolio host for film work.
+- **LinkedIn:** <https://www.linkedin.com/company/south-east-media>
+- **YouTube:** <https://www.youtube.com/@SouthEastMedia03>
 
-Rules: identical NAP in every bio, identical logo, and the website URL on every
-one.
+Still to create or claim, in this order:
 
-**Send me the finished URLs.** The site currently has placeholder links pointing
-at `instagram.com` and `linkedin.com` themselves, and I deliberately left them
-out of the schema — publishing those would tell Google that Southeast Media _is_
-LinkedIn. Once I have the real ones they go into `sameAs` and the footer.
+1. **Instagram** — where visual studios get found. Post work, not office photos.
+   The studio said this one is coming; send me the handle and it goes into the
+   footer and the schema with the other two.
+2. **Behance** — genuinely good for CGI discovery, and it ranks.
+3. **Vimeo** — the industry-standard portfolio host for film work.
+
+Rules: identical NAP in every bio (§0), identical logo, and the website URL on
+every one. On the two that exist, go and check that now — a LinkedIn page with no
+address, or with a different one, is a citation that disagrees with the site.
+
+On YouTube specifically: title the films for search — "3D Medical Animation —
+Mechanism of Action | Southeast Media", not "Reel_final_v3" — write real
+descriptions, and link each back to the matching page on the site.
+
+**Why the two live URLs matter more than they look.** `sameAs` is schema.org's way
+of saying "these accounts are the same entity as this website". It is one of the
+strongest signals a search engine has for deciding that a business is a single,
+real, identifiable thing rather than a name on a page — and it is read heavily by
+the AI answer engines. The site published no social links at all until now,
+because the ones it had pointed at `instagram.com` and `linkedin.com` themselves;
+putting those in `sameAs` would have told Google that Southeast Media _is_
+LinkedIn.
 
 ---
 
@@ -316,8 +349,8 @@ Description to paste where a short one is wanted (about 300 characters):
 
 > Southeast Media is a creative, CGI and video production studio in Hyderabad —
 > medical and pharmaceutical animation, architectural visualization, corporate
-> and commercial film, VFX, and motion graphics. Over twenty years of CGI, an
-> in-house 15-server render farm, and 8K delivery end to end.
+> and commercial film, VFX, and motion graphics. Over twenty years of combined
+> CGI experience, an in-house 15-server render farm, and 8K delivery end to end.
 
 ---
 
