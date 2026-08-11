@@ -65,6 +65,24 @@ export const aboutStages = [
 ];
 
 /**
+ * The Corridor — the page's one set-piece.
+ *
+ * The copy has to do a specific job here, because the scene itself is silent:
+ * say what is flying past and who made it, in the two lines a visitor reads
+ * before the first panel arrives. Everything else is the frames.
+ *
+ * NO CLAIM ABOUT DURATION OR VOLUME. "Years of work" and "hundreds of frames"
+ * are the obvious lines to write under a scene like this and neither is
+ * supportable — the studio was founded in 2025, and nobody has counted the
+ * archive. What is true is where the frames come from and what they share.
+ */
+export const aboutCorridor = {
+  eyebrow: "The archive",
+  title: "One pass through everything the pipeline has made.",
+  body: "Medical, architectural, product, character, motion and effects work, drawn from every library the studio keeps — modelled, lit, rendered and graded on the same machines, by the same people, to the same standard.",
+};
+
+/**
  * The studio's range, as one band of frames.
  *
  * The story ends on "one pipeline, one standard, seven disciplines", which the

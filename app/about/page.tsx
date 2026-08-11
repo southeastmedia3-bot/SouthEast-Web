@@ -1,6 +1,7 @@
 import { CinematicBackdrop } from "@/components/media/cinematic-backdrop";
 import { Container } from "@/components/common/container";
 import { Reveal } from "@/components/common/reveal";
+import { Corridor } from "@/components/about/corridor";
 import { FrameWall } from "@/components/about/frame-wall";
 import { InfrastructureBand } from "@/components/about/infrastructure-band";
 import { RangeBand } from "@/components/about/range-band";
@@ -21,15 +22,22 @@ export const metadata = metadataFor("/about");
  *
  *   1  Hero              the studio's own frames, drifting
  *   2  Story + stages    one job, sketch to render
- *   3  Range             seven disciplines, one band
- *   4  Infrastructure    the four numbers, and the sentence that states them
- *   5  Studio flow       the two charts jobs are actually routed against
- *   6  Principles        the standards underneath
- *   7  Close             the invitation
+ *   3  Corridor          the set-piece — a fly-through of the archive
+ *   4  Studio flow       the two charts jobs are actually routed against
+ *   5  Range             seven disciplines, named, with the way out to /verticals
+ *   6  Infrastructure    the four numbers, and the sentence that states them
+ *   7  Principles        the standards underneath
+ *   8  Close             the invitation
  *
- * The metrics used to sit between 5 and 7 as a plain row on white — the hardest
- * evidence on the page in its quietest possible setting. They are now beat 4, on
- * black, immediately after the range band has shown what the machines produce.
+ * The metrics used to sit between 7 and 8 as a plain row on white — the hardest
+ * evidence on the page in its quietest possible setting. They are now beat 6, on
+ * black, immediately after the range band has named what the machines produce.
+ *
+ * The Corridor sits at 3 rather than later because it is the answer to the
+ * question the story raises: the paragraphs above it describe a standard, and
+ * this is four screens of the work that standard produced. Held back to the end
+ * it would be a flourish; here it is the evidence, and everything after it reads
+ * as explanation rather than assertion.
  */
 export default function AboutPage() {
   return (
@@ -80,14 +88,18 @@ export default function AboutPage() {
         <StageTriptych />
       </Container>
 
-      {/* The claim the story ends on — "seven disciplines" — shown. */}
+      {/* The set-piece: fly the camera through the archive. */}
+      <Corridor />
+
+      {/* The org chart and the pipeline chart, published as-is. */}
+      <StudioFlow />
+
+      {/* The claim the story ends on — "seven disciplines" — named, and the way
+          through to the pages that carry them. */}
       <RangeBand />
 
       {/* The machines, and the sentence that states what they are. */}
       <InfrastructureBand />
-
-      {/* The org chart and the pipeline chart, published as-is. */}
-      <StudioFlow />
 
       {/* Principles */}
       <section className="border-y border-border bg-surface-elevated/50 py-24 md:py-32">

@@ -1878,6 +1878,200 @@ export const aboutMosaic: string[] = [
 ];
 
 /**
+ * The Corridor — the /about fly-through.
+ *
+ * Fifteen panels suspended at different depths. Scrolling flies the camera
+ * forward through them: a panel resolves out of the vanishing point, grows, and
+ * dissolves as it sweeps past. The set is drawn across every library the studio
+ * keeps, because the whole argument of the scene is that one pipeline made all
+ * of it — so, as with `towerAssets`, no two consecutive panels share a
+ * discipline.
+ *
+ * MOST OF THESE FRAMES HAVE NEVER BEEN ON THE SITE. They were chosen from what
+ * `scripts/unused-media.mjs` reports as unreferenced: real work sitting in
+ * `public/media` that no page had a slot for. Four of the fifteen are films
+ * rather than stills, so motion arrives as it passes the camera rather than
+ * being something the page has to announce.
+ *
+ * THE GEOMETRY IS AUTHORED, NOT RANDOM. `x`/`y` are fractions of the stage, so
+ * the layout holds its composition at every viewport; they alternate sides and
+ * heights so the eye keeps moving, and the widest panels sit nearest the centre
+ * where they read as the frame you fly into. Randomising it produces clumps and
+ * dead corners on roughly every third reload.
+ *
+ * `ratio` IS A BOX, NOT A CLAIM ABOUT THE FILE. The picture inside is
+ * `object-cover`, so a ratio that does not match its asset crops rather than
+ * distorts — which is why a new panel can be added without measuring anything.
+ *
+ * ALT TEXT IS LIBRARY-LEVEL and deliberately so: "Photorealistic interior
+ * render" rather than a specific description of a room nobody has verified. It
+ * is the same standard the generated frame sets use, and it is honest about what
+ * is actually known about each file. Captions name the craft, never the client —
+ * see the note at the top of this file.
+ */
+export type CorridorPanel = {
+  /** Still, or the poster when `video` is set. */
+  src: string;
+  video?: string;
+  alt: string;
+  /** The discipline, read out as the panel passes the camera. */
+  kicker: string;
+  /** Horizontal offset, as a fraction of the stage's width. */
+  x: number;
+  /** Vertical offset, as a fraction of the stage's height. */
+  y: number;
+  /** Panel width, as a fraction of the stage's width. */
+  w: number;
+  /** The panel's box, as width / height. */
+  ratio: number;
+};
+
+const PANEL_WIDE = 16 / 9;
+const PANEL_SQUARE = 1;
+
+export const aboutCorridor: CorridorPanel[] = [
+  {
+    src: `${G}/exterior-06.jpg`,
+    alt: "Photorealistic exterior render",
+    kicker: "Architectural visualization",
+    x: -0.34,
+    y: -0.22,
+    w: 0.34,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${PHARMA}/moa-protein-poster.jpg`,
+    video: `${PHARMA}/moa-protein.mp4`,
+    alt: "Mechanism-of-action animation — protein binding",
+    kicker: "Medical animation",
+    x: 0.03,
+    y: -0.05,
+    w: 0.4,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${PROD}/serum-09.jpg`,
+    alt: "Beauty product render",
+    kicker: "Product CGI",
+    x: 0.4,
+    y: 0.2,
+    w: 0.28,
+    ratio: PANEL_SQUARE,
+  },
+  {
+    src: `${ANIM}/character-06.jpg`,
+    alt: "Character animation frame",
+    kicker: "Character animation",
+    x: -0.44,
+    y: 0.24,
+    w: 0.26,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${G}/interior-09.jpg`,
+    alt: "Photorealistic interior render",
+    kicker: "Interior visualization",
+    x: 0.34,
+    y: -0.3,
+    w: 0.3,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${G}/villa-poster.jpg`,
+    video: `${G}/villa-night.mp4`,
+    alt: "Night-lit villa exterior, cinematic render",
+    kicker: "Architectural visualization",
+    x: -0.1,
+    y: 0.11,
+    w: 0.42,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${PROD}/fibre-08.jpg`,
+    alt: "Fibre-optic study — luminous strands",
+    kicker: "Technical 3D",
+    x: 0.46,
+    y: -0.08,
+    w: 0.26,
+    ratio: PANEL_SQUARE,
+  },
+  {
+    src: `${SAAS}/creative-05.jpg`,
+    alt: "Abstract systems film frame",
+    kicker: "Product & SaaS film",
+    x: -0.3,
+    y: -0.34,
+    w: 0.28,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${PROD}/jewellery-poster.jpg`,
+    video: `${PROD}/jewellery.mp4`,
+    alt: "Jewellery product film",
+    kicker: "Product CGI",
+    x: 0.16,
+    y: 0.3,
+    w: 0.32,
+    ratio: PANEL_SQUARE,
+  },
+  {
+    src: `${PROD}/horse-05.jpg`,
+    alt: "Volumetric simulation — smoke resolving into a form",
+    kicker: "VFX & simulation",
+    x: -0.42,
+    y: -0.02,
+    w: 0.3,
+    ratio: PANEL_SQUARE,
+  },
+  {
+    src: `${G}/interior-13.jpg`,
+    alt: "Photorealistic interior render",
+    kicker: "Interior visualization",
+    x: 0.3,
+    y: 0.06,
+    w: 0.28,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${ANIM}/logo-trail-poster.jpg`,
+    video: `${ANIM}/logo-trail.mp4`,
+    alt: "Logo build — a light trail resolving into a mark",
+    kicker: "Motion graphics",
+    x: -0.18,
+    y: -0.28,
+    w: 0.34,
+    ratio: PANEL_WIDE,
+  },
+  {
+    src: `${PROD}/ribbon-06.jpg`,
+    alt: "X-Particles simulation — a ribbon resolving out of drifting particles",
+    kicker: "VFX & simulation",
+    x: 0.44,
+    y: 0.32,
+    w: 0.26,
+    ratio: PANEL_SQUARE,
+  },
+  {
+    src: `${PROD}/watch-09.jpg`,
+    alt: "Wearable product render",
+    kicker: "Product CGI",
+    x: -0.36,
+    y: 0.32,
+    w: 0.28,
+    ratio: PANEL_SQUARE,
+  },
+  {
+    src: `${PROD}/cell-04.jpg`,
+    alt: "Cellular render — division sequence",
+    kicker: "Scientific visualization",
+    x: 0.1,
+    y: -0.24,
+    w: 0.3,
+    ratio: PANEL_WIDE,
+  },
+];
+
+/**
  * The bed behind the /about infrastructure band.
  *
  * A live simulation loop, 320KB, and the one piece of footage on the site that
