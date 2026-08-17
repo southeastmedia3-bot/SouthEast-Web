@@ -159,7 +159,14 @@ export function Corridor() {
         // Fully faded panels are lifted off the compositor entirely. Fifteen
         // transparent layers still cost a paint each; at any moment only about a
         // third of them are actually on screen.
-        node.style.visibility = opacity < 0.01 ? "hidden" : "visible";
+        //
+        // `display`, not `visibility`. An IntersectionObserver does not consider
+        // visibility, so a hidden-but-displayed panel still reads as on screen
+        // and `LazyLoopVideo` keeps its film running: all four decode for the
+        // whole four-screen scene, three of them behind nothing. Taking the box
+        // out of layout is the one hide the observer actually sees, so a film
+        // plays while its frame is in the corridor and stops when it is not.
+        node.style.display = opacity < 0.01 ? "none" : "";
 
         if (opacity > 0.35 && z > nearest) {
           nearest = z;
@@ -196,9 +203,13 @@ export function Corridor() {
 
     // The scene has to be composed before it is ever scrolled to: without this
     // every panel sits at its unstyled origin — dead centre, full size, stacked
-    // — until the first scroll event moves them.
+    // — until the first scroll event moves them. `create()` refreshes
+    // synchronously, so `onRefresh` above has usually done exactly that already;
+    // this is the belt to its braces, and it composes the frame the visitor is
+    // ACTUALLY at. Drawing 0 here would undo that refresh, and a reload halfway
+    // down the corridor would hold the first frame until the next scroll.
     measure();
-    draw(0);
+    draw(trigger.progress);
 
     return () => trigger.kill();
   });
@@ -250,11 +261,20 @@ export function Corridor() {
           {/* The stage. `perspective` here rather than on each panel, so all
               fifteen share one lens and one vanishing point — per-panel
               perspective gives each frame its own camera and the depth reads as
-              fifteen unrelated zooms. */}
+              fifteen unrelated zooms.
+
+              `transformStyle: preserve-3d` is not decoration. `perspective`
+              alone still projects each child's `translate3d`, so the geometry
+              looks right — but the children are flattened into this element's
+              plane and then painted in DOM ORDER. Panel 0 is always the nearest
+              and panel 14 the farthest, so every overlap comes out back to
+              front: a frame at the vanishing point drawn over the one arriving
+              at the lens. Preserving the 3D context is what makes the browser
+              sort them by their z instead. */}
           <div
             ref={stageRef}
             className="absolute inset-0"
-            style={{ perspective: `${PERSPECTIVE}px` }}
+            style={{ perspective: `${PERSPECTIVE}px`, transformStyle: "preserve-3d" }}
             aria-hidden="true"
           >
             {aboutCorridor.map((panel, i) => (
