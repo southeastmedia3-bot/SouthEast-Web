@@ -14,33 +14,43 @@ import { siteConfig } from "@/constants/site";
  * now always on, which also keeps the nav legible over the dark showreel that
  * opens the page.
  *
- * NOTE no transform on this element or anything inside it: the verticals
- * mega-panel is `position: fixed` and a transform here would make this bar its
- * containing block. Same trap that breaks the pinned scroll stages.
+ * NOTE nothing that wraps the nav may carry a transform, a filter or a
+ * backdrop-filter. Any of the three makes that element the containing block
+ * for every `position: fixed` descendant, and both menus are fixed: the
+ * services mega-panel, and the mobile menu's full-screen overlay. Same trap
+ * that breaks the pinned scroll stages.
+ *
+ * That is why the frosted glass is its own layer behind the bar's contents
+ * rather than the element around them. While the blur wrapped the nav, the
+ * mobile menu was sized to this 80px bar instead of the screen and opened as a
+ * white strip with the first link cut off at its bottom edge.
  */
 export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-[60]">
-      <div className="border-b border-border/60 bg-white/75 backdrop-blur-xl">
-        {/* The bar's height is the `--header-h` token, not a literal — the
-            homepage reel offsets itself by the same token so it starts below
-            this bar instead of running under it. */}
-        <div className="mx-auto flex h-[var(--header-h)] max-w-[100rem] items-center justify-between px-6 sm:px-10 lg:px-16">
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label={`${siteConfig.name} home`}
-          >
-            <BrandMark className="transition duration-300 group-hover:opacity-80" />
-            <span className="sr-only">{siteConfig.projectName}</span>
-          </Link>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 border-b border-border/60 bg-white/75 backdrop-blur-xl"
+      />
+      {/* The bar's height is the `--header-h` token, not a literal — the
+          homepage reel offsets itself by the same token so it starts below
+          this bar instead of running under it. `relative` stacks it over the
+          glass. */}
+      <div className="relative mx-auto flex h-[var(--header-h)] max-w-[100rem] items-center justify-between px-6 sm:px-10 lg:px-16">
+        <Link
+          href="/"
+          className="group inline-flex items-center gap-3 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label={`${siteConfig.name} home`}
+        >
+          <BrandMark className="transition duration-300 group-hover:opacity-80" />
+          <span className="sr-only">{siteConfig.projectName}</span>
+        </Link>
 
-          {/* Contact already lives in `primaryNavigation` — a second link here
-              rendered it twice in the bar. */}
-          <div className="flex items-center gap-6">
-            <DesktopNav />
-            <MobileNav />
-          </div>
+        {/* Contact already lives in `primaryNavigation` — a second link here
+            rendered it twice in the bar. */}
+        <div className="flex items-center gap-6">
+          <DesktopNav />
+          <MobileNav />
         </div>
       </div>
     </header>

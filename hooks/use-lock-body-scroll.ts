@@ -6,7 +6,7 @@ import { getLenis } from "@/hooks/use-lenis";
 /**
  * Hold the page still behind an overlay.
  *
- * `body { overflow: hidden }` on its own is not a lock on this site. Lenis does
+ * `overflow: hidden` on its own is not a lock on this site. Lenis does
  * not scroll by letting the browser scroll — it listens for wheel and touch,
  * runs its own eased animation and *writes* the position with `scrollTo` on
  * every ticker frame. A programmatic scroll is unaffected by the overflow of
@@ -19,6 +19,14 @@ import { getLenis } from "@/hooks/use-lenis";
  * does nothing at all rather than falling through), and `overflow: hidden` is
  * what still holds a visitor whose Lenis never started — anyone on reduced
  * motion, where no instance exists.
+ *
+ * The overflow goes on <html>, never <body>. A stopped Lenis already hides
+ * <html>'s overflow (`.lenis-stopped` in globals.css), and once the root's
+ * overflow is not `visible` the browser stops handing <body>'s up to the
+ * viewport, so a hidden <body> becomes a scroll container of its own. Every
+ * `position: sticky` stage then sticks to <body>, which never scrolls, instead
+ * of the viewport: the homepage reel dropped back to its place in the document
+ * behind the open menu, leaving a black band where the bottom of the film was.
  */
 export function useLockBodyScroll(locked: boolean) {
   useEffect(() => {
@@ -27,18 +35,19 @@ export function useLockBodyScroll(locked: boolean) {
     }
 
     const lenis = getLenis();
-    const originalOverflow = document.body.style.overflow;
+    const root = document.documentElement;
+    const originalOverflow = root.style.overflow;
     const originalPaddingRight = document.body.style.paddingRight;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth = window.innerWidth - root.clientWidth;
 
     lenis?.stop();
-    document.body.style.overflow = "hidden";
+    root.style.overflow = "hidden";
     if (scrollbarWidth > 0) {
       document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
 
     return () => {
-      document.body.style.overflow = originalOverflow;
+      root.style.overflow = originalOverflow;
       document.body.style.paddingRight = originalPaddingRight;
       // Only if it is still the live instance — a reduced-motion flip while the
       // overlay is open destroys it, and starting a destroyed Lenis would

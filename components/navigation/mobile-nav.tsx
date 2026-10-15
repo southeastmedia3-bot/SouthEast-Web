@@ -154,11 +154,16 @@ export function MobileNav() {
               aria-modal="true"
               aria-label="Site navigation"
               tabIndex={-1}
+              // The one surface that may still scroll while the page is
+              // locked: with Services expanded it runs past a phone screen. A
+              // stopped Lenis cancels every wheel and touch gesture it sees,
+              // this panel's included, unless told to leave the element alone.
+              data-lenis-prevent
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto border-l border-border bg-white p-6 pt-24 shadow-[0_24px_60px_rgba(0,0,0,0.5)] focus:outline-none"
+              className="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto overscroll-contain border-l border-border bg-white p-6 pt-24 shadow-[0_24px_60px_rgba(0,0,0,0.5)] focus:outline-none"
             >
               <nav aria-label="Mobile navigation" className="flex flex-col">
                 {primaryNavigation.map((item, index) => {
