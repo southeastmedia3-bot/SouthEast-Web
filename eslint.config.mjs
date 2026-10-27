@@ -7,7 +7,7 @@ const eslintConfig = [
   ...nextTypescript,
   prettier,
   {
-    ignores: [".next/**", "node_modules/**", ".npm-cache/**"],
+    ignores: [".next/**", "node_modules/**", ".npm-cache/**", "out/**", ".static-build-stash/**"],
   },
 ];
 

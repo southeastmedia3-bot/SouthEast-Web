@@ -55,3 +55,9 @@ firebase-debug.log
 .claude/
 .agents/
 skills-lock.json
+
+# cPanel static export (npm run build:static): `/out/` above is its output. These
+# are the transient stash that holds app/api + .next during the build, and the real
+# PHP config (holds secrets; only the .sample file is committed)
+/.static-build-stash/
+/static-host/api/contact-config.php

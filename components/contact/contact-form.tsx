@@ -9,6 +9,16 @@ import { siteConfig } from "@/constants/site";
 import { contactSchema, projectTypes, type ContactValues } from "@/data/contact";
 import { cn } from "@/lib/utils";
 
+/**
+ * Where the enquiry is POSTed. Unset — every Firebase / Node build — it is the
+ * App Router route handler at /api/contact. The cPanel static export has no
+ * Node runtime, so `npm run build:static` sets NEXT_PUBLIC_CONTACT_ENDPOINT to
+ * the PHP handler (/api/contact.php, see static-host/). Both are same-origin,
+ * so `connect-src 'self'` in the CSP covers either. `NEXT_PUBLIC_` values are
+ * inlined at build time, so this is a constant in the shipped bundle.
+ */
+const CONTACT_ENDPOINT = process.env.NEXT_PUBLIC_CONTACT_ENDPOINT ?? "/api/contact";
+
 const fieldBase =
   "w-full rounded-[0.7rem] border border-border bg-surface px-4 py-3 type-body text-foreground placeholder:text-muted/70 transition-colors focus-visible:border-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40";
 
@@ -29,7 +39,7 @@ export function ContactForm() {
     setStatus("idle");
     setErrorMessage(null);
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(CONTACT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),

@@ -2,3 +2,5 @@
 node_modules
 package-lock.json
 .npm-cache
+out
+.static-build-stash

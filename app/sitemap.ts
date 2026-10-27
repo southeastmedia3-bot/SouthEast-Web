@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/constants/site";
 import { seoRoutes } from "@/data/seo";
 import { homeShowreel, verticalHeroes } from "@/data/media";
+import { absoluteUrl } from "@/lib/seo";
 
 /**
  * XML-escape a string before it reaches the sitemap.
@@ -69,9 +70,19 @@ const pageVideos: Record<string, { video: string; poster: string }> = Object.fro
     .map(([path, asset]) => [path, { video: asset.video!, poster: asset.poster! }]),
 );
 
+/**
+ * Explicit, because `output: "export"` (the cPanel build, `npm run build:static`)
+ * refuses a metadata route that does not declare itself static. It is already
+ * prerendered on every other build — this only states it — so the Firebase output
+ * is unchanged.
+ */
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return seoRoutes.map((seo) => {
-    const url = new URL(seo.path, siteConfig.url).toString();
+    // `absoluteUrl` rather than a bare `new URL`: on the static export it adds the
+    // trailing slash the pages are actually served at. Elsewhere it is identical.
+    const url = absoluteUrl(seo.path);
     const media = pageVideos[seo.path];
 
     return {

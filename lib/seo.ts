@@ -11,8 +11,27 @@ type MetadataInput = {
   noIndex?: boolean;
 };
 
+/**
+ * The cPanel static export (`STATIC_EXPORT=1`, see next.config.ts) builds with
+ * `trailingSlash: true`: every page is `<route>/index.html`, served at `/route/`.
+ * Next already writes that slash into each page's canonical and og:url, so every
+ * other URL that names a page — the sitemap, llms.txt, the JSON-LD — has to carry
+ * it too, or it points at an address that 301s to the canonical one.
+ *
+ * Unset (every Firebase build) this is false and `absoluteUrl` is exactly what it
+ * always was. Server-only on purpose: the variable is not `NEXT_PUBLIC_`, so it
+ * would read as unset in a client bundle.
+ */
+const PAGE_URLS_END_IN_SLASH = process.env.STATIC_EXPORT === "1";
+
 export function absoluteUrl(path = "/") {
-  return new URL(path, siteConfig.url).toString();
+  const url = new URL(path, siteConfig.url);
+  // Pages only: not `/brand/og.jpg` (a file), and not `/` or `/#organization`
+  // (already end in a slash). A query string is left alone for the same reason.
+  if (PAGE_URLS_END_IN_SLASH && !url.search && !/\/$|\.[a-z0-9]+$/i.test(url.pathname)) {
+    url.pathname += "/";
+  }
+  return url.toString();
 }
 
 export function createMetadata({

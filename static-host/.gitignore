@@ -1,0 +1,2 @@
+# The real delivery config holds secrets and lives only on the server.
+api/contact-config.php
