@@ -14,7 +14,7 @@ import { absoluteUrl } from "@/lib/seo";
  *
  * WHY THIS MATTERS MORE THAN IT USED TO. Structured data was always the way to
  * earn a rich result; it is now also how a language model resolves what this
- * studio *is*. An AI asked "who does medical animation in Hyderabad" is reading
+ * studio *is*. An AI asked "who does medical animation in Bengaluru and Hyderabad" is reading
  * entities, not paragraphs — a `Service` node with a `provider` and an
  * `areaServed` is directly answerable in a way that the same claim buried in
  * prose is not. That is the whole of the GEO/AEO case for this file.

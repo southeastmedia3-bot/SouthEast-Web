@@ -28,7 +28,7 @@ export const trustBar = {
   /**
    * The opening clause names the studio, the discipline and the city.
    *
-   * The homepage carried "Hyderabad" in its `<title>` and its structured data
+   * The homepage carried Bengaluru and Hyderabad in its `<title>` and structured data
    * and nowhere a visitor could read it, which is the one shape of keyword gap
    * that is worth closing: a page whose own metadata claims a location its copy
    * never supports is weaker for it, and every term on the client's list ends in
@@ -37,7 +37,7 @@ export const trustBar = {
    * one clause, not a rewrite. The rest of the statement is untouched.
    */
   statement:
-    "Southeast Media is a creative, CGI and video production studio in Hyderabad, working with institutions across India. We replace the ad-hoc agency model and become your outsourced digital infrastructure partner — dedicated resource allocation, on access-controlled servers, for institutions that cannot afford to look uncertain.",
+    "Southeast Media is a creative, CGI and video production studio based in Bengaluru and Hyderabad, built to serve institutions globally as a dedicated digital infrastructure and creative production partner.",
   /**
    * Rendered as physics bodies you can shove around.
    *

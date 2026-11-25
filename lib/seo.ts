@@ -124,7 +124,7 @@ export function metadataFor(path: SeoPath, options: { image?: string } = {}): Me
    * `title.template` in the root layout applies to CHILD segments only, and
    * `app/page.tsx` sits in the *same* segment as `app/layout.tsx` — so the
    * template never runs on it and its title is emitted verbatim. Left alone the
-   * homepage shipped `<title>Creative & 3D Animation Agency in Hyderabad</title>`
+   * homepage shipped `<title>Creative & 3D Animation Agency in Bengaluru & Hyderabad</title>`
    * with no brand on it at all, which is the one page where the brand name most
    * needs to be in the result.
    *
@@ -172,7 +172,7 @@ export function createRobots(): MetadataRoute.Robots {
        * the default is easy to reverse by accident: a great deal of "block the
        * AI scrapers" advice circulates, and for a studio that wants to be the
        * answer when someone asks ChatGPT for a medical animation company in
-       * Hyderabad, blocking them is self-harm. There is nothing behind this site
+       * Bengaluru and Hyderabad, blocking them is self-harm. There is nothing behind this site
        * but marketing copy the studio wants read as widely as possible.
        *
        * Two of these are not training crawlers and are worth understanding

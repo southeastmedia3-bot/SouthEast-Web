@@ -94,8 +94,8 @@ export const siteConfig = {
    * its own; if it is ever staffed as a second office it needs its own Business
    * Profile listing, not a second address in this file.
    */
-  cities: ["Hyderabad", "Bengaluru"],
-  areaServed: ["Hyderabad", "Bengaluru", "India"],
+  cities: ["Bengaluru", "Hyderabad"],
+  areaServed: ["Bengaluru", "Hyderabad", "India"],
   /**
    * Google Search Console site verification.
    *
@@ -278,7 +278,7 @@ export const businessProfile: BusinessProfile = {
    * years combined CGI experience" figure on `/about`: the number counts the
    * team's experience, not the company's age, which is why it is labelled
    * "combined" in `data/about.ts`. The `/about` title and description used to
-   * blur the two ("Twenty years of CGI from a Hyderabad … studio"), and were
+   * blur the two ("Twenty years of CGI from a Bengaluru and Hyderabad studio"), and were
    * corrected when this date arrived — a `foundingDate` of 2025 sitting in the
    * same page's JSON-LD as a claim of twenty years' trading is a contradiction a
    * machine can see.

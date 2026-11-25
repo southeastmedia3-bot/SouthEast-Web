@@ -26,12 +26,12 @@ import type { MediaTone } from "@/data/media";
  *
  * THE FIRST SENTENCE OF EACH `intro` IS SEARCH COPY. Five of the seven now open
  * with a plain statement of what the studio is and where it is — "Southeast Media
- * is a medical animation company in Hyderabad." That reads as a slightly blunt
+ * is a medical animation company in Bengaluru and Hyderabad." That reads as a slightly blunt
  * opening line, and it is deliberate: the H1s here are oblique on purpose ("The
  * Zero-Imperfection Rendering Pipeline"), and this is the compromise that keeps
  * them that way. Rather than bend the headline to hold a keyword, the sentence
  * directly under it carries the phrase in ordinary prose — which is also the
- * sentence a language model quotes when asked who does this work in Hyderabad.
+ * sentence a language model quotes when asked who does this work in Bengaluru and Hyderabad.
  * Titles and meta descriptions live in `data/seo.ts`; only this one clause is
  * search copy that a visitor actually reads.
  *
@@ -198,7 +198,7 @@ const verticalCatalogue: Vertical[] = [
     summary:
       "Physically accurate 3D for the medical device and pharmaceutical sectors — Mechanism of Action rendered to 4K–8K, under regulatory compliance and ironclad data security.",
     intro:
-      "Southeast Media is a medical animation company in Hyderabad. Translating advanced biology into flawless visual narratives requires an uncompromising dedication to scientific truth. We build physically accurate, complex 3D models tailored explicitly for the medical device and pharmaceutical sectors, strictly adhering to regulatory compliance and ironclad data security protocols.",
+      "Southeast Media is a medical animation company in Bengaluru and Hyderabad. Translating advanced biology into flawless visual narratives requires an uncompromising dedication to scientific truth. We build physically accurate, complex 3D models tailored explicitly for the medical device and pharmaceutical sectors, strictly adhering to regulatory compliance and ironclad data security protocols.",
     headline: [
       { value: "10 yrs", label: "of medical 3D" },
       { value: "4K–8K", label: "MoA delivery" },
@@ -442,8 +442,8 @@ const verticalCatalogue: Vertical[] = [
         a: "Yes. Molecular structures extend into 3D-print-ready models for exhibitions, medical conferences and activation spaces, and the same assets drive AR and VR experiences for product demonstration, medical training and investor showcases through our Unreal Engine pipeline.",
       },
       {
-        q: "Do you work with pharmaceutical companies outside Hyderabad?",
-        a: "Yes. The studio works from Hyderabad and Bengaluru and delivers across India, and everything after the brief is digital — storyboards, animatics and review rounds move over access-controlled servers, so where the client sits does not change the process.",
+        q: "Do you work with pharmaceutical companies outside Bengaluru and Hyderabad?",
+        a: "Yes. The studio works from Bengaluru and Hyderabad and delivers across India, and everything after the brief is digital — storyboards, animatics and review rounds move over access-controlled servers, so where the client sits does not change the process.",
       },
       {
         q: "What determines the cost of a medical animation?",
@@ -470,7 +470,7 @@ const verticalCatalogue: Vertical[] = [
     summary:
       "Photorealistic 3D rendering that lets buyers, tenants and boards understand a property before it exists.",
     intro:
-      "Southeast Media is an architectural visualization studio in Hyderabad. We execute elite pre-construction visualizations for institutional, commercial, and premium residential developments. Moving beyond standard renders, we target corporate boards and high-end buyers demanding absolute infrastructural accuracy and immersive pre-sales experiences.",
+      "Southeast Media is an architectural visualization studio in Bengaluru and Hyderabad. We execute elite pre-construction visualizations for institutional, commercial, and premium residential developments. Moving beyond standard renders, we target corporate boards and high-end buyers demanding absolute infrastructural accuracy and immersive pre-sales experiences.",
     headline: [
       { value: "1–2 wks", label: "typical delivery" },
       { value: "Unlimited", label: "revisions" },
@@ -683,8 +683,8 @@ const verticalCatalogue: Vertical[] = [
         a: "Yes. Retail outlets, malls, restaurants and cafés, hospitality, offices, public buildings and large-scale mixed-use developments — anything that does not fit a standard residential template.",
       },
       {
-        q: "Do you work with developers outside Hyderabad?",
-        a: "Yes. The studio works from Hyderabad and Bengaluru and delivers across India. Everything after the drawings arrive is digital — grey-shader previews, review rounds and the final set all move over access-controlled storage — so the site's location does not change how the work runs.",
+        q: "Do you work with developers outside Bengaluru and Hyderabad?",
+        a: "Yes. The studio works from Bengaluru and Hyderabad and delivers across India. Everything after the drawings arrive is digital — grey-shader previews, review rounds and the final set all move over access-controlled storage — so the site's location does not change how the work runs.",
       },
     ],
     proof: {
@@ -716,7 +716,7 @@ const verticalCatalogue: Vertical[] = [
     summary:
       "A fully equipped in-house live-action division — uncompressed 8K capture, complex compositing, and Digital Intermediate colour grading, end to end.",
     intro:
-      "Southeast Media is a corporate and commercial video production company in Hyderabad. Complementing our CGI infrastructure is a fully equipped, in-house cinematic live-action division capable of end-to-end video production and complex compositing workflows. One company from the recce to the master — so nobody inherits a problem they were not in the room for.",
+      "Southeast Media is a corporate and commercial video production company in Bengaluru and Hyderabad. Complementing our CGI infrastructure is a fully equipped, in-house cinematic live-action division capable of end-to-end video production and complex compositing workflows. One company from the recce to the master — so nobody inherits a problem they were not in the room for.",
     headline: [
       { value: "8K", label: "uncompressed capture" },
       { value: "0", label: "external hand-offs" },
@@ -1018,7 +1018,7 @@ const verticalCatalogue: Vertical[] = [
     summary:
       "A multi-stage GPU pipeline built for speed and absolute physical accuracy — finished through Octane at 8K.",
     intro:
-      "Southeast Media runs a VFX studio and CGI production pipeline in Hyderabad. Our 3D department is powered by a sophisticated, multi-stage, GPU-based software workflow designed to maximise both speed and absolute physical accuracy across every discipline.",
+      "Southeast Media runs a VFX studio and CGI production pipeline in Bengaluru and Hyderabad. Our 3D department is powered by a sophisticated, multi-stage, GPU-based software workflow designed to maximise both speed and absolute physical accuracy across every discipline.",
     headline: [
       { value: "15", label: "server render farm" },
       { value: "96GB", label: "VRAM per node" },
@@ -1156,7 +1156,7 @@ const verticalCatalogue: Vertical[] = [
     summary:
       "2D and 3D motion graphics, explainer films, and AR, VR and projection-mapped work that redefines a physical space.",
     intro:
-      "Southeast Media is a 3D animation and motion graphics studio in Hyderabad. Extensive expertise in 2D and 3D motion graphics, built on the complete Adobe Creative Suite with a minimalistic, character-driven design approach suited to explainer videos and rapid turnover — and extended, beyond the screen, into experiential media.",
+      "Southeast Media is a 3D animation and motion graphics studio in Bengaluru and Hyderabad. Extensive expertise in 2D and 3D motion graphics, built on the complete Adobe Creative Suite with a minimalistic, character-driven design approach suited to explainer videos and rapid turnover — and extended, beyond the screen, into experiential media.",
     headline: [
       { value: "2D + 3D", label: "motion graphics" },
       { value: "AR / VR", label: "Unreal & Twinmotion" },

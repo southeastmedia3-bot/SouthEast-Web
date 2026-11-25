@@ -73,29 +73,29 @@ export type RouteSeo = {
 export const routeSeo = {
   "/": {
     path: "/",
-    title: "Creative & 3D Animation Agency in Hyderabad",
+    title: "Creative & 3D Animation Agency in Bengaluru & Hyderabad",
     description:
-      "Creative and 3D animation agency in Hyderabad. Southeast Media builds 8K CGI, medical animation, architectural visualization and corporate film in-house.",
+      "Creative and 3D animation agency in Bengaluru and Hyderabad. Southeast Media builds 8K CGI, medical animation, architectural visualization and corporate film in-house.",
     breadcrumb: "Home",
     blurb:
-      "Southeast Media is a creative, CGI and video production studio in Hyderabad and Bengaluru, India, working across medical and pharmaceutical animation, architectural visualization, live-action film, VFX and motion graphics.",
-    lastModified: "2026-08-05",
+      "Southeast Media is a creative, CGI and video production studio in Bengaluru and Hyderabad, India, working across medical and pharmaceutical animation, architectural visualization, live-action film, VFX and motion graphics.",
+    lastModified: "2026-11-25",
   },
   "/verticals": {
     path: "/verticals",
     title: "Creative, 3D & Video Production Services",
     description:
-      "Creative, 3D and video production services from Southeast Media, Hyderabad — medical animation, architectural visualization, film, VFX, motion graphics and CGI.",
+      "Creative, 3D and video production services from Southeast Media, Bengaluru and Hyderabad — medical animation, architectural visualization, film, VFX, motion graphics and CGI.",
     breadcrumb: "Services",
     blurb:
       "The full list of Southeast Media's services, with a page for each: pharma and medical animation, architectural visualization, live-action film, VFX and CGI, motion graphics and animation, product and SaaS video, and enterprise retainers.",
-    lastModified: "2026-08-05",
+    lastModified: "2026-11-25",
   },
   "/pharma": {
     path: "/pharma",
-    title: "Medical Animation Company in Hyderabad",
+    title: "Medical Animation Company in Bengaluru & Hyderabad",
     description:
-      "Southeast Media is a medical animation company in Hyderabad — Mechanism of Action films, 3D medical visualization and pharma marketing at 4K–8K, under NDA.",
+      "Southeast Media is a medical animation company in Bengaluru and Hyderabad — Mechanism of Action films, 3D medical visualization and pharma marketing at 4K–8K, under NDA.",
     breadcrumb: "Medical & Pharma",
     blurb:
       "Medical and pharmaceutical 3D animation: Mechanism of Action (MoA) films, anatomical and molecular visualization, patient education animation and pharmaceutical video production, rendered at 4K–8K with MD-reviewed anatomy under NDA.",
@@ -103,13 +103,13 @@ export const routeSeo = {
       name: "Medical & Pharmaceutical 3D Animation",
       serviceType: "Medical animation and pharmaceutical visualization",
     },
-    lastModified: "2026-08-05",
+    lastModified: "2026-11-25",
   },
   "/real-estate": {
     path: "/real-estate",
-    title: "Architectural Visualization, Hyderabad",
+    title: "Architectural Visualization, Bengaluru & Hyderabad",
     description:
-      "Architectural visualization studio in Hyderabad. Photorealistic 3D rendering, real-estate walkthrough animation and virtual tours for institutional developments.",
+      "Architectural visualization studio in Bengaluru and Hyderabad. Photorealistic 3D rendering, real-estate walkthrough animation and virtual tours for institutional developments.",
     breadcrumb: "Real Estate",
     blurb:
       "Architectural and real-estate visualization: photorealistic 3D exterior and interior rendering, property walkthrough animation, 3D virtual tours and pre-construction CGI for institutional, commercial and premium residential developments.",
@@ -117,13 +117,13 @@ export const routeSeo = {
       name: "Architectural & Real-Estate Visualization",
       serviceType: "3D architectural visualization and rendering",
     },
-    lastModified: "2026-08-05",
+    lastModified: "2026-11-25",
   },
   "/films": {
     path: "/films",
-    title: "Corporate Video Production, Hyderabad",
+    title: "Corporate Video Production, Bengaluru & Hyderabad",
     description:
-      "Corporate video production company in Hyderabad — uncompressed 8K capture, commercial and corporate film, complex facility shoots and in-house DI colour grading.",
+      "Corporate video production company in Bengaluru and Hyderabad — uncompressed 8K capture, commercial and corporate film, complex facility shoots and in-house DI colour grading.",
     breadcrumb: "Films",
     blurb:
       "Live-action film production: corporate video, TV and commercial film, product films and facility shoots inside hospitals and manufacturing plants, captured in uncompressed 8K and finished with in-house Digital Intermediate colour grading.",
@@ -131,13 +131,13 @@ export const routeSeo = {
       name: "Corporate & Commercial Film Production",
       serviceType: "Video and film production",
     },
-    lastModified: "2026-08-05",
+    lastModified: "2026-11-25",
   },
   "/vfx": {
     path: "/vfx",
-    title: "VFX Studio & CGI Production, Hyderabad",
+    title: "VFX Studio & CGI Production, Bengaluru & Hyderabad",
     description:
-      "VFX studio and CGI production company in Hyderabad. A 15-server GPU render farm finishing photorealistic, physically accurate frames through Octane at 8K.",
+      "VFX studio and CGI production company in Bengaluru and Hyderabad. A 15-server GPU render farm finishing photorealistic, physically accurate frames through Octane at 8K.",
     breadcrumb: "VFX",
     blurb:
       "Visual effects and CGI production: simulation, compositing, look development and photorealistic rendering on a 15-server GPU render farm, finished through Octane at 8K.",
@@ -145,13 +145,13 @@ export const routeSeo = {
       name: "VFX & CGI Production",
       serviceType: "Visual effects and CGI production",
     },
-    lastModified: "2026-08-05",
+    lastModified: "2026-11-25",
   },
   "/animation": {
     path: "/animation",
     title: "3D Animation & Motion Graphics Studio",
     description:
-      "3D animation company in Hyderabad — 2D and 3D motion graphics, explainer videos, product animation and AR, VR and projection-mapped experiential work.",
+      "3D animation company in Bengaluru and Hyderabad — 2D and 3D motion graphics, explainer videos, product animation and AR, VR and projection-mapped experiential work.",
     breadcrumb: "Animation",
     blurb:
       "2D and 3D animation and motion graphics: explainer videos, character animation, kinetic typography, 3D product animation, and AR, VR and projection-mapped experiential media built in Unreal and Twinmotion.",
@@ -194,7 +194,7 @@ export const routeSeo = {
     /**
      * THE TWENTY YEARS BELONG TO THE TEAM, NOT THE COMPANY. These three strings
      * used to read "About the Studio — 20 Years in CGI" and "Twenty years of CGI
-     * from a Hyderabad and Bengaluru studio", which says the studio has been
+     * from a Bengaluru and Hyderabad studio", which says the studio has been
      * trading since ~2006. It has not: the studio was founded in 2025, and the
      * figure on the page is labelled "years combined CGI experience" in
      * `data/about.ts` — an aggregate over the people, which is a normal and
@@ -208,21 +208,21 @@ export const routeSeo = {
      */
     title: "About the Team — 20 Years of CGI",
     description:
-      "Southeast Media is a Hyderabad CGI studio founded in 2025 by a team with 20+ years of combined experience, running a 15-server render farm and an 8K pipeline.",
+      "Southeast Media is a CGI studio in Bengaluru and Hyderabad, founded in 2025 by a team with 20+ years of combined experience, running a 15-server render farm and an 8K pipeline.",
     breadcrumb: "About",
     blurb:
-      "Who Southeast Media is: a Hyderabad and Bengaluru studio founded in 2025 by a team carrying over twenty years of combined CGI experience, running a 15-server render farm with 672GB of VRAM and 100TB of RAID storage, and an 8K pipeline operated in-house.",
-    lastModified: "2026-08-11",
+      "Who Southeast Media is: a Bengaluru and Hyderabad studio founded in 2025 by a team carrying over twenty years of combined CGI experience, running a 15-server render farm with 672GB of VRAM and 100TB of RAID storage, and an 8K pipeline operated in-house.",
+    lastModified: "2026-11-25",
   },
   "/contact": {
     path: "/contact",
     title: "Contact",
     description:
-      "Start a project with Southeast Media, a creative and 3D production studio in Hyderabad. Confidential scoping under NDA, answered within two business days.",
+      "Start a project with Southeast Media, a creative and 3D production studio in Bengaluru and Hyderabad. Confidential scoping under NDA, answered within two business days.",
     breadcrumb: "Contact",
     blurb:
       "How to reach Southeast Media: an enquiry form routed to info@southeastmedia.in, answered within two business days, with a confidential scoping call under NDA.",
-    lastModified: "2026-08-05",
+    lastModified: "2026-11-25",
   },
 } as const satisfies Record<string, RouteSeo>;
 

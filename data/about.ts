@@ -3,7 +3,7 @@
  *
  * About is the page a search engine and an answer engine both reach for when
  * working out what and where a business is, and it was describing a studio with
- * no location at all — "Hyderabad" and "Bengaluru" appeared in the page title and
+ * no location at all — "Bengaluru" and "Hyderabad" appeared in the page title and
  * the JSON-LD but in none of the prose underneath. One clause fixes that; the
  * claim itself is not new, it is the same one `siteConfig.cities` already makes
  * to crawlers, and it comes from the client's Corporate Capability Deck.
@@ -11,7 +11,7 @@
 export const aboutHero = {
   eyebrow: "Who We Are",
   headline: "A studio built for the frames that can't be wrong.",
-  body: "Southeast Media is a cinematic animation, film, and visual-effects studio working from Hyderabad and Bengaluru, and delivering across India. We sit inside the institutions we serve — under NDA, on secure servers — as the embedded visual division that turns science, architecture, and ambition into images people believe.",
+  body: "Southeast Media is a cinematic animation, film, and visual-effects studio working from Bengaluru and Hyderabad, and delivering across India. We sit inside the institutions we serve — under NDA, on secure servers — as the embedded visual division that turns science, architecture, and ambition into images people believe.",
 };
 
 export const aboutStory = {

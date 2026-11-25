@@ -14,7 +14,7 @@ import { absoluteUrl } from "@/lib/seo";
  * which is not legal XML.
  *
  * That is exactly what happened here. Four route titles in `data/seo.ts` contain
- * one: "Creative & 3D Animation Agency in Hyderabad", "VFX Studio & CGI
+ * one: "Creative & 3D Animation Agency in Bengaluru & Hyderabad", "VFX Studio & CGI
  * Production", "3D Animation & Motion Graphics Studio", "Product & SaaS Video
  * Production". The served sitemap.xml failed to parse at the first of them, and
  * a malformed sitemap is rejected *whole* — Search Console reports a parse error

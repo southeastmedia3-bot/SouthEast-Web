@@ -93,10 +93,10 @@ export const contactContent = {
   /**
    * The closing clause names the cities. Contact is where a visitor decides
    * whether the studio is reachable and where it is, and the page said neither —
-   * it carried "Hyderabad" in its title and its JSON-LD and nowhere on the page.
+   * it carried Bengaluru and Hyderabad in its title and JSON-LD and nowhere on the page.
    * The claim is the same one `siteConfig.cities` already makes.
    */
-  body: "Tell us what has to be true about the frame. We operate under NDA, on secure servers — every enquiry is treated as confidential, and we'll respond within two business days. The studio works from Hyderabad and Bengaluru, and delivers across India.",
+  body: "Tell us what has to be true about the frame. We operate under NDA, on secure servers — every enquiry is treated as confidential, and we'll respond within two business days. The studio works from Bengaluru and Hyderabad, and delivers across India.",
   aside: {
     title: "What to expect",
     points: [
